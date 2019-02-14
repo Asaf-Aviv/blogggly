@@ -1,0 +1,10 @@
+{
+  "delay": "500",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "*.test",
+    "client"
+  ],
+  "ext": "js,json"
+}
