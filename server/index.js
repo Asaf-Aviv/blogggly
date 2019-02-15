@@ -1,6 +1,5 @@
 require('dotenv').config();
-require('./db').init();
-// require('./auth').init();
+require('./db');
 
 const app = require('./app');
 
