@@ -4,6 +4,7 @@ const { ApolloServer } = require('apollo-server-express');
 const isAuth = require('../middleware/isAuth');
 const typeDefs = require('../graphql/schema');
 const resolvers = require('../graphql/resolvers');
+const { createLoaders } = require('../utils');
 
 const productionMode = process.env.NODE_ENV === 'production';
 
@@ -24,6 +25,9 @@ app.use((req, res, next) => {
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: () => ({
+    ...createLoaders(),
+  }),
 });
 
 apolloServer.applyMiddleware({ app });

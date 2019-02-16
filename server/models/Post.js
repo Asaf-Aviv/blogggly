@@ -5,11 +5,25 @@ const User = require('./User');
 const { Schema } = mongoose;
 
 const PostSchema = new mongoose.Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  },
   title: { type: String, required: true },
   body: { type: String, required: true },
   deleted: { type: Boolean, default: false },
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }],
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  }],
 }, { timestamps: true });
 
 PostSchema.statics.deletePost = async function (id) {
@@ -18,6 +32,14 @@ PostSchema.statics.deletePost = async function (id) {
     { $set: { deleted: true } },
     { new: true },
   );
+};
+
+PostSchema.statics.findPostsByIds = async function (postIds) {
+  if (!postIds || !postIds.length) {
+    return [];
+  }
+
+  return postIds.map(pId => this.find({ _id: { $in: pId } }));
 };
 
 PostSchema.statics.updatePost = async function (postId, updatedPost) {

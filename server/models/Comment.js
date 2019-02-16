@@ -6,17 +6,33 @@ const Post = require('./Post');
 const { Schema } = mongoose;
 
 const CommentSchema = new mongoose.Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  },
+  post: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  },
   body: { type: String, required: true },
 }, { timestamps: true });
 
-CommentSchema.statics.findCommentsForPost = async function (postId) {
-  const post = await Post.findPostById(postId);
+CommentSchema.statics.findCommentsbyIds = async function (commentIds) {
+  if (!commentIds || !commentIds.length) {
+    return [];
+  }
+  return commentIds.map(cId => (cId.length ? this.find({ _id: { $in: cId } }) : []));
 
-  return this.find({ _id: { $in: post.comments } });
+  // return this.find({ _id: { $in: commentIds } });
 };
-
 
 CommentSchema.statics.createComment = async function (commentInput) {
   const session = await conn.startSession();

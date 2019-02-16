@@ -29,11 +29,25 @@ const UserSchema = new mongoose.Schema({
     maxlength: [100, 'Password is too long'],
     validate: [/^[^ ]+$/],
   },
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post', required: true }],
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }],
+  posts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  }],
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  }],
 }, { timestamps: true });
 
-UserSchema.statics.findByEmail = function (email) {
+UserSchema.statics.findUserByEmail = async function (email) {
   return this.findOne({ email });
 };
 
@@ -51,8 +65,15 @@ UserSchema.statics.findUserById = async function (userId) {
   return user;
 };
 
+UserSchema.statics.findUsersByIds = async function (userIds) {
+  if (!userIds || !userIds.length) {
+    return [];
+  }
+  return this.find({ _id: { $in: userIds } });
+};
+
 UserSchema.statics.createUser = async function (userInput) {
-  const userExist = await this.findByEmail(userInput.email);
+  const userExist = await this.findUserByEmail(userInput.email);
 
   if (userExist) {
     throw new Error('User already exists.');
