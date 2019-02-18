@@ -6,3 +6,37 @@
 body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+  font-family: 'Montserrat', sans-serif
+  font-size: 18px
+  letter-spacing: .3px
+  background: #eee
+  padding-top: 60px
+
+button
+  cursor: pointer
+
+button, input
+  font-family: inherit
+
+ul
+  list-style: none
+
+.btn
+  height: 50px
+  font-size: 18px
+  background: none
+  border: none
+  outline: none
+  border-radius: 5px
+  transition: background 150ms, color 150ms
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3)
+  &--default
+  &--primary
+    color: #FFF
+    background: #716bcc
+    &:hover
+      background: #57539e
+    &:active
+      background: #44417d
+  &--secondary
+  &--danger

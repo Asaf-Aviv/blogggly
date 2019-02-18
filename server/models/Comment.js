@@ -29,9 +29,8 @@ CommentSchema.statics.findCommentsbyIds = async function (commentIds) {
   if (!commentIds || !commentIds.length) {
     return [];
   }
-  return commentIds.map(cId => (cId.length ? this.find({ _id: { $in: cId } }) : []));
 
-  // return this.find({ _id: { $in: commentIds } });
+  return commentIds.map(cId => (cId.length ? this.find({ _id: { $in: cId } }) : []));
 };
 
 CommentSchema.statics.createComment = async function (commentInput) {

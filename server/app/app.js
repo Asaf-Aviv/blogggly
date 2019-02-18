@@ -11,6 +11,7 @@ const productionMode = process.env.NODE_ENV === 'production';
 const app = express();
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,15 +19,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(isAuth);
 
 app.use((req, res, next) => {
-  console.log(req.isAuth);
+  console.log('isAuth', req.isAuth);
   next();
 });
 
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => ({
+  context: ({ req }) => ({
     ...createLoaders(),
+    isAuth: req.isAuth,
+    userId: req.userId,
   }),
 });
 

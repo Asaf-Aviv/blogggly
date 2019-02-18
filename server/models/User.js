@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     maxlength: [100, 'Password is too long'],
     validate: [/^[^ ]+$/],
   },
+  avatar: {
+    type: String,
+    default: 'public/assets/avatar/man.svg',
+  },
   posts: [{
     type: Schema.Types.ObjectId,
     ref: 'Post',
@@ -47,7 +51,7 @@ const UserSchema = new mongoose.Schema({
   }],
 }, { timestamps: true });
 
-UserSchema.statics.findUserByEmail = async function (email) {
+UserSchema.statics.findByEmail = function (email) {
   return this.findOne({ email });
 };
 
@@ -73,7 +77,7 @@ UserSchema.statics.findUsersByIds = async function (userIds) {
 };
 
 UserSchema.statics.createUser = async function (userInput) {
-  const userExist = await this.findUserByEmail(userInput.email);
+  const userExist = await this.findByEmail(userInput.email);
 
   if (userExist) {
     throw new Error('User already exists.');
@@ -89,14 +93,14 @@ UserSchema.statics.createUser = async function (userInput) {
   return user.save();
 };
 
-UserSchema.statics.login = async function (userInput) {
-  const user = await this.findByEmail(userInput.email).select('+password');
+UserSchema.statics.login = async function (email, password) {
+  const user = await this.findByEmail(email).select('+password');
 
   if (!user) {
     throw new Error('User does not exists.');
   }
 
-  if (!await this.comparePasswords(userInput.password, user.password)) {
+  if (!await this.comparePasswords(password, user.password)) {
     throw new Error('Incorrect password.');
   }
 
