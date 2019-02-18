@@ -17,7 +17,13 @@ module.exports = {
     'no-unused-vars': ['error', { 'argsIgnorePattern': 'next' }],
     "no-unused-expressions": ["error", {"allowTernary": true}],
     'react/jsx-filename-extension': 0,
+    'react/no-array-index-key': 0,
+    'jsx-a11y/no-noninteractive-element-interactions': 0,
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/no-noninteractive-element-interactions': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
     'func-names': 0,
+    'no-use-before-define': 0,
   },
   overrides: [
     {
