@@ -12,6 +12,9 @@ const NavMenu = () => (
     <li className="nav-menu__item">
       <NavLink className="nav-menu__link" to="/blogs">Blogs</NavLink>
     </li>
+    <li className="nav-menu__item">
+      <NavLink className="nav-menu__link" to="/create">Create</NavLink>
+    </li>
   </ul>
 );
 

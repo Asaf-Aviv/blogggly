@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
 import apolloClient from './ApolloClient';
@@ -16,20 +16,26 @@ import './App.sass';
 const App = () => {
   const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState(null);
-  const [alerts, setAlerts] = useState([
-    { message: 'Incorrect password.' },
-    { message: 'Incorrect email.' },
-    { message: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.' },
-  ]);
+  // const [alerts, setAlerts] = useState([]);
+
+  // const addAlerts = (newAlerts) => {
+  //   const concatedAlerts = Array.isArray(newAlerts)
+  //     ? [...alerts, ...newAlerts]
+  //     : [...alerts, newAlerts];
+
+  //   setAlerts(concatedAlerts);
+  // };
+
+  // useEffect(() => {
+  //   alerts.forEach((alert) => {
+  //     Alert[alert.type || 'info'](alert.message);
+  //   });
+  //   if (alerts.length) {
+  //     setAlerts([]);
+  //   }
+  // }, [alerts]);
 
   useEffect(() => {
-    alerts.forEach((alert) => {
-      Alert[alert.type || 'info'](alert.message);
-    });
-    setAlerts([]);
-  }, [alerts]);
-
-  useLayoutEffect(() => {
     const cachedToken = localStorage.getItem('token');
 
     console.log(cachedToken);

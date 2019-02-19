@@ -36,7 +36,7 @@ module.exports = {
       const token = generateToken(user._id);
       return { user, token };
     },
-    createPost: (root, args) => Post.createPost(args.post),
+    createPost: (root, args) => Post.createPost(args.postInput),
     updatePost: (root, args) => Post.updatePost(args.postId, args.updatedPost),
     deletePost: (root, args) => Post.deletePost(args.id),
     createComment: (root, args) => Comment.createComment(args.comment),

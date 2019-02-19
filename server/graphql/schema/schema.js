@@ -3,20 +3,20 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   type Query {
     relog: Relog
-    user(id: ID!): User
+    user(id: ID): User
     users: [User!]!
-    post(id: ID!): Post
+    post(id: ID): Post
     posts: [Post!]!
-    postComments(postId: ID!): [Comment!]!
+    postComments(postId: ID): [Comment!]!
   }
 
   type Mutation {
-    login(email: String!, password: String!): Auth
+    login(email: String, password: String): Auth
     signup(userInput: UserInput): Auth
-    createPost(post: PostInput!): Post
-    createComment(comment: CommentInput!): Comment
-    updatePost(postId: ID!, updatedPost: PostInput!): Post
-    deletePost(id: ID!): Post
+    createPost(postInput: PostInput): Post
+    createComment(comment: CommentInput): Comment
+    updatePost(postId: ID, updatedPost: PostInput): Post
+    deletePost(id: ID): Post
   }
 
   type Relog {
