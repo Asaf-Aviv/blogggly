@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { UserContext } from '../../context';
 import Container from '../Container';
 import MemberForms from '../MemberForms';
 import NavBarUserMenu from '../NavBarUserMenu';
+import NavMenu from '../NavMenu';
 
 import './NavBar.sass';
 
@@ -15,20 +15,6 @@ const NavBar = ({ logout }) => {
   const toggleForms = () => {
     setShowMemberForms(!showMemberForms);
   };
-
-  const NavMenu = () => (
-    <ul className="nav-menu">
-      <li className="nav-menu__item">
-        <NavLink className="nav-menu__link" to="/">Home</NavLink>
-      </li>
-      <li className="nav-menu__item">
-        <NavLink className="nav-menu__link" to="/users">Users</NavLink>
-      </li>
-      <li className="nav-menu__item">
-        <NavLink className="nav-menu__link" to="/blogs">Blogs</NavLink>
-      </li>
-    </ul>
-  );
 
   return (
     <header className="navbar">
