@@ -4,9 +4,11 @@ module.exports = gql`
   type Query {
     relog: Relog
     user(id: ID): User
+    searchUser(username: String): SearchUser
     users: [User!]!
     post(id: ID): Post
     posts: [Post!]!
+    userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
   }
 
@@ -29,6 +31,7 @@ module.exports = gql`
   }
 
   type Comment {
+    _id: ID!
     author: User!
     post: Post!
     body: String!
@@ -40,6 +43,10 @@ module.exports = gql`
     author: ID!
     post: ID!
     body: String!
+  }
+
+  type SearchUser {
+    user: User
   }
 
   type User {

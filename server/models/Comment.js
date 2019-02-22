@@ -25,12 +25,17 @@ const CommentSchema = new mongoose.Schema({
   body: { type: String, required: true },
 }, { timestamps: true });
 
-CommentSchema.statics.findCommentsbyIds = async function (commentIds) {
+CommentSchema.statics.findCommentsByIds = async function (commentIds) {
   if (!commentIds || !commentIds.length) {
     return [];
   }
 
   return commentIds.map(cId => (cId.length ? this.find({ _id: { $in: cId } }) : []));
+};
+
+CommentSchema.statics.findCommentsForPost = async function (postId) {
+  const { comments: commentIds } = await Post.findById(postId).select('comments');
+  return commentIds;
 };
 
 CommentSchema.statics.createComment = async function (commentInput) {

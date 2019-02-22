@@ -21,7 +21,7 @@ exports.generateToken = (userId) => {
 exports.createLoaders = () => ({
   userLoader: new DataLoader(userIds => User.findUsersByIds(userIds)),
   postLoader: new DataLoader(postIds => Post.findPostsByIds(postIds)),
-  commentLoader: new DataLoader(commentIds => Comment.findCommentsbyIds(commentIds)),
+  commentLoader: new DataLoader(commentIds => Comment.findCommentsByIds(commentIds)),
 });
 
 exports.createFakeData = async () => {

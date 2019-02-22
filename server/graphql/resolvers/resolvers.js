@@ -16,14 +16,22 @@ module.exports = {
       return { user };
     },
     user: (root, args) => User.findUserById(args.id),
+    searchUser: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+      return { user };
+    },
     users: async (root, args, { userLoader }) => {
       const users = await User.find({});
       users.map(user => userLoader.prime(user._id, user));
       return users;
     },
+    userPosts: (root, args) => Post.findPostsForUser(args.id),
     post: (root, args) => Post.findPostById(args.id),
     posts: async () => Post.find({ deleted: false }),
-    postComments: (root, args) => Comment.findCommentsForPost(args.postId),
+    postComments: async (root, args, { commentLoader }) => {
+      const commentIds = await Comment.findCommentsForPost(args.postId);
+      return commentLoader.load(commentIds);
+    },
   },
   Mutation: {
     login: async (root, { email, password }) => {

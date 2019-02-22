@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: 'public/assets/avatar/man.svg',
+    default: '/public/assets/avatar/man.svg',
   },
   posts: [{
     type: Schema.Types.ObjectId,

@@ -34,6 +34,11 @@ PostSchema.statics.deletePost = async function (id) {
   );
 };
 
+PostSchema.statics.findPostsForUser = async function (id) {
+  const user = await User.findById(id).populate('posts');
+  return user.posts;
+};
+
 PostSchema.statics.findPostsByIds = async function (postIds) {
   if (!postIds || !postIds.length) {
     return [];

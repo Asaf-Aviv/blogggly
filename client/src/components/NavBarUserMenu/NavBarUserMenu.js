@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   string, arrayOf, shape, func,
 } from 'prop-types';
@@ -47,24 +48,38 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
         <div ref={dropdown} className="dropdown__container">
           <ul className="dropdown faster animated fadeIn">
             <li className="dropdown__item">
-              <i className="dropdown__icon fas fa-newspaper" />
-              Create post
+              <Link to="/create" className="dropdown__link">
+                <i className="dropdown__icon fas fa-plus" />
+                Create post
+              </Link>
             </li>
             <li className="dropdown__item">
-              <i className="dropdown__icon fas fa-user" />
-              Profile
+              <Link to="/profile/posts" className="dropdown__link">
+                <i className="dropdown__icon fas fa-user" />
+                Profile
+              </Link>
             </li>
             <li className="dropdown__item">
-              <i className="dropdown__icon fas fa-envelope" />
-              Messages
+              <Link to="/profile/posts" className="dropdown__link">
+                <i className="dropdown__icon fas fa-newspaper" />
+                Posts
+              </Link>
             </li>
             <li className="dropdown__item">
-              <i className="dropdown__icon fas fa-comments" />
-              Comments
+              <Link to="/profile/posts" className="dropdown__link">
+                <i className="dropdown__icon fas fa-envelope" />
+                Messages
+              </Link>
+            </li>
+            <li className="dropdown__item">
+              <Link to="/profile/posts" className="dropdown__link">
+                <i className="dropdown__icon fas fa-comments" />
+                Comments
+              </Link>
             </li>
             <div className="dropdown__divider" />
             <li
-              className="dropdown__item"
+              className="dropdown__item dropdown__link"
               onClick={logout}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') logout();

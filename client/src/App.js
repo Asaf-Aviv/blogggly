@@ -8,6 +8,9 @@ import Home from './components/Home';
 import { UserContext, FormContext } from './context';
 import queries from './graphql/queries';
 import PostEditor from './components/PostEditor';
+import UserPosts from './components/UserPosts';
+import Post from './components/Post';
+import User from './components/User';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
@@ -16,24 +19,6 @@ import './App.sass';
 const App = () => {
   const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState(null);
-  // const [alerts, setAlerts] = useState([]);
-
-  // const addAlerts = (newAlerts) => {
-  //   const concatedAlerts = Array.isArray(newAlerts)
-  //     ? [...alerts, ...newAlerts]
-  //     : [...alerts, newAlerts];
-
-  //   setAlerts(concatedAlerts);
-  // };
-
-  // useEffect(() => {
-  //   alerts.forEach((alert) => {
-  //     Alert[alert.type || 'info'](alert.message);
-  //   });
-  //   if (alerts.length) {
-  //     setAlerts([]);
-  //   }
-  // }, [alerts]);
 
   useEffect(() => {
     const cachedToken = localStorage.getItem('token');
@@ -80,6 +65,9 @@ const App = () => {
         </FormContext.Provider>
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/posts/:id" component={Post} />
+          <Route path="/users/:username" component={User} />
+          <Route path="/profile/posts" component={UserPosts} />
           <Route path="/users" component={Users} />
           <Route path="/create" component={PostEditor} />
           <Route render={() => <Redirect to="/" />} />
