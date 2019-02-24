@@ -39,30 +39,18 @@ CommentSchema.statics.findCommentsForPost = async function (postId) {
 };
 
 CommentSchema.statics.createComment = async function (commentInput) {
-  const session = await conn.startSession();
+  const post = await Post.findPostById(commentInput.post);
+  const user = await User.findUserById(commentInput.author);
+  const comment = new this(commentInput);
 
-  try {
-    session.startTransaction();
+  post.comments.push(comment._id);
+  user.comments.unshift(comment._id);
 
-    const post = await Post.findPostById(commentInput.post);
-    const user = await User.findUserById(commentInput.author);
-    const comment = new this(commentInput);
+  await comment.save();
+  await post.save();
+  await user.save();
 
-    post.comments.push(comment._id);
-    user.comments.unshift(comment._id);
-
-    await comment.save({ session });
-    await post.save({ session });
-    await user.save({ session });
-
-    await session.commitTransaction();
-
-    return comment;
-  } catch (err) {
-    console.error(err);
-    await session.abortTransaction();
-    throw err;
-  }
+  return comment;
 };
 
 module.exports = mongoose.model('Comment', CommentSchema);

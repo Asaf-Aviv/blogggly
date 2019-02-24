@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+import './NavMenu.sass';
+
 const NavMenu = () => (
   <ul className="nav-menu">
     <li className="nav-menu__item">

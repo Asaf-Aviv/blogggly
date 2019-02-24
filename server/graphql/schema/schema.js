@@ -6,7 +6,7 @@ module.exports = gql`
     user(id: ID): User
     searchUser(username: String): SearchUser
     users: [User!]!
-    post(id: ID): Post
+    post(postId: ID): Post
     posts: [Post!]!
     userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
@@ -19,10 +19,15 @@ module.exports = gql`
     createComment(comment: CommentInput): Comment
     updatePost(postId: ID, updatedPost: PostInput): Post
     deletePost(id: ID): Post
+    toggleLike(postId: ID, userId: ID): Likes
   }
 
   type Relog {
     user: User!
+  }
+
+  type Likes {
+    likes: [ID!]!
   }
 
   type Auth {
@@ -57,7 +62,7 @@ module.exports = gql`
     avatar: String!
     createdAt: String!
     updatedAt: String!
-    comments: [String!]!
+    comments: [ID!]!
   }
 
   type Post {
@@ -68,6 +73,8 @@ module.exports = gql`
     createdAt: String!
     updatedAt: String!
     comments: [Comment!]!
+    likeCount: Int!
+    likes: [ID!]
   }
 
   input PostInput {

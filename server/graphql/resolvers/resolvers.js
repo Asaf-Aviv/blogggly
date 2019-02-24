@@ -26,7 +26,7 @@ module.exports = {
       return users;
     },
     userPosts: (root, args) => Post.findPostsForUser(args.id),
-    post: (root, args) => Post.findPostById(args.id),
+    post: (root, args) => Post.findPostById(args.postId),
     posts: async () => Post.find({ deleted: false }),
     postComments: async (root, args, { commentLoader }) => {
       const commentIds = await Comment.findCommentsForPost(args.postId);
@@ -48,6 +48,7 @@ module.exports = {
     updatePost: (root, args) => Post.updatePost(args.postId, args.updatedPost),
     deletePost: (root, args) => Post.deletePost(args.id),
     createComment: (root, args) => Comment.createComment(args.comment),
+    toggleLike: (root, args) => Post.toggleLike(args.postId, args.userId),
   },
   User: {
     // posts: (root, args, { postLoader }) => postLoader.load(root.posts),

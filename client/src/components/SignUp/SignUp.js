@@ -8,6 +8,7 @@ import { FormContext } from '../../context';
 const SIGNUP = gql`
   mutation signup($userInput: UserInput) {
     signup(userInput: $userInput) {
+      token
       user {
         _id
         username
@@ -35,6 +36,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
       variables={{ userInput: { username, email, password } }}
       errorPolicy="all"
       onCompleted={({ signup }) => {
+        console.log(signup);
         setLoggedUser(signup.user);
         setToken(signup.token);
         hideForms();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
 import apolloClient from './ApolloClient';
@@ -20,7 +20,7 @@ const App = () => {
   const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const cachedToken = localStorage.getItem('token');
 
     console.log(cachedToken);
@@ -65,7 +65,7 @@ const App = () => {
         </FormContext.Provider>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/posts/:id" component={Post} />
+          <Route path="/posts/:postId" component={Post} />
           <Route path="/users/:username" component={User} />
           <Route path="/profile/posts" component={UserPosts} />
           <Route path="/users" component={Users} />
