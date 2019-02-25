@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { func } from 'prop-types';
 import Loader from '../Loader';
 import { FormContext } from '../../context';
+import utils from '../../utils';
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -34,13 +35,14 @@ const Login = ({ toggleForms, hideForms }) => {
       mutation={LOGIN}
       variables={{ email, password }}
       errorPolicy="all"
+      onError={utils.UIErrorNotifier}
       onCompleted={({ login }) => {
         setLoggedUser(login.user);
         setToken(login.token);
         hideForms();
       }}
     >
-      {(login, { loading, error }) => (
+      {(login, { loading }) => (
         <form
           className="member-form animated fadeIn"
           onClick={e => e.stopPropagation()}
@@ -94,13 +96,6 @@ const Login = ({ toggleForms, hideForms }) => {
             <span className="inner"> Sign Up</span>
           </span>
           {loading && <Loader />}
-          {error && (
-            <pre>
-              {error.graphQLErrors.map(({ message }, i) => (
-                <span key={i}>{message}</span>
-              ))}
-            </pre>
-          )}
         </form>
       )}
     </Mutation>

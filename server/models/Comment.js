@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const conn = require('../db');
-const User = require('./User');
-const Post = require('./Post');
 
 const { Schema } = mongoose;
 
@@ -23,7 +20,29 @@ const CommentSchema = new mongoose.Schema({
     },
   },
   body: { type: String, required: true },
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    get(v) {
+      return v.toString();
+    },
+  }],
 }, { timestamps: true });
+
+CommentSchema.statics.findCommentById = async function (commentId) {
+  const comment = await this.findById(commentId);
+
+  if (!comment) {
+    throw new Error('Comment not found.');
+  }
+
+  return comment;
+};
 
 CommentSchema.statics.findCommentsByIds = async function (commentIds) {
   if (!commentIds || !commentIds.length) {
@@ -53,4 +72,40 @@ CommentSchema.statics.createComment = async function (commentInput) {
   return comment;
 };
 
+CommentSchema.statics.toggleLike = async function (id, userId) {
+  const [comment] = await Promise.all([
+    this.findCommentById(id),
+    User.findUserById(userId),
+  ]);
+
+  const alreadyLike = comment.likes.includes(userId);
+
+  let updatedDoc;
+
+  if (alreadyLike) {
+    updatedDoc = await this.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: { likes: userId },
+        $inc: { likeCount: -1 },
+      },
+      { new: true },
+    );
+  } else {
+    updatedDoc = await this.findOneAndUpdate(
+      { _id: id },
+      {
+        $addToSet: { likes: userId },
+        $inc: { likeCount: 1 },
+      },
+      { new: true },
+    );
+  }
+
+  return { likes: updatedDoc.likes };
+};
 module.exports = mongoose.model('Comment', CommentSchema);
+
+// prevent circular dependencies by requiring after export
+const User = require('./User');
+const Post = require('./Post');

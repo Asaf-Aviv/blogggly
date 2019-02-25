@@ -8,6 +8,7 @@ import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
 import { UserContext } from '../../context';
 import Container from '../Container';
+import utils from '../../utils';
 
 import 'react-quill/dist/quill.snow.css';
 import './PostEditor.sass';
@@ -86,6 +87,7 @@ const PostEditor = () => {
         },
       }}
       errorPolicy="all"
+      onError={utils.UIErrorNotifier}
       onCompleted={({ createPost }) => {
         console.log(createPost);
         setNewPostId(createPost._id);
@@ -126,7 +128,6 @@ const PostEditor = () => {
             >
             Create Post
             </button>
-            {error && JSON.stringify(error)}
           </Container>
         );
       }}

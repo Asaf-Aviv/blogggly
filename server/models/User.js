@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
+const { sampleSize } = require('lodash');
 
 const { Schema } = mongoose;
 
@@ -50,6 +51,12 @@ const UserSchema = new mongoose.Schema({
     },
   }],
 }, { timestamps: true });
+
+UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
+  const user = await this.findUserById(userId);
+  const postIds = sampleSize(user.posts.filter(post => post.id.toString() !== viewingPostId), 3);
+  return Post.find({ _id: { $in: postIds } });
+};
 
 UserSchema.statics.findByEmail = function (email) {
   return this.findOne({ email });
@@ -110,3 +117,5 @@ UserSchema.statics.login = async function (email, password) {
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });
 
 module.exports = mongoose.model('User', UserSchema);
+// prevent circular dependencies by requiring after export
+const Post = require('./Post');

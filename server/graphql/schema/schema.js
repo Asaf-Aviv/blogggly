@@ -10,6 +10,7 @@ module.exports = gql`
     posts: [Post!]!
     userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
+    moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
   }
 
   type Mutation {
@@ -19,7 +20,7 @@ module.exports = gql`
     createComment(comment: CommentInput): Comment
     updatePost(postId: ID, updatedPost: PostInput): Post
     deletePost(id: ID): Post
-    toggleLike(postId: ID, userId: ID): Likes
+    toggleLike(id: ID, userId: ID, isPost: Boolean): Likes
   }
 
   type Relog {
@@ -42,6 +43,8 @@ module.exports = gql`
     body: String!
     createdAt: String!
     updatedAt: String!
+    likeCount: Int!
+    likes: [ID!]!
   }
 
   input CommentInput {
@@ -84,7 +87,7 @@ module.exports = gql`
   }
 
   input UserInput {
-    username: String
+    username: String!
     email: String!
     password: String!
   }

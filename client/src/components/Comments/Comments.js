@@ -22,7 +22,7 @@ const Comments = ({ postId }) => (
           <AddComment postId={postId} />
           <ul className="comments__list">
             {data.postComments.map(comment => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment key={comment._id} comment={comment} postId={postId} />
             ))}
           </ul>
         </div>

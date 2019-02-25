@@ -1,14 +1,9 @@
 require('dotenv').config();
 require('./db');
 
-// const Post = require('./models/Post');
 // const { createFakeData } = require('./utils');
 
 // createFakeData();
-
-// (async () => {
-//   await Post.update({}, { $set: { likes: [] } }, { multi: true });
-// })();
 
 const app = require('./app');
 

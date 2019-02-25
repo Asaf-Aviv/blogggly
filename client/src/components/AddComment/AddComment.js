@@ -3,7 +3,7 @@ import { Mutation } from 'react-apollo';
 import { string } from 'prop-types';
 import { UserContext } from '../../context';
 import queries from '../../graphql/queries';
-import { UIErrorNotifier } from '../../utils';
+import utils from '../../utils';
 
 import './AddComment.sass';
 
@@ -24,7 +24,7 @@ const AddComment = ({ postId }) => {
       }}
       onCompleted={() => setCommentBody('')}
       refetchQueries={[{ query: queries.COMMENTS, variables: { postId } }]}
-      onError={UIErrorNotifier}
+      onError={utils.UIErrorNotifier}
     >
       {(addComment, { loading }) => (
         <form className="add-comment">

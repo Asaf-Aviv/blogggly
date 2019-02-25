@@ -7,6 +7,7 @@ import Container from '../Container';
 import AuthorDetails from '../AuthorDetails';
 import Likes from '../Likes/Likes';
 import queries from '../../graphql/queries';
+import MoreFromAuthor from '../MoreFromAuthor/MoreFromAuthor';
 
 import './Post.sass';
 
@@ -16,7 +17,7 @@ const Post = ({ match: { params: { postId } } }) => (
     variables={{ postId }}
   >
     {({ loading, error, data: { post } }) => {
-      if (loading) return <Container><h1>lading</h1></Container>;
+      if (loading) return <Container><h1>loading</h1></Container>;
       if (error) return <h1>error</h1>;
 
       return (
@@ -28,8 +29,15 @@ const Post = ({ match: { params: { postId } } }) => (
                 <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
               </AuthorDetails>
               <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
-              <Likes likeCount={post.likeCount} postId={postId} likes={post.likes} />
+              <Likes
+                postId={postId}
+                likeCount={post.likeCount}
+                id={postId}
+                likes={post.likes}
+                isPost
+              />
             </article>
+            <MoreFromAuthor authorId={post.author._id} viewingPostId={postId} />
             <Comments postId={post._id} />
           </main>
         </Container>

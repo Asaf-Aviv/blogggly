@@ -29,7 +29,7 @@ exports.createFakeData = async () => {
   await Post.deleteMany();
   await Comment.deleteMany();
 
-  const fakeUsersAndPosts = [...Array(10)]
+  const fakeUsersAndPosts = [...Array(5)]
     .map(async (_, i) => {
       const userInput = {
         username: `testeroni_${i}`,
@@ -39,19 +39,21 @@ exports.createFakeData = async () => {
 
       const user = await User.createUser(userInput);
 
-      const postInput = {
-        author: user._id,
-        title: `${user.username} ${i} post`,
-        body: `
-        Lorem ipsum dolor sit, amet consectetur 
-        adipisicing elit. Dolore laboriosam praesentium ab 
-        animi totam! Quas sapiente ipsa nobis porro unde dignissimos 
-        expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
-        que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
-      `,
-      };
+      return [...Array(5)].map(async (_, i) => { // eslint-disable-line
+        const postInput = {
+          author: user._id,
+          title: `${user.username} ${i} post`,
+          body: `
+          Lorem ipsum dolor sit, amet consectetur 
+          adipisicing elit. Dolore laboriosam praesentium ab 
+          animi totam! Quas sapiente ipsa nobis porro unde dignissimos 
+          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
+        `,
+        };
 
-      return Post.createPost(postInput);
+        return Post.createPost(postInput);
+      });
     });
 
   await Promise.all(fakeUsersAndPosts);

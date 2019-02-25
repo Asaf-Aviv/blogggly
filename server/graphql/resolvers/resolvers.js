@@ -32,6 +32,7 @@ module.exports = {
       const commentIds = await Comment.findCommentsForPost(args.postId);
       return commentLoader.load(commentIds);
     },
+    moreFromAuthor: (root, args) => User.moreFromAuthor(args.authorId, args.viewingPostId),
   },
   Mutation: {
     login: async (root, { email, password }) => {
@@ -48,7 +49,9 @@ module.exports = {
     updatePost: (root, args) => Post.updatePost(args.postId, args.updatedPost),
     deletePost: (root, args) => Post.deletePost(args.id),
     createComment: (root, args) => Comment.createComment(args.comment),
-    toggleLike: (root, args) => Post.toggleLike(args.postId, args.userId),
+    toggleLike: (root, args) => (args.isPost
+      ? Post.toggleLike(args.id, args.userId)
+      : Comment.toggleLike(args.id, args.userId)),
   },
   User: {
     // posts: (root, args, { postLoader }) => postLoader.load(root.posts),

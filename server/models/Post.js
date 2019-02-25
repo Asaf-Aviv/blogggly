@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const conn = require('../db/');
-const User = require('./User');
 
 const { Schema } = mongoose;
 
@@ -78,9 +76,9 @@ PostSchema.statics.findPostById = async function (postId) {
   return post;
 };
 
-PostSchema.statics.toggleLike = async function (postId, userId) {
+PostSchema.statics.toggleLike = async function (id, userId) {
   const [post] = await Promise.all([
-    this.findPostById(postId),
+    this.findPostById(id),
     User.findUserById(userId),
   ]);
 
@@ -92,7 +90,7 @@ PostSchema.statics.toggleLike = async function (postId, userId) {
 
   if (likeIndex === -1) {
     updatedDoc = await this.findOneAndUpdate(
-      { _id: postId },
+      { _id: id },
       {
         $addToSet: { likes: userId },
         $inc: { likeCount: 1 },
@@ -101,7 +99,7 @@ PostSchema.statics.toggleLike = async function (postId, userId) {
     );
   } else {
     updatedDoc = await this.findOneAndUpdate(
-      { _id: postId },
+      { _id: id },
       {
         $pull: { likes: userId },
         $inc: { likeCount: -1 },
@@ -116,7 +114,7 @@ PostSchema.statics.toggleLike = async function (postId, userId) {
 PostSchema.statics.createPost = async function (postInput) {
   const post = new this(postInput);
 
-  const user = await User.findById(post.author);
+  const user = await User.findUserById(post.author);
 
   if (!user) {
     throw new Error('User not found.');
@@ -130,3 +128,6 @@ PostSchema.statics.createPost = async function (postInput) {
 };
 
 module.exports = mongoose.model('Post', PostSchema);
+
+// prevent circular dependencies by requiring after export
+const User = require('./User');

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const TOGGLE_LIKE = gql`
-  mutation toggleLike($postId: ID, $userId: ID) {
-    toggleLike(postId: $postId, userId: $userId) {
+  mutation toggleLike($id: ID, $userId: ID, $isPost: Boolean) {
+    toggleLike(id: $id, userId: $userId, isPost: $isPost) {
       likes
     }
   }
@@ -17,6 +17,7 @@ export const POST = gql`
       createdAt
       updatedAt
       author {
+        _id
         avatar
         username
       }
@@ -67,6 +68,8 @@ export const COMMENTS = gql`
       body
       createdAt
       updatedAt
+      likeCount
+      likes
       author {
         _id
         username
