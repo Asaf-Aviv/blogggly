@@ -7,9 +7,6 @@ const PostSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    get(v) {
-      return v.toString();
-    },
   },
   title: { type: String, required: true },
   body: { type: String, required: true },
@@ -21,18 +18,10 @@ const PostSchema = new mongoose.Schema({
   likes: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    get(v) {
-      return v.toString();
-    },
   }],
   comments: [{
     type: Schema.Types.ObjectId,
     ref: 'Comment',
-    required: true,
-    get(v) {
-      return v.toString();
-    },
   }],
 }, { timestamps: true });
 
@@ -77,38 +66,35 @@ PostSchema.statics.findPostById = async function (postId) {
 };
 
 PostSchema.statics.toggleLike = async function (id, userId) {
-  const [post] = await Promise.all([
+  const [post, user] = await Promise.all([
     this.findPostById(id),
     User.findUserById(userId),
   ]);
 
-  const likeIndex = post.likes.findIndex(
-    likeUserId => likeUserId.toString() === userId.toString(),
-  );
+  const alreadyLike = post.likes
+    .some(postAuthorId => postAuthorId.toString() === userId);
 
-  let updatedDoc;
+  if (alreadyLike) {
+    post.likes = post.likes
+      .filter(postAuthorId => postAuthorId.toString() !== userId);
 
-  if (likeIndex === -1) {
-    updatedDoc = await this.findOneAndUpdate(
-      { _id: id },
-      {
-        $addToSet: { likes: userId },
-        $inc: { likeCount: 1 },
-      },
-      { new: true },
-    );
+    post.likeCount -= 1;
+
+    user.likes.posts = user.likes.posts
+      .filter(postId => postId.toString() !== post._id.toString());
   } else {
-    updatedDoc = await this.findOneAndUpdate(
-      { _id: id },
-      {
-        $pull: { likes: userId },
-        $inc: { likeCount: -1 },
-      },
-      { new: true },
-    );
+    post.likes.push(userId);
+    post.likeCount += 1;
+
+    user.likes.posts.unshift(post._id);
   }
 
-  return { likes: updatedDoc.likes };
+  await Promise.all([
+    post.save(),
+    user.save(),
+  ]);
+
+  return { likes: post.likes };
 };
 
 PostSchema.statics.createPost = async function (postInput) {

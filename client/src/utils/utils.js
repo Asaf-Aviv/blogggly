@@ -6,5 +6,10 @@ export const validateEmail = (email) => {
 };
 
 export const UIErrorNotifier = (err) => {
+  err.graphQLErrors.forEach((e) => {
+    console.log('*'.repeat(20));
+    console.log(e);
+    console.log('*'.repeat(20));
+  });
   err.graphQLErrors.map(({ message }) => Alert.error(message));
 };

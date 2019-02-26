@@ -25,7 +25,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     select: false,
     required: true,
-    unique: false,
     minlength: [6, 'Password is too short'],
     maxlength: [100, 'Password is too long'],
     validate: [/^[^ ]+$/],
@@ -37,24 +36,26 @@ const UserSchema = new mongoose.Schema({
   posts: [{
     type: Schema.Types.ObjectId,
     ref: 'Post',
-    required: true,
-    get(v) {
-      return v.toString();
-    },
   }],
+  likes: {
+    comments: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
+    }],
+    posts: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    }],
+  },
   comments: [{
     type: Schema.Types.ObjectId,
     ref: 'Comment',
-    required: true,
-    get(v) {
-      return v.toString();
-    },
   }],
 }, { timestamps: true });
 
 UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
   const user = await this.findUserById(userId);
-  const postIds = sampleSize(user.posts.filter(post => post.id.toString() !== viewingPostId), 3);
+  const postIds = sampleSize(user.posts.filter(post => post._id.toString() !== viewingPostId), 3);
   return Post.find({ _id: { $in: postIds } });
 };
 

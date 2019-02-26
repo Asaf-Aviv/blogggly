@@ -7,17 +7,11 @@ const CommentSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    get(v) {
-      return v.toString();
-    },
   },
   post: {
     type: Schema.Types.ObjectId,
     ref: 'Post',
     required: true,
-    get(v) {
-      return v.toString();
-    },
   },
   body: { type: String, required: true },
   likeCount: {
@@ -27,10 +21,6 @@ const CommentSchema = new mongoose.Schema({
   likes: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    get(v) {
-      return v.toString();
-    },
   }],
 }, { timestamps: true });
 
@@ -73,37 +63,37 @@ CommentSchema.statics.createComment = async function (commentInput) {
 };
 
 CommentSchema.statics.toggleLike = async function (id, userId) {
-  const [comment] = await Promise.all([
+  const [comment, user] = await Promise.all([
     this.findCommentById(id),
     User.findUserById(userId),
   ]);
 
-  const alreadyLike = comment.likes.includes(userId);
-
-  let updatedDoc;
+  const alreadyLike = comment.likes
+    .some(commentAuthorId => commentAuthorId.toString() === userId);
 
   if (alreadyLike) {
-    updatedDoc = await this.findOneAndUpdate(
-      { _id: id },
-      {
-        $pull: { likes: userId },
-        $inc: { likeCount: -1 },
-      },
-      { new: true },
-    );
+    comment.likes = comment.likes
+      .filter(commentAuthorId => commentAuthorId.toString() !== userId);
+
+    comment.likeCount -= 1;
+
+    user.likes.comments = user.likes.comments
+      .filter(commentId => commentId.toString() !== comment._id.toString());
   } else {
-    updatedDoc = await this.findOneAndUpdate(
-      { _id: id },
-      {
-        $addToSet: { likes: userId },
-        $inc: { likeCount: 1 },
-      },
-      { new: true },
-    );
+    comment.likes.push(userId);
+    comment.likeCount += 1;
+
+    user.likes.comments.unshift(comment._id);
   }
 
-  return { likes: updatedDoc.likes };
+  await Promise.all([
+    comment.save(),
+    user.save(),
+  ]);
+
+  return { likes: comment.likes };
 };
+
 module.exports = mongoose.model('Comment', CommentSchema);
 
 // prevent circular dependencies by requiring after export

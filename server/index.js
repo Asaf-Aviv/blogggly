@@ -1,9 +1,21 @@
 require('dotenv').config();
 require('./db');
 
-// const { createFakeData } = require('./utils');
+// const User = require('./models/User');
+// const Post = require('./models/Post');
+// const Comment = require('./models/Comment');
 
-// createFakeData();
+// (async () => {
+//   await Promise.all([
+//     User.deleteMany(),
+//     Post.deleteMany(),
+//     Comment.deleteMany(),
+//   ]);
+// })();
+
+const { createFakeData } = require('./utils');
+
+createFakeData();
 
 const app = require('./app');
 
