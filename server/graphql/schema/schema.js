@@ -11,6 +11,7 @@ module.exports = gql`
     userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
     moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
+    inbox: Inbox
   }
 
   type Mutation {
@@ -21,6 +22,23 @@ module.exports = gql`
     updatePost(postId: ID, updatedPost: PostInput): Post
     deletePost(id: ID): Post
     toggleLike(id: ID, userId: ID, isPost: Boolean): Likes
+    sendMessage(to: ID, body: String): Message
+  }
+
+  type Message {
+    _id: ID!
+    from: ID!
+    to: ID!
+    body: String!
+    read: Boolean!
+    createdAt: String!
+  }
+
+  type Inbox {
+    sent: [Message!]!
+    inbox: [Message!]!
+    bookmarks: [Message!]!
+    trash: [Message!]!
   }
 
   type Relog {
@@ -66,6 +84,7 @@ module.exports = gql`
     createdAt: String!
     updatedAt: String!
     comments: [ID!]!
+    inbox: Inbox!
   }
 
   type Post {

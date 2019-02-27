@@ -6,18 +6,18 @@ const { generateToken } = require('../../utils');
 module.exports = {
   Query: {
     relog: async (root, args, { isAuth, userId }) => {
-      console.log('relogging', isAuth);
+      console.log('relogging');
 
       if (!isAuth) {
         throw new Error('Unauthorized');
       }
 
-      const user = await User.findById(userId);
+      const user = await User.findUserById(userId);
       return { user };
     },
-    user: (root, args) => User.findUserById(args.id),
-    searchUser: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
+    user: (root, { id }) => User.findUserById(id),
+    searchUser: async (root, { username }) => {
+      const user = await User.findOne({ username });
       return { user };
     },
     users: async (root, args, { userLoader }) => {
@@ -25,14 +25,21 @@ module.exports = {
       users.map(user => userLoader.prime(user._id, user));
       return users;
     },
-    userPosts: (root, args) => Post.findPostsForUser(args.id),
-    post: (root, args) => Post.findPostById(args.postId),
+    userPosts: (root, { id }) => Post.findPostsForUser(id),
+    post: (root, { postId }) => Post.findPostById(postId),
     posts: async () => Post.find({ deleted: false }),
-    postComments: async (root, args, { commentLoader }) => {
-      const commentIds = await Comment.findCommentsForPost(args.postId);
+    postComments: async (root, { postId }, { commentLoader }) => {
+      const commentIds = await Comment.findCommentsForPost(postId);
       return commentLoader.load(commentIds);
     },
-    moreFromAuthor: (root, args) => User.moreFromAuthor(args.authorId, args.viewingPostId),
+    moreFromAuthor: (root, { authorId, viewingPostId }) => (
+      User.moreFromAuthor(authorId, viewingPostId)
+    ),
+    inbox: async (root, args, { userId }) => {
+      if (!userId) throw new Error('Unauthorized');
+      const { inbox } = await User.findUserById(userId, { inbox: 1 });
+      return inbox;
+    },
   },
   Mutation: {
     login: async (root, { email, password }) => {
@@ -45,23 +52,28 @@ module.exports = {
       const token = generateToken(user._id);
       return { user, token };
     },
-    createPost: (root, args) => Post.createPost(args.postInput),
-    updatePost: (root, args) => Post.updatePost(args.postId, args.updatedPost),
-    deletePost: (root, args) => Post.deletePost(args.id),
-    createComment: (root, args) => Comment.createComment(args.comment),
-    toggleLike: (root, args) => (args.isPost
-      ? Post.toggleLike(args.id, args.userId)
-      : Comment.toggleLike(args.id, args.userId)),
+    createPost: (root, { postInput }) => Post.createPost(postInput),
+    updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),
+    deletePost: (root, { id }) => Post.deletePost(id),
+    createComment: (root, { comment }) => Comment.createComment(comment),
+    toggleLike: (root, { isPost, id }, { userId }) => (isPost
+      ? Post.toggleLike(id, userId)
+      : Comment.toggleLike(id, userId)),
+    sendMessage: async (root, { to, body }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized');
+      const message = await User.sendMessage(userId, to, body);
+      return message;
+    },
   },
   User: {
     // posts: (root, args, { postLoader }) => postLoader.load(root.posts),
     // comments: (root, args, { commentLoader }) => commentLoader.load(root.comments),
   },
   Post: {
-    author: (root, args, { userLoader }) => userLoader.load(root.author),
-    comments: (root, args, { commentLoader }) => commentLoader.load(root.comments),
+    author: ({ author }, args, { userLoader }) => userLoader.load(author),
+    comments: ({ comments }, args, { commentLoader }) => commentLoader.load(comments),
   },
   Comment: {
-    author: (root, args, { userLoader }) => userLoader.load(root.author),
+    author: ({ author }, args, { userLoader }) => userLoader.load(author),
   },
 };

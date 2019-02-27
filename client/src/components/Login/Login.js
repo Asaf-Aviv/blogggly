@@ -1,28 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { func } from 'prop-types';
 import Loader from '../Loader';
 import { FormContext } from '../../context';
 import utils from '../../utils';
-
-const LOGIN = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        _id
-        username
-        email
-        posts
-        avatar
-        createdAt
-        updatedAt
-        comments
-      }
-    }
-  }
-`;
+import queries from '../../graphql/queries';
 
 const Login = ({ toggleForms, hideForms }) => {
   const [email, setEmail] = useState('');
@@ -32,7 +14,7 @@ const Login = ({ toggleForms, hideForms }) => {
 
   return (
     <Mutation
-      mutation={LOGIN}
+      mutation={queries.LOGIN}
       variables={{ email, password }}
       errorPolicy="all"
       onError={utils.UIErrorNotifier}

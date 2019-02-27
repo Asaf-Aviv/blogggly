@@ -3,10 +3,11 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const { sampleSize } = require('lodash');
+const MessageSchema = require('./Message');
 
 const { Schema } = mongoose;
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   username: {
     type: String,
     unique: true,
@@ -51,6 +52,12 @@ const UserSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'Comment',
   }],
+  inbox: {
+    sent: [MessageSchema],
+    inbox: [MessageSchema],
+    bookmarks: [MessageSchema],
+    trash: [MessageSchema],
+  },
 }, { timestamps: true });
 
 UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
@@ -67,8 +74,27 @@ UserSchema.statics.comparePasswords = async (password, hashedPassword) => (
   bcrypt.compare(password, hashedPassword)
 );
 
-UserSchema.statics.findUserById = async function (userId) {
-  const user = await this.findById(userId);
+UserSchema.statics.sendMessage = async function (from, to, body) {
+  const [sender, receiver] = await Promise.all([
+    this.findUserById(from),
+    this.findUserById(to),
+  ]);
+
+  const message = { from, to, body };
+
+  sender.inbox.sent.unshift(message);
+  receiver.inbox.inbox.unshift(message);
+
+  await Promise.all([
+    sender.save(),
+    receiver.save(),
+  ]);
+
+  return sender.inbox.sent[0];
+};
+
+UserSchema.statics.findUserById = async function (userId, options) {
+  const user = await this.findById(userId, options);
 
   if (!user) {
     throw new Error('User not found.');

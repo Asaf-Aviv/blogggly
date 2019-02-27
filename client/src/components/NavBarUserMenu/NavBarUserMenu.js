@@ -66,9 +66,9 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile/posts" className="dropdown__link">
-                <i className="dropdown__icon fas fa-envelope" />
-                Messages
+              <Link to="/profile/inbox" className="dropdown__link">
+                <i className="dropdown__icon fas fa-inbox" />
+                Inbox
               </Link>
             </li>
             <li className="dropdown__item">

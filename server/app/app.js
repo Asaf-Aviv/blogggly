@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
 const path = require('path');
 const { ApolloServer } = require('apollo-server-express');
 const isAuth = require('../middleware/isAuth');
@@ -9,6 +11,11 @@ const { createLoaders } = require('../utils');
 const productionMode = process.env.NODE_ENV === 'production';
 
 const app = express();
+
+if (process.env.NODE_ENV !== 'production') {
+  mongoose.set('debug', true);
+  app.use(morgan('dev'));
+}
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use('/public', express.static(path.join(__dirname, '../public')));

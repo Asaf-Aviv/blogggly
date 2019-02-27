@@ -5,10 +5,6 @@ mongoose.connect(process.env.MONGO_URI, mongoDBConfig);
 
 const conn = mongoose.connection;
 
-if (process.env.NODE_ENV !== 'production') {
-  // mongoose.set('debug', true);
-}
-
 mongoose.set('useFindAndModify', false);
 
 conn.on('connected', () => {

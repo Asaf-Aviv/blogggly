@@ -10,6 +10,7 @@ import queries from './graphql/queries';
 import PostEditor from './components/PostEditor';
 import UserPosts from './components/UserPosts';
 import Post from './components/Post';
+import Inbox from './components/Inbox/Inbox';
 import User from './components/User';
 
 import 'react-s-alert/dist/s-alert-default.css';
@@ -68,6 +69,7 @@ const App = () => {
           <Route path="/posts/:postId" component={Post} />
           <Route path="/users/:username" component={User} />
           <Route path="/profile/posts" component={UserPosts} />
+          <Route path="/profile/inbox" component={Inbox} />
           <Route path="/users" component={Users} />
           <Route path="/create" component={PostEditor} />
           <Route render={() => <Redirect to="/" />} />

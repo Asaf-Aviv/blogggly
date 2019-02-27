@@ -5,17 +5,9 @@ require('./db');
 // const Post = require('./models/Post');
 // const Comment = require('./models/Comment');
 
-// (async () => {
-//   await Promise.all([
-//     User.deleteMany(),
-//     Post.deleteMany(),
-//     Comment.deleteMany(),
-//   ]);
-// })();
+// const { createFakeData } = require('./utils');
 
-const { createFakeData } = require('./utils');
-
-createFakeData();
+// createFakeData();
 
 const app = require('./app');
 

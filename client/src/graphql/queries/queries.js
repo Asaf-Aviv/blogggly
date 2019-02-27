@@ -39,8 +39,72 @@ export const RELOG = gql`
         createdAt
         updatedAt
         comments
+        inbox {
+          sent {
+            ...messageFields
+          }
+          inbox {
+            ...messageFields
+          }
+          bookmarks {
+            ...messageFields
+          }
+          trash {
+            ...messageFields
+          }
+        }
       }
     }
+  }
+
+  fragment messageFields on Message {
+    _id
+    from
+    to
+    body
+    read
+    createdAt
+  }
+`;
+
+export const LOGIN = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        _id
+        username
+        email
+        posts
+        avatar
+        createdAt
+        updatedAt
+        comments
+        inbox {
+          sent {
+            ...messageFields
+          }
+          inbox {
+            ...messageFields
+          }
+          bookmarks {
+            ...messageFields
+          }
+          trash {
+            ...messageFields
+          }
+        }
+      }
+    }
+  }
+
+  fragment messageFields on Message {
+    _id
+    from
+    to
+    body
+    read
+    createdAt
   }
 `;
 

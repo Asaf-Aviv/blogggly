@@ -8,7 +8,7 @@ exports.generateToken = (userId) => {
   const token = jwt.sign(
     { userId },
     process.env.JWT_SECRET,
-    { expiresIn: '10m' },
+    { expiresIn: '1h' },
   );
 
   if (!token) {
@@ -29,6 +29,14 @@ exports.createFakeData = async () => {
   await Post.deleteMany();
   await Comment.deleteMany();
 
+  for (let i = 0; i < 1; i++) {
+    await User.createUser({
+      username: 'asafaviv',
+      email: 'avivasaf1@hotmail.com',
+      password: '12345',
+    });
+  }
+
   const fakeUsersAndPosts = [...Array(5)]
     .map(async (_, i) => {
       const userInput = {
@@ -39,7 +47,7 @@ exports.createFakeData = async () => {
 
       const user = await User.createUser(userInput);
 
-      return [...Array(5)].map(async (_, i) => { // eslint-disable-line
+      [...Array(5)].map(async (_, i) => { // eslint-disable-line
         const postInput = {
           author: user._id,
           title: `${user.username} ${i} post`,
@@ -61,13 +69,22 @@ exports.createFakeData = async () => {
   const users = await User.find();
   const posts = await Post.find();
 
-  for (let i = 0; i < posts.length; i += 1) {
-    for (let j = 0; j < users.length; j += 1) {
+  for (const post of posts) {
+    for (const user of users) {
       await Comment.createComment({ // eslint-disable-line
-        author: users[j]._id,
-        post: posts[i]._id,
+        author: user._id,
+        post: post._id,
         body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, cum.',
       });
+    }
+  }
+
+
+  for (const user1 of users) {
+    for (const user2 of users) {
+      if (user1._id !== user2._id) {
+        await User.sendMessage(user1._id, user2._id, 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque, tempora.');
+      }
     }
   }
 };
