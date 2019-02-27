@@ -1,0 +1,67 @@
+.inbox
+  background: #FFF
+  border-radius: 5px
+  display: grid
+  height: calc(100vh - 140px)
+  grid-template-columns: repeat(12, 1fr)
+  grid-template-rows: repeat(12, 1fr)
+  overflow: hidden
+  &__header
+    padding: 0.5rem
+    display: flex
+    background: #000
+    align-items: center
+    grid-column: 1 / 4
+    grid-row: 1 / 2
+  &__searchbar
+    padding: 0.5rem
+    grid-column: 4 / 13
+    background: yellow
+  &__sidebar
+    background: purple
+    grid-column: 1 / 4
+    grid-row: 2 / 13
+    &-menu
+      &-item
+        height: 45px
+        cursor: pointer
+        padding: 0.5rem
+        display: flex
+        align-items: center
+        &:hover
+          background: rgba(255, 255, 255, 0.2)
+      &-icon
+        width: 35px
+        display: flex
+        align-items: center
+        justify-content: center
+  &-content
+    &__container
+      padding: 1rem
+      background: #3e0d0d
+      grid-column: 4 / 13
+      grid-row: 2 / 13
+
+.menu-badge
+  width: 30px
+  height: 25px
+  margin-left: auto
+  border-radius: 4px
+  background: #1b8c8c
+  font-size: 14px
+  display: flex
+  align-items: center
+  justify-content: center
+
+.message
+  font-size: 14px
+  padding: 0.2rem
+  &__from
+    font-weight: 600
+  &:not(:last-of-type)
+    border-bottom: 1px solid #FFF
+  &__menu
+    display: none
+    border: 1px solid #FFF
+    &[data-active="true"]
+      display: block
