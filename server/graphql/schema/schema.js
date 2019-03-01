@@ -2,7 +2,6 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Query {
-    relog: Relog
     user(id: ID): User
     searchUser(username: String): SearchUser
     users: [User!]!
@@ -15,14 +14,57 @@ module.exports = gql`
   }
 
   type Mutation {
-    login(email: String, password: String): Auth
-    signup(userInput: UserInput): Auth
+    relog: CurrentUser
+    login(email: String, password: String): CurrentUser
+    signup(userInput: UserInput): CurrentUser
     createPost(postInput: PostInput): Post
-    createComment(comment: CommentInput): Comment
+    addComment(comment: CommentInput): Post
     updatePost(postId: ID, updatedPost: PostInput): Post
     deletePost(id: ID): Post
-    toggleLike(id: ID, userId: ID, isPost: Boolean): Likes
+    toggleLike(id: ID, userId: ID, isPost: Boolean): ToggleLikeResult
     sendMessage(to: ID, body: String): Message
+    toggleFollow(userIdToFollow: ID): CurrentUser
+  }
+
+  union ToggleLikeResult = Post | Comment
+
+  type CurrentUser {
+    token: String
+    _id: ID!
+    username: String!
+    email: String!
+    posts: [String!]!
+    avatar: String!
+    likes: UserLikes!
+    createdAt: String!
+    inbox: Inbox!
+    comments: [ID!]!
+    followers: [ID!]!
+    following: [ID!]!
+    followersCount: Int!
+    followingCount: Int!
+    tags: [String!]!
+  }
+
+  type UserLikes {
+    posts: [String!]!
+    comments: [String!]!
+  }
+
+  type User {
+    _id: ID!
+    username: String!
+    email: String!
+    posts: [String!]!
+    avatar: String!
+    createdAt: String!
+    comments: [ID!]!
+    likes: UserLikes!
+    followers: [ID!]!
+    following: [ID!]!
+    followersCount: Int!
+    followingCount: Int!
+    tags: [String!]!
   }
 
   type Message {
@@ -60,43 +102,32 @@ module.exports = gql`
     post: Post!
     body: String!
     createdAt: String!
-    updatedAt: String!
     likeCount: Int!
     likes: [ID!]!
-  }
-
-  input CommentInput {
-    author: ID!
-    post: ID!
-    body: String!
   }
 
   type SearchUser {
     user: User
   }
 
-  type User {
-    _id: ID!
-    username: String!
-    email: String!
-    posts: [String!]!
-    avatar: String!
-    createdAt: String!
-    updatedAt: String!
-    comments: [ID!]!
-    inbox: Inbox!
-  }
-
   type Post {
     _id: ID!
     author: User!
     title: String!
+    shortBody: String!
     body: String!
     createdAt: String!
     updatedAt: String!
+    commentsCount: Int!
     comments: [Comment!]!
     likeCount: Int!
-    likes: [ID!]
+    likes: [ID!]!
+    tags: [String!]!
+  }
+
+  input CommentInput {
+    post: ID!
+    body: String!
   }
 
   input PostInput {

@@ -28,7 +28,7 @@ const MessageBoard = ({ messages, active, loggedUserId }) => (
   <ul className="message__menu" data-active={active}>
     {messages.map(message => (
       <li key={message._id} className="message">
-        <span className="message__from">{message.from === loggedUserId ? message.to : message.from}</span>
+        <span className="message__from">{message[message.from === loggedUserId ? 'to' : 'from']}</span>
         <span className="message__body">{message.body}</span>
       </li>
     ))}

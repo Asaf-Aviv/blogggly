@@ -1,48 +1,32 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { func } from 'prop-types';
 import Loader from '../Loader';
-import { FormContext } from '../../context';
-
-const SIGNUP = gql`
-  mutation signup($userInput: UserInput) {
-    signup(userInput: $userInput) {
-      token
-      user {
-        _id
-        username
-        email
-        posts
-        avatar
-        createdAt
-        updatedAt
-        comments
-      }
-    }
-  }
-`;
+import { UserContext } from '../../context';
+import queries from '../../graphql/queries';
+import utils from '../../utils';
 
 const SignUp = ({ toggleForms, hideForms }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setToken, setLoggedUser } = useContext(FormContext);
+  const { setToken, setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
-      mutation={SIGNUP}
+      mutation={queries.SIGNUP}
       variables={{ userInput: { username, email, password } }}
       errorPolicy="all"
-      onCompleted={({ signup }) => {
-        console.log(signup);
-        setLoggedUser(signup.user);
-        setToken(signup.token);
+      onError={utils.UIErrorNotifier}
+      onCompleted={({ signup: currentUser }) => {
+        console.log(currentUser);
+        setLoggedUser(currentUser);
+        setToken(currentUser.token);
         hideForms();
       }}
     >
-      {(signup, { loading, error }) => (
+      {(signup, { loading }) => (
         <form
           className="member-form animated fadeIn"
           onClick={e => e.stopPropagation()}
@@ -113,13 +97,6 @@ const SignUp = ({ toggleForms, hideForms }) => {
             <span className="inner"> Log In</span>
           </span>
           {loading && <Loader />}
-          {error && (
-            <pre>
-              {error.graphQLErrors.map(({ message }, i) => (
-                <span key={i}>{message}</span>
-              ))}
-            </pre>
-          )}
         </form>
       )}
     </Mutation>

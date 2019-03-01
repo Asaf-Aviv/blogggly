@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Query } from 'react-apollo';
 import { shape, string } from 'prop-types';
 import { Redirect } from 'react-router-dom';
@@ -8,46 +8,60 @@ import Container from '../Container';
 import AuthorDetails from '../AuthorDetails';
 import Likes from '../Likes/Likes';
 import queries from '../../graphql/queries';
-import MoreFromAuthor from '../MoreFromAuthor/MoreFromAuthor';
+import MoreFromAuthor from '../MoreFromAuthor';
+import FollowButton from '../FollowButton';
+import utils from '../../utils';
+import { UserContext } from '../../context';
 
 import './Post.sass';
-import utils from '../../utils';
 
-const Post = ({ match: { params: { postId } } }) => (
-  <Query
-    query={queries.POST}
-    variables={{ postId }}
-    onError={utils.UIErrorNotifier}
-  >
-    {({ loading, error, data }) => {
-      if (loading) return <Container><h1>loading</h1></Container>;
-      if (error) return <Redirect to="/" />;
+const Post = ({ match: { params: { postId } } }) => {
+  const { loggedUser } = useContext(UserContext);
 
-      return (
-        <Container>
-          <main>
-            <article className="post">
-              <h1 className="post__title">{data.post.title}</h1>
-              <AuthorDetails {...data.post.author}>
-                <span className="post__date">{moment(+data.post.createdAt).format('LL')}</span>
-              </AuthorDetails>
-              <span className="post__body" dangerouslySetInnerHTML={{ __html: data.post.body }} />
-              <Likes
-                postId={postId}
-                likeCount={data.post.likeCount}
-                id={postId}
-                likes={data.post.likes}
-                isPost
+  return (
+    <Query
+      query={queries.POST}
+      variables={{ postId, withComments: true }}
+      onError={utils.UIErrorNotifier}
+    >
+      {({ loading, error, data: { post } }) => {
+        if (loading) return <Container><h1>loading</h1></Container>;
+        if (error) return <Redirect to="/" />;
+
+        return (
+          <Container>
+            <main>
+              <article className="post">
+                <h1 className="post__title">{post.title}</h1>
+                <AuthorDetails {...post.author}>
+                  <FollowButton
+                    following={!!loggedUser && loggedUser.following.includes(post.author._id)}
+                    authorId={post.author._id}
+                  />
+                  <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
+                </AuthorDetails>
+                <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
+                <Likes
+                  postId={postId}
+                  likeCount={post.likeCount}
+                  id={postId}
+                  likes={post.likes}
+                  isPost
+                />
+              </article>
+              <MoreFromAuthor
+                authorName={post.author.username}
+                authorId={post.author._id}
+                viewingPostId={postId}
               />
-            </article>
-            <MoreFromAuthor authorId={data.post.author._id} viewingPostId={postId} />
-            <Comments postId={data.post._id} />
-          </main>
-        </Container>
-      );
-    }}
-  </Query>
-);
+              <Comments postId={post._id} comments={post.comments} />
+            </main>
+          </Container>
+        );
+      }}
+    </Query>
+  );
+};
 
 Post.propTypes = {
   match: shape({

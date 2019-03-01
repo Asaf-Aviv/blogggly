@@ -47,19 +47,24 @@ CommentSchema.statics.findCommentsForPost = async function (postId) {
   return commentIds;
 };
 
-CommentSchema.statics.createComment = async function (commentInput) {
-  const post = await Post.findPostById(commentInput.post);
-  const user = await User.findUserById(commentInput.author);
+CommentSchema.statics.addComment = async function (commentInput) {
+  const [post, user] = await Promise.all([
+    Post.findPostById(commentInput.post),
+    User.findUserById(commentInput.author),
+  ]);
+
   const comment = new this(commentInput);
 
   post.comments.push(comment._id);
   user.comments.unshift(comment._id);
 
-  await comment.save();
-  await post.save();
-  await user.save();
+  await Promise.all([
+    await comment.save(),
+    await post.save(),
+    await user.save(),
+  ]);
 
-  return comment;
+  return post;
 };
 
 CommentSchema.statics.toggleLike = async function (id, userId) {
@@ -91,7 +96,7 @@ CommentSchema.statics.toggleLike = async function (id, userId) {
     user.save(),
   ]);
 
-  return { likes: comment.likes };
+  return comment;
 };
 
 module.exports = mongoose.model('Comment', CommentSchema);

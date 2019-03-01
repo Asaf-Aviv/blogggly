@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { func } from 'prop-types';
 import Loader from '../Loader';
-import { FormContext } from '../../context';
+import { UserContext } from '../../context';
 import utils from '../../utils';
 import queries from '../../graphql/queries';
 
@@ -10,7 +10,7 @@ const Login = ({ toggleForms, hideForms }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setToken, setLoggedUser } = useContext(FormContext);
+  const { setToken, setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
@@ -18,9 +18,9 @@ const Login = ({ toggleForms, hideForms }) => {
       variables={{ email, password }}
       errorPolicy="all"
       onError={utils.UIErrorNotifier}
-      onCompleted={({ login }) => {
-        setLoggedUser(login.user);
-        setToken(login.token);
+      onCompleted={({ login: currentUser }) => {
+        setLoggedUser(currentUser);
+        setToken(currentUser.token);
         hideForms();
       }}
     >

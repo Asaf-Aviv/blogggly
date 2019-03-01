@@ -1,13 +1,14 @@
 .post-title
   padding: 1rem
   margin: 1rem 0
-  background: none
-  border: 1px solid #e4e4e4
+  background: #FFF
   border-radius: 8px
-  outline-color: #716bcc
+  outline: none
   font-size: 20px
   font-family: inherit
   width: 100%
+  color: #545454
+  resize: none
   max-width: 100%
   min-width: 100%
 
@@ -21,12 +22,20 @@
 
 .ql
   &-editor
+    background: #FFF
     font-size: 18px
   &-toolbar
+    background: #FFF
     font-family: inherit
     border-top-left-radius: 8px
     border-top-right-radius: 8px
   &-container
+    color: #545454
     font-family: inherit
     border-bottom-left-radius: 8px
     border-bottom-right-radius: 8px
+    overflow: hidden
+
+.ql-snow .ql-editor blockquote
+  padding: 0.5rem 1rem
+  border-color: #706acf

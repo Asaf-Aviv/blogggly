@@ -25,25 +25,28 @@ exports.createLoaders = () => ({
 });
 
 exports.createFakeData = async () => {
-  await User.deleteMany();
-  await Post.deleteMany();
-  await Comment.deleteMany();
-
-  for (let i = 0; i < 1; i++) {
-    await User.createUser({
-      username: 'asafaviv',
-      email: 'avivasaf1@hotmail.com',
-      password: '12345',
-    });
-  }
+  await Promise.all([
+    await User.deleteMany(),
+    await Post.deleteMany(),
+    await Comment.deleteMany(),
+  ]);
 
   const fakeUsersAndPosts = [...Array(5)]
     .map(async (_, i) => {
-      const userInput = {
-        username: `testeroni_${i}`,
-        email: `testeroni_${i}@test.com`,
-        password: '12345',
-      };
+      let userInput;
+      if (i) {
+        userInput = {
+          username: `testeroni_${i}`,
+          email: `testeroni_${i}@test.com`,
+          password: '12345',
+        };
+      } else {
+        userInput = {
+          username: 'asafaviv',
+          email: 'avivasaf1@hotmail.com',
+          password: '12345',
+        };
+      }
 
       const user = await User.createUser(userInput);
 
@@ -55,6 +58,16 @@ exports.createFakeData = async () => {
           Lorem ipsum dolor sit, amet consectetur 
           adipisicing elit. Dolore laboriosam praesentium ab 
           animi totam! Quas sapiente ipsa nobis porro unde dignissimos 
+          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
+
+          Loa nobis porro unde dignissimos 
+          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
+
+          Lorem ipsum dolor sit, amet consectetur 
+          adipisicing elit. Dolore laboriosam praesentium ab 
+          animi totam!nde dignissimos 
           expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
           que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
         `,
@@ -71,14 +84,13 @@ exports.createFakeData = async () => {
 
   for (const post of posts) {
     for (const user of users) {
-      await Comment.createComment({ // eslint-disable-line
+      await Comment.addComment({ // eslint-disable-line
         author: user._id,
         post: post._id,
         body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, cum.',
       });
     }
   }
-
 
   for (const user1 of users) {
     for (const user2 of users) {

@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { string } from 'prop-types';
-import { UserContext } from '../../context';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
+import Loader from '../Loader';
 
 import './AddComment.sass';
+import { UserContext } from '../../context';
 
 const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');
 
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
@@ -18,34 +19,45 @@ const AddComment = ({ postId }) => {
       variables={{
         comment: {
           post: postId,
-          author: loggedUser && loggedUser._id,
           body: commentBody,
         },
       }}
-      onCompleted={() => setCommentBody('')}
-      refetchQueries={[{ query: queries.COMMENTS, variables: { postId } }]}
+      onCompleted={({ addComment: { comments } }) => {
+        console.log(comments);
+        setCommentBody('');
+        setLoggedUser({
+          ...loggedUser,
+          comments: [
+            comments[comments.length - 1]._id,
+            ...loggedUser.comments,
+          ],
+        });
+      }}
       onError={utils.UIErrorNotifier}
     >
       {(addComment, { loading }) => (
-        <form className="add-comment">
+        <form
+          className="add-comment"
+          onSubmit={(e) => {
+            e.preventDefault();
+            addComment();
+          }}
+        >
           <textarea
             className="add-comment__textarea"
             onChange={e => setCommentBody(e.target.value)}
             value={commentBody}
             required
             rows="5"
-            placeholder="Add a Comment..."
+            placeholder="Add a Comment"
           />
           <button
             className="btn btn--primary add-comment__btn"
             type="submit"
-            onClick={loading ? null : (e) => {
-              e.preventDefault();
-              addComment();
-            }}
           >
-              Add Comment
+            Add Comment
           </button>
+          {loading && <Loader />}
         </form>
       )}
     </Mutation>

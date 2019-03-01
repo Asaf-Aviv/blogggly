@@ -1,18 +1,7 @@
 import React, { useContext } from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import { UserContext } from '../../context';
-
-const USER_POSTS = gql`
-  query userPosts($id: ID) {
-    userPosts(id: $id) {
-      _id
-      title
-      body
-      createdAt
-    }
-  }
-`;
+import queries from '../../graphql/queries';
 
 const UserPosts = () => {
   const { loggedUser } = useContext(UserContext);
@@ -20,7 +9,7 @@ const UserPosts = () => {
   return (
     loggedUser && (
       <Query
-        query={USER_POSTS}
+        query={queries.USER_POSTS}
         variables={{ id: loggedUser._id }}
       >
         {({ loading, error, data }) => {

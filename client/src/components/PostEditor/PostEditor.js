@@ -2,57 +2,49 @@ import React, {
   useState, useContext, useEffect, useRef,
 } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Redirect } from 'react-router-dom';
+import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
+import debounce from 'lodash.debounce';
 import { UserContext } from '../../context';
 import Container from '../Container';
 import utils from '../../utils';
+import queries from '../../graphql/queries';
 
+import 'highlight.js/styles/railscasts.css';
 import 'react-quill/dist/quill.snow.css';
 import './PostEditor.sass';
 
-const CREATE_POST = gql`
-  mutation createPost($postInput: PostInput) {
-    createPost(postInput: $postInput) {
-      _id
-      title
-      body
-    }
-  }
-`;
+const saveTitleToLocalStorage = debounce((title) => {
+  console.log('saving');
+  localStorage.setItem('title', title);
+}, 1000);
 
-const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-  ['blockquote', 'code-block'],
-
-  [{ header: 1 }, { header: 2 }], // custom button values
-  [{ list: 'ordered' }, { list: 'bullet' }],
-  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-  [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-  [{ direction: 'rtl' }], // text direction
-
-  [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ font: [] }],
-  [{ align: [] }],
-
-  ['clean'], // remove formatting button
-];
+const saveBodyToLocalStorage = debounce((postBody) => {
+  console.log('saving');
+  localStorage.setItem('postBody', postBody);
+}, 1000);
 
 const editorOptions = {
   placeholder: 'Share your story',
   debug: true,
   modules: {
+    syntax: {
+      highlight: text => hljs.highlightAuto(text).value,
+    },
     toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6] }],
+      [{ header: [1, 2, 3, 4, 5, 6, true] }],
+      [{ font: [] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      ['image', 'code-block'],
-      [],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+      ['blockquote', 'code-block', 'image'],
+      [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+      [{ direction: 'rtl' }], // text direction
+      [{ align: [] }],
+      ['clean'], // remove formatting button
     ],
   },
 };
@@ -67,6 +59,10 @@ const PostEditor = () => {
   const { loggedUser } = useContext(UserContext);
 
   useEffect(() => {
+    const cachedTitle = localStorage.getItem('title');
+    const cachedPostBody = localStorage.getItem('postBody');
+    if (cachedTitle) setTitle(cachedTitle);
+    if (cachedPostBody) setBody(cachedPostBody);
     postTitleRef.current.focus();
   }, []);
 
@@ -78,7 +74,7 @@ const PostEditor = () => {
 
   return (
     <Mutation
-      mutation={CREATE_POST}
+      mutation={queries.CREATE_POST}
       variables={{
         postInput: {
           author: loggedUser && loggedUser._id,
@@ -89,7 +85,8 @@ const PostEditor = () => {
       errorPolicy="all"
       onError={utils.UIErrorNotifier}
       onCompleted={({ createPost }) => {
-        console.log(createPost);
+        localStorage.removeItem('title');
+        localStorage.removeItem('postBody');
         setNewPostId(createPost._id);
       }}
     >
@@ -102,13 +99,19 @@ const PostEditor = () => {
               ref={postTitleRef}
               className="post-title"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                saveTitleToLocalStorage(e.target.value);
+              }}
               placeholder="Enter Post title"
-              rows="1"
+              rows="2"
             />
             <ReactQuill
               value={body}
-              onChange={postTest => setBody(postTest)}
+              onChange={(postBody) => {
+                setBody(postBody);
+                saveBodyToLocalStorage(postBody);
+              }}
               {...editorOptions}
             />
             <button
@@ -136,25 +139,3 @@ const PostEditor = () => {
 };
 
 export default PostEditor;
-
-// const PostEditor = () => {
-//   useEffect(() => {
-//     new Quill('#editor', { // eslint-disable-line
-//       theme: 'snow',
-//     });
-//     return () => {
-//       document.querySelector('.ql-toolbar').remove();
-//     };
-//   }, []);
-//   return (
-//     <div id="editor">
-//       <p>Hello World!</p>
-//       <p>
-//         Some initial
-//         <strong>bold</strong>
-//         text
-//       </p>
-//       <br />
-//     </div>
-//   );
-// };

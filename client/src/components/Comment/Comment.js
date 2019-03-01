@@ -1,8 +1,9 @@
 import React from 'react';
-import { shape, string } from 'prop-types';
+import { string } from 'prop-types';
 import moment from 'moment';
 import AuthorDetails from '../AuthorDetails';
 import Likes from '../Likes/Likes';
+import { CommentPropTypes } from '../../propTypes';
 
 import './Comment.sass';
 
@@ -23,17 +24,7 @@ const Comment = ({ comment, postId }) => (
 
 Comment.propTypes = {
   postId: string.isRequired,
-  comment: shape({
-    _id: string.isRequired,
-    body: string.isRequired,
-    createdAt: string.isRequired,
-    updatedAt: string.isRequired,
-    author: shape({
-      _id: string.isRequired,
-      username: string.isRequired,
-      avatar: string.isRequired,
-    }).isRequired,
-  }).isRequired,
+  comment: CommentPropTypes.isRequired,
 };
 
 export default Comment;

@@ -1,25 +1,13 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import { shape, string } from 'prop-types';
+import queries from '../../graphql/queries';
 
 import './User.sass';
 
-const SEARCH_USER = gql`
-  query searchUser($username: String) {
-    searchUser(username: $username) {
-      user {
-        _id
-        username
-        email
-      }
-    }
-  }
-`;
-
 const User = ({ match: { params: { username } } }) => (
   <Query
-    query={SEARCH_USER}
+    query={queries.SEARCH_USER}
     variables={{ username }}
   >
     {({ loading, error, data }) => {

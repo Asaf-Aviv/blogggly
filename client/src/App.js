@@ -5,10 +5,11 @@ import apolloClient from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
 import Home from './components/Home';
-import { UserContext, FormContext } from './context';
+import { UserContext } from './context';
 import queries from './graphql/queries';
 import PostEditor from './components/PostEditor';
 import UserPosts from './components/UserPosts';
+import Posts from './components/Posts';
 import Post from './components/Post';
 import Inbox from './components/Inbox/Inbox';
 import User from './components/User';
@@ -48,9 +49,11 @@ const App = () => {
   const relog = async () => {
     console.log('relogging');
     try {
-      const { data: { relog: { user } } } = await apolloClient.query({ query: queries.RELOG });
-      console.log(user);
-      setLoggedUser(user);
+      const { data: { relog: relogResult } } = await apolloClient.mutate({
+        mutation: queries.RELOG,
+      });
+      console.log(relogResult);
+      setLoggedUser(relogResult);
     } catch (error) {
       console.log('relog error', error.message);
       setToken(null);
@@ -59,13 +62,12 @@ const App = () => {
   };
 
   return (
-    <UserContext.Provider value={{ loggedUser }}>
+    <UserContext.Provider value={{ loggedUser, setLoggedUser, setToken }}>
       <div className="App">
-        <FormContext.Provider value={{ setToken, setLoggedUser }}>
-          <NavBar logout={logout} />
-        </FormContext.Provider>
+        <NavBar logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/posts" exact component={Posts} />
           <Route path="/posts/:postId" component={Post} />
           <Route path="/users/:username" component={User} />
           <Route path="/profile/posts" component={UserPosts} />

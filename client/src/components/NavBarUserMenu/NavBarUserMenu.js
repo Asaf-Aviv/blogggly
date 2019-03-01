@@ -103,7 +103,6 @@ NavBarUserMenu.propTypes = {
     posts: arrayOf(string).isRequired,
     avatar: string.isRequired,
     createdAt: string.isRequired,
-    updatedAt: string.isRequired,
     comments: arrayOf(string).isRequired,
   }),
   logout: func.isRequired,

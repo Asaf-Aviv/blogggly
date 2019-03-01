@@ -8,9 +8,9 @@ import utils from '../../utils';
 import queries from '../../graphql/queries';
 
 const Likes = ({
-  likeCount, id, likes, isPost, postId,
+  likeCount, id, likes, isPost,
 }) => {
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   let likeText;
   const loggedUserAlreadyLike = loggedUser && likes.includes(loggedUser._id);
@@ -26,11 +26,32 @@ const Likes = ({
     <Mutation
       mutation={queries.TOGGLE_LIKE}
       variables={{ id, userId: loggedUser && loggedUser._id, isPost }}
-      refetchQueries={[{
-        query: isPost ? queries.POST : queries.COMMENTS,
-        variables: { postId },
-      }]}
       onError={utils.UIErrorNotifier}
+      onCompleted={({ toggleLike }) => {
+        const likeOnWhat = toggleLike.__typename === 'Post' ? 'posts' : 'comments';
+
+        console.log(likeOnWhat);
+
+        loggedUser.likes[likeOnWhat].includes(toggleLike._id)
+          ? setLoggedUser({
+            ...loggedUser,
+            likes: {
+              ...loggedUser.likes,
+              [likeOnWhat]: loggedUser.likes[likeOnWhat]
+                .filter(likeId => likeId !== toggleLike._id),
+            },
+          })
+          : setLoggedUser({
+            ...loggedUser,
+            likes: {
+              ...loggedUser.likes,
+              [likeOnWhat]: [
+                toggleLike._id,
+                ...loggedUser.likes[likeOnWhat],
+              ],
+            },
+          });
+      }}
     >
       {(toggleLike, { loading }) => (
         <div className="likes__container">
@@ -52,7 +73,6 @@ const Likes = ({
 Likes.propTypes = {
   likeCount: number.isRequired,
   id: string.isRequired,
-  postId: string.isRequired,
   likes: arrayOf(string).isRequired,
   isPost: bool,
 };

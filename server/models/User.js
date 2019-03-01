@@ -30,39 +30,29 @@ const UserSchema = new Schema({
     maxlength: [100, 'Password is too long'],
     validate: [/^[^ ]+$/],
   },
-  avatar: {
-    type: String,
-    default: '/public/assets/avatar/man.svg',
-  },
-  posts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Post',
-  }],
+  avatar: { type: String, default: '/public/assets/avatar/man.svg' },
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   likes: {
-    comments: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Comment',
-    }],
-    posts: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Post',
-    }],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   },
-  comments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Comment',
-  }],
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  followersCount: { type: Number, default: 0 },
+  followingCount: { type: Number, default: 0 },
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   inbox: {
     sent: [MessageSchema],
     inbox: [MessageSchema],
     bookmarks: [MessageSchema],
     trash: [MessageSchema],
   },
+  tags: [String],
 }, { timestamps: true });
 
 UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
   const user = await this.findUserById(userId);
-  const postIds = sampleSize(user.posts.filter(post => post._id.toString() !== viewingPostId), 3);
+  const postIds = sampleSize(user.posts.filter(post => post._id.toString() !== viewingPostId), 4);
   return Post.find({ _id: { $in: postIds } });
 };
 
@@ -103,7 +93,42 @@ UserSchema.statics.findUserById = async function (userId, options) {
   return user;
 };
 
+UserSchema.statics.toggleFollow = async function (currentUserId, userIdTofollow) {
+  const [currentUser, userToFollow] = await Promise.all([
+    this.findUserById(currentUserId),
+    this.findUserById(userIdTofollow),
+  ]);
+
+  const alreadyFollow = currentUser.following
+    .some(followedUser => followedUser._id.toString() === userIdTofollow);
+
+  if (alreadyFollow) {
+    currentUser.following = currentUser.following
+      .filter(followedUser => followedUser._id.toString() !== userIdTofollow);
+
+    userToFollow.followers = userToFollow.followers
+      .filter(followingUser => followingUser._id.toString() !== currentUserId);
+
+    currentUser.followingCount -= 1;
+    userToFollow.followersCount -= 1;
+  } else {
+    currentUser.following.unshift(userIdTofollow);
+    userToFollow.followers.unshift(currentUserId);
+
+    currentUser.followingCount += 1;
+    userToFollow.followersCount += 1;
+  }
+
+  await Promise.all([
+    currentUser.save(),
+    userToFollow.save(),
+  ]);
+
+  return currentUser;
+};
+
 UserSchema.statics.findUsersByIds = async function (userIds) {
+  console.log(userIds);
   if (!userIds || !userIds.length) {
     return [];
   }

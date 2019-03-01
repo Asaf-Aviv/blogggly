@@ -1,50 +1,40 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { string } from 'prop-types';
 import { Query } from 'react-apollo';
 import utils from '../../utils';
 import Container from '../Container';
+import queries from '../../graphql/queries';
+import ShowcaseCard from '../ShowcaseCard';
 
-const MORE_FROM_AUTHOR = gql`
-  query moreFromAuthor($authorId: ID, $viewingPostId: ID) {
-    moreFromAuthor(authorId: $authorId, viewingPostId: $viewingPostId) {
-      _id
-      title
-      body
-      likeCount
-      author {
-        _id
-        username
-      }
-    }
-  }
-`;
+import './MoreFromAuthor.sass';
 
-const MoreFromAuthor = ({ authorId, viewingPostId }) => (
+const MoreFromAuthor = ({ authorId, viewingPostId, authorName }) => (
   <Query
-    query={MORE_FROM_AUTHOR}
+    query={queries.MORE_FROM_AUTHOR}
     variables={{ authorId, viewingPostId }}
     onError={utils.UIErrorNotifier}
   >
     {({ loading, error, data: { moreFromAuthor } }) => {
       if (loading) return <Container><h1>loading</h1></Container>;
-      if (error) return console.log(error) || <h1>error</h1>;
+      if (error) return <Container><h1>Failed to fetch comments.</h1></Container>;
 
-      return moreFromAuthor.map(post => (
-        <div key={post._id} className="author-showcase">
-          <p>{post.title}</p>
-          <p>{post.author.username}</p>
-          <p>{post.body}</p>
-          <i className="heart fa-heart fas" />
-          <span>{post.likeCount}</span>
+      if (!moreFromAuthor.length) return null;
+
+      return (
+        <div className="more-from-author">
+          <h2 className="more-from-author__username">{`More from ${authorName}`}</h2>
+          <div className="more-from-author__container">
+            {moreFromAuthor.map(post => <ShowcaseCard key={post._id} post={post} />)}
+          </div>
         </div>
-      ));
+      );
     }}
   </Query>
 );
 
 MoreFromAuthor.propTypes = {
   authorId: string.isRequired,
+  authorName: string.isRequired,
   viewingPostId: string.isRequired,
 };
 

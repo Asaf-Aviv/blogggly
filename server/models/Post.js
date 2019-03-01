@@ -8,22 +8,23 @@ const PostSchema = new Schema({
     ref: 'User',
     required: true,
   },
+  tags: [String],
   title: { type: String, required: true },
   body: { type: String, required: true },
+  shortBody: String,
   deleted: { type: Boolean, default: false },
-  likeCount: {
-    type: Number,
-    default: 0,
-  },
-  likes: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  }],
-  comments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Comment',
-  }],
+  likeCount: { type: Number, default: 0 },
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  commentsCount: { type: Number, default: 0 },
 }, { timestamps: true });
+
+PostSchema.pre('save', function (done) {
+  if (this.isNew) {
+    this.shortBody = this.body.slice(0, 300).trim();
+  }
+  return done();
+});
 
 PostSchema.statics.deletePost = async function (id) {
   return this.findByIdAndUpdate(
@@ -94,7 +95,7 @@ PostSchema.statics.toggleLike = async function (id, userId) {
     user.save(),
   ]);
 
-  return { likes: post.likes };
+  return post;
 };
 
 PostSchema.statics.createPost = async function (postInput) {
