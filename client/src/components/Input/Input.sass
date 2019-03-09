@@ -1,0 +1,61 @@
+.input
+  border: none
+  font-size: 18px
+  padding-left: 1rem
+  margin-top: 0.5rem
+  width: 100%
+  height: 45px
+  border-radius: 5px
+  &--with-icon
+    padding-left: 2.5rem
+  &__container
+    position: relative
+  &__icon, &__valid, &__invalid
+    position: absolute
+    font-size: 20px
+    top: 50%
+    transform: translateY(calc(-50% + 0.25rem))
+  &__icon
+    left: 0.65rem
+    color: #4d537b
+  &__valid
+    color: #2be000
+    right: 0.65rem
+  &__invalid
+    color: #e00000
+    right: 0.65rem
+
+.tooltip
+  position: absolute
+  top: 21px
+  right: 40px
+  &:hover
+    .tooltip__text
+      display: block
+  &__icon
+    font-size: 18px
+    color: rgba(0, 0, 0, 0.75)
+  &__inner
+    position: relative
+    right: 8.5px
+    top: -25px
+  &__text
+    position: absolute
+    left: 50%
+    transform: translateX(-50%)
+    top: -69px
+    width: 200px
+    background: rgba(0, 0, 0, 0.75)
+    display: none
+    font-size: 10px
+    padding: 0.5rem
+    &:after
+      position: absolute
+      top: 58px
+      right: 83px
+      content: ' '
+      border-color: rgba(0, 0, 0, 0.85) transparent
+      border-style: solid
+      border-width: 10px 10px 0px 10px
+      height: 0px
+      width: 0px

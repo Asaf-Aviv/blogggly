@@ -8,7 +8,7 @@
   display: flex
   justify-content: center
   align-items: center
-  background: rgba(0, 0, 0, 0.2)
+  background: rgba(0, 0, 0, 0.5)
   height: 100vh
   z-index: 200
 
@@ -41,37 +41,12 @@
       color: #e2e0ff
   &__title
     text-align: center
-  &__label
-    position: relative
-    font-weight: 600
-    margin-top: 1.5rem
-  &__icon
-    &:first-child
-      font-size: 20px
-      position: absolute
-      top: 43px
-      left: 10px
-      color: #4d537b
-    &:last-child
-      font-size: 20px
-      position: absolute
-      top: 43px
-      right: 10px
-      color: #2be000
-  &__input
-    border: none
-    font-size: 18px
-    padding-left: 2.3rem
-    margin-top: .5rem
-    width: 100%
-    height: 45px
-    border-radius: 5px
-  &__btn
+  &__submit
     margin: 1.5rem 0
   &__toggle
     cursor: pointer
     padding: .5rem 0
-    .inner
+    &-inner
       color: #2be000
 
 .login-btn
@@ -82,5 +57,10 @@
   padding: .5rem 1.5rem
 
 .forgot
+  cursor: pointer
   color: #c7f4ff
+  padding: 0.5rem 0
   margin-top: 1rem 
+  transition: color 150ms
+  &:hover
+    color: #fff
