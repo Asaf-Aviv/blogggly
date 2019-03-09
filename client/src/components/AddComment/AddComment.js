@@ -40,6 +40,7 @@ const AddComment = ({ postId }) => {
           className="add-comment"
           onSubmit={(e) => {
             e.preventDefault();
+            if (!loggedUser) return;
             addComment();
           }}
         >

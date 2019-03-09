@@ -13,28 +13,47 @@ const UserSchema = new Schema({
     unique: true,
     required: true,
     uniqueCaseInsensitive: true,
-    validate: [/^[a-zA-Z0-9_]+$/, 'Username must contain only Characters, Numbers and Underscores'],
+    validate: [
+      /^[a-zA-Z0-9_]+$/,
+      'Username can contain only Characters, Numbers and Underscores',
+    ],
   },
   email: {
     type: String,
     unique: true,
     required: true,
     uniqueCaseInsensitive: true,
-    validate: [validator.isEmail, "The email you've entered is invalid, Please try again."],
+    validate: [validator.isEmail, 'Invalid email.'],
   },
   password: {
     type: String,
     select: false,
     required: true,
-    minlength: [6, 'Password is too short'],
     maxlength: [100, 'Password is too long'],
-    validate: [/^[^ ]+$/],
+    validate: [
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      'Password must contain atleast eight characters, one letter and one number',
+    ],
   },
   avatar: { type: String, default: '/public/assets/avatar/man.svg' },
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   likes: {
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  },
+  info: {
+    firstname: { type: String, default: '' },
+    lastname: { type: String, default: '' },
+    gender: {
+      type: String,
+      default: '',
+      validate: [
+        /male|female|/,
+        'Gender must be "male" or "female"',
+      ],
+    },
+    dateOfBirth: { type: String, default: '' },
+    country: { type: String, default: '' },
   },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   followersCount: { type: Number, default: 0 },
@@ -50,19 +69,75 @@ const UserSchema = new Schema({
   tags: [String],
 }, { timestamps: true });
 
-UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
-  const user = await this.findUserById(userId);
-  const postIds = sampleSize(user.posts.filter(post => post._id.toString() !== viewingPostId), 4);
-  return Post.find({ _id: { $in: postIds } });
-};
-
-UserSchema.statics.findByEmail = function (email) {
-  return this.findOne({ email });
-};
-
 UserSchema.statics.comparePasswords = async (password, hashedPassword) => (
   bcrypt.compare(password, hashedPassword)
 );
+
+UserSchema.statics.findByEmail = function (email) {
+  return this.findOne({ email: { $regex: email, $options: 'i' } });
+};
+
+UserSchema.statics.findByUsername = function (username) {
+  return this.findOne({ username: { $regex: username, $options: 'i' } });
+};
+
+UserSchema.statics.findUserById = async function (userId, options) {
+  const user = await this.findById(userId, options);
+
+  if (!user) {
+    throw new Error('User not found.');
+  }
+
+  return user;
+};
+
+UserSchema.statics.findUsersByIds = async function (userIds) {
+  if (!userIds || !userIds.length) {
+    return [];
+  }
+
+  return this.find({ _id: { $in: userIds } });
+};
+
+UserSchema.statics.createUser = async function (userInput) {
+  const userExist = await this.findByEmail(userInput.email);
+
+  if (userExist) {
+    throw new Error('User already exists.');
+  }
+
+  const hashedPassword = await bcrypt.hash(userInput.password, 10);
+
+  const user = new this({
+    ...userInput,
+    password: hashedPassword,
+  });
+
+  return user.save();
+};
+
+UserSchema.statics.login = async function (email, password) {
+  const user = await this.findByEmail(email).select('+password');
+
+  if (!user) {
+    throw new Error('User does not exists.');
+  }
+
+  if (!await this.comparePasswords(password, user.password)) {
+    throw new Error('Incorrect password.');
+  }
+
+  return user;
+};
+
+UserSchema.statics.updateInfo = async function (userId, info) {
+  console.log(info);
+  return this.findOneAndUpdate(
+    { _id: userId },
+    { $set: { info, $set: { $dateFromString: { dateString: info.dateOfbirth, format: '%m-%d-%y' } } } },
+    { new: true },
+  );
+};
 
 UserSchema.statics.sendMessage = async function (from, to, body) {
   const [sender, receiver] = await Promise.all([
@@ -81,16 +156,6 @@ UserSchema.statics.sendMessage = async function (from, to, body) {
   ]);
 
   return sender.inbox.sent[0];
-};
-
-UserSchema.statics.findUserById = async function (userId, options) {
-  const user = await this.findById(userId, options);
-
-  if (!user) {
-    throw new Error('User not found.');
-  }
-
-  return user;
 };
 
 UserSchema.statics.toggleFollow = async function (currentUserId, userIdTofollow) {
@@ -127,43 +192,10 @@ UserSchema.statics.toggleFollow = async function (currentUserId, userIdTofollow)
   return currentUser;
 };
 
-UserSchema.statics.findUsersByIds = async function (userIds) {
-  console.log(userIds);
-  if (!userIds || !userIds.length) {
-    return [];
-  }
-  return this.find({ _id: { $in: userIds } });
-};
-
-UserSchema.statics.createUser = async function (userInput) {
-  const userExist = await this.findByEmail(userInput.email);
-
-  if (userExist) {
-    throw new Error('User already exists.');
-  }
-
-  const hashedPassword = await bcrypt.hash(userInput.password, 10);
-
-  const user = new this({
-    ...userInput,
-    password: hashedPassword,
-  });
-
-  return user.save();
-};
-
-UserSchema.statics.login = async function (email, password) {
-  const user = await this.findByEmail(email).select('+password');
-
-  if (!user) {
-    throw new Error('User does not exists.');
-  }
-
-  if (!await this.comparePasswords(password, user.password)) {
-    throw new Error('Incorrect password.');
-  }
-
-  return user;
+UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
+  const user = await this.findUserById(userId);
+  const postIds = sampleSize(user.posts.filter(post => post._id.toString() !== viewingPostId), 4);
+  return Post.find({ _id: { $in: postIds } });
 };
 
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });

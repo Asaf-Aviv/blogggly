@@ -6,6 +6,17 @@ const { generateToken } = require('../../utils');
 module.exports = {
   Query: {
     user: (root, { id }) => User.findUserById(id),
+    getUsersByIds: async (root, { userIds }, { userLoader }) => {
+      const users = await userLoader.loadMany(userIds);
+      console.log(users);
+      return users;
+    },
+    getPostsByIds: async (root, { postIds }, { postLoader }) => (
+      postLoader.loadMany(postIds)
+    ),
+    getCommentsByIds: async (root, { commentIds }, { commentLoader }) => (
+      commentLoader.loadMany(commentIds)
+    ),
     searchUser: async (root, { username }) => {
       const user = await User.findOne({ username });
       return { user };
@@ -18,6 +29,7 @@ module.exports = {
     userPosts: (root, { id }) => Post.findPostsForUser(id),
     post: (root, { postId }) => Post.findPostById(postId),
     posts: async () => Post.find({ deleted: false }),
+    postsByTags: async (root, { tags }) => Post.find({ tags: { $in: tags } }),
     postComments: async (root, { postId }, { commentLoader }) => {
       const commentIds = await Comment.findCommentsForPost(postId);
       return commentLoader.load(commentIds.map(String));
@@ -48,6 +60,10 @@ module.exports = {
       const currentUser = await User.createUser(userInput);
       const token = generateToken(currentUser._id);
       return { ...currentUser._doc, token };
+    },
+    updateUserInfo: (root, { info }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized, Please Login to update your info.');
+      return User.updateInfo(userId, info);
     },
     createPost: (root, { postInput }) => Post.createPost(postInput),
     updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),

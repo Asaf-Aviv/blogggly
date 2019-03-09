@@ -1,15 +1,17 @@
 import React from 'react';
-import './AuthorDetails.sass';
 import {
   string, oneOfType, node, arrayOf,
 } from 'prop-types';
+import UserAvatar from '../UserAvatar';
+
+import './AuthorDetails.sass';
 
 const AuthorDetails = ({ avatar, username, children }) => (
   <div className="author">
-    <img
-      className="author__avatar"
-      src={avatar}
-      alt={username}
+    <UserAvatar
+      width={50}
+      avatar={avatar}
+      username={username}
     />
     <span className="author__username">{username}</span>
     {children}

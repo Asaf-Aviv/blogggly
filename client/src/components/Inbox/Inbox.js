@@ -120,7 +120,7 @@ InboxSidebar.propTypes = {
 const InboxContent = ({ children }) => (
   <main className="inbox-content__container">
     <div className="inbox-content">
-      {children}
+      {children.find(child => child.props.active)}
     </div>
   </main>
 );

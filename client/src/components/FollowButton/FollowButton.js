@@ -5,6 +5,8 @@ import queries from '../../graphql/queries';
 import utils from '../../utils';
 import { UserContext } from '../../context';
 
+import './FollowButton.sass';
+
 const FollowButton = ({ following, authorId }) => {
   const { loggedUser, setLoggedUser } = useContext(UserContext);
 
@@ -18,8 +20,13 @@ const FollowButton = ({ following, authorId }) => {
     >
       {follow => (
         <button
+          className="btn btn--primary follow-btn"
           type="button"
-          onClick={follow}
+          onClick={(e) => {
+            if (!loggedUser) return;
+            follow();
+            e.target.innerHTML = e.target.innerHTML === 'Unfollow' ? 'Follow' : 'Unfollow';
+          }}
         >
           {following ? 'Unfollow' : 'Follow'}
         </button>

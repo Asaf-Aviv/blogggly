@@ -7,6 +7,7 @@ import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
 import debounce from 'lodash.debounce';
+import Select from 'react-select';
 import { UserContext } from '../../context';
 import Container from '../Container';
 import utils from '../../utils';
@@ -16,14 +17,9 @@ import 'highlight.js/styles/railscasts.css';
 import 'react-quill/dist/quill.snow.css';
 import './PostEditor.sass';
 
-const saveTitleToLocalStorage = debounce((title) => {
+const saveToLocalStorage = debounce((key, value) => {
   console.log('saving');
-  localStorage.setItem('title', title);
-}, 1000);
-
-const saveBodyToLocalStorage = debounce((postBody) => {
-  console.log('saving');
-  localStorage.setItem('postBody', postBody);
+  localStorage.setItem(key, value);
 }, 1000);
 
 const editorOptions = {
@@ -49,22 +45,37 @@ const editorOptions = {
   },
 };
 
+const options = [
+  { value: 'Programming', label: 'Programming' },
+  { value: 'React', label: 'React' },
+  { value: 'Art', label: 'Art' },
+  { value: 'Movies', label: 'Movies' },
+  { value: 'Games', label: 'Games' },
+  { value: 'Painting', label: 'Painting' },
+];
+
 const PostEditor = () => {
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [postTitle, setPostTitle] = useState('');
+  const [postBody, setPostBody] = useState('');
   const [newPostId, setNewPostId] = useState('');
+  const [tags, setTags] = useState([]);
 
   const postTitleRef = useRef(null);
+  const quillRef = useRef(null);
 
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   useEffect(() => {
     const cachedTitle = localStorage.getItem('title');
     const cachedPostBody = localStorage.getItem('postBody');
-    if (cachedTitle) setTitle(cachedTitle);
-    if (cachedPostBody) setBody(cachedPostBody);
+    if (cachedTitle) setPostTitle(cachedTitle);
+    if (cachedPostBody) setPostBody(cachedPostBody);
     postTitleRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    console.log('tags', tags);
+  }, [tags]);
 
   if (newPostId) {
     return (
@@ -72,68 +83,95 @@ const PostEditor = () => {
     );
   }
 
+  const handleChange = (selectedOptions) => {
+    if (selectedOptions.length > 5) {
+      Alert.info('You can\'t add more then 5 tags.');
+      return;
+    }
+    setTags(selectedOptions);
+    console.log('Option selected:', selectedOptions);
+  };
+
   return (
     <Mutation
       mutation={queries.CREATE_POST}
       variables={{
         postInput: {
           author: loggedUser && loggedUser._id,
-          title,
-          body,
+          title: postTitle,
+          body: postBody,
+          tags: tags.map(({ value }) => value),
         },
       }}
       errorPolicy="all"
       onError={utils.UIErrorNotifier}
-      onCompleted={({ createPost }) => {
-        localStorage.removeItem('title');
+      onCompleted={({ createPost: newPost }) => {
+        localStorage.removeItem('postTitle');
         localStorage.removeItem('postBody');
-        setNewPostId(createPost._id);
+        setLoggedUser({
+          ...loggedUser,
+          posts: [
+            newPost._id,
+            ...loggedUser.posts,
+          ],
+        });
+        setNewPostId(newPost._id);
       }}
     >
-      {(createPost, { loading, error }) => {
-        if (loading) return <h1>Loading</h1>;
+      {createPost => (
+        <Container>
+          <textarea
+            ref={postTitleRef}
+            className="post-title"
+            value={postTitle}
+            onChange={(e) => {
+              setPostTitle(e.target.value);
+              saveToLocalStorage('postTitle', e.target.value);
+            }}
+            placeholder="Enter Post title"
+            rows="2"
+          />
+          <Select
+            options={options}
+            onChange={handleChange}
+            value={tags}
+            isMulti
+          />
+          <ReactQuill
+            ref={quillRef}
+            value={postBody}
+            onChange={(postBodyMarkdown) => {
+              setPostBody(postBodyMarkdown);
+              saveToLocalStorage('postBody', postBodyMarkdown);
+            }}
+            {...editorOptions}
+          />
+          <button
+            type="button"
+            className="btn btn--primary create-post__btn"
+            onClick={() => {
+              const postBodyLength = quillRef.current.getEditor().getLength();
 
-        return (
-          <Container>
-            <textarea
-              ref={postTitleRef}
-              className="post-title"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                saveTitleToLocalStorage(e.target.value);
-              }}
-              placeholder="Enter Post title"
-              rows="2"
-            />
-            <ReactQuill
-              value={body}
-              onChange={(postBody) => {
-                setBody(postBody);
-                saveBodyToLocalStorage(postBody);
-              }}
-              {...editorOptions}
-            />
-            <button
-              type="button"
-              className="btn btn--primary create-post__btn"
-              onClick={() => {
-                if (!title) {
-                  Alert.error('Please enter post title.');
-                }
-                if (!body) {
-                  Alert.error('Please enter post content.');
-                }
-                if (!title || !body) return;
-                console.log(body);
-                createPost();
-              }}
-            >
-            Create Post
-            </button>
-          </Container>
-        );
-      }}
+              if (!postTitle) {
+                Alert.warning('Please enter post title.');
+              }
+              if (postBodyLength < 2) {
+                Alert.warning('Please enter post content.');
+              }
+              if (!tags.length) {
+                Alert.warning('Please add atleast 1 tag to your post.');
+              }
+
+              // if (!postTitle || !tags.length || postBodyLength < 2) return;
+
+              console.log(postBody);
+              createPost();
+            }}
+          >
+              Create Post
+          </button>
+        </Container>
+      )}
     </Mutation>
   );
 };

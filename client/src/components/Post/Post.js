@@ -14,6 +14,7 @@ import utils from '../../utils';
 import { UserContext } from '../../context';
 
 import './Post.sass';
+import Tags from '../Tags/Tags';
 
 const Post = ({ match: { params: { postId } } }) => {
   const { loggedUser } = useContext(UserContext);
@@ -33,17 +34,22 @@ const Post = ({ match: { params: { postId } } }) => {
             <main>
               <article className="post">
                 <h1 className="post__title">{post.title}</h1>
+                <div className="post__tags">
+                  <Tags tags={post.tags} />
+                </div>
                 <AuthorDetails {...post.author}>
-                  <FollowButton
-                    following={!!loggedUser && loggedUser.following.includes(post.author._id)}
-                    authorId={post.author._id}
-                  />
+                  {post.author._id !== (loggedUser && loggedUser._id) && (
+                    <FollowButton
+                      following={!!loggedUser && loggedUser.following.includes(post.author._id)}
+                      authorId={post.author._id}
+                    />
+                  )}
                   <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
                 </AuthorDetails>
                 <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
                 <Likes
                   postId={postId}
-                  likeCount={post.likeCount}
+                  likesCount={post.likesCount}
                   id={postId}
                   likes={post.likes}
                   isPost

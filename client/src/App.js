@@ -13,6 +13,7 @@ import Posts from './components/Posts';
 import Post from './components/Post';
 import Inbox from './components/Inbox/Inbox';
 import User from './components/User';
+import CurrentUserProfile from './components/CurrentUserProfile';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
@@ -24,8 +25,6 @@ const App = () => {
 
   useLayoutEffect(() => {
     const cachedToken = localStorage.getItem('token');
-
-    console.log(cachedToken);
 
     if (cachedToken) {
       console.log('setting token');
@@ -69,10 +68,11 @@ const App = () => {
           <Route path="/" exact component={Home} />
           <Route path="/posts" exact component={Posts} />
           <Route path="/posts/:postId" component={Post} />
+          <Route path="/users" exact component={Users} />
           <Route path="/users/:username" component={User} />
+          <Route path="/profile" exact component={CurrentUserProfile} />
           <Route path="/profile/posts" component={UserPosts} />
           <Route path="/profile/inbox" component={Inbox} />
-          <Route path="/users" component={Users} />
           <Route path="/create" component={PostEditor} />
           <Route render={() => <Redirect to="/" />} />
         </Switch>
@@ -87,6 +87,5 @@ const App = () => {
     </UserContext.Provider>
   );
 };
-
 
 export default App;

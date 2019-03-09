@@ -15,7 +15,7 @@ const Comment = ({ comment, postId }) => (
     <p className="comment__body">{comment.body}</p>
     <Likes
       id={comment._id}
-      likeCount={comment.likeCount}
+      likesCount={comment.likesCount}
       likes={comment.likes}
       postId={postId}
     />

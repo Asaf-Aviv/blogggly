@@ -8,20 +8,28 @@ const PostSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  tags: [String],
+  tags: {
+    type: Array,
+    required: true,
+    validate: {
+      validator(array) {
+        return (array.length && array.length <= 5) && array.every(v => typeof (v) === 'string');
+      },
+    },
+  },
   title: { type: String, required: true },
   body: { type: String, required: true },
   shortBody: String,
   deleted: { type: Boolean, default: false },
-  likeCount: { type: Number, default: 0 },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  likesCount: { type: Number, default: 0 },
   commentsCount: { type: Number, default: 0 },
 }, { timestamps: true });
 
 PostSchema.pre('save', function (done) {
   if (this.isNew) {
-    this.shortBody = this.body.slice(0, 300).trim();
+    this.shortBody = this.body.slice(0, 150).trim();
   }
   return done();
 });
@@ -44,7 +52,7 @@ PostSchema.statics.findPostsByIds = async function (postIds) {
     return [];
   }
 
-  return postIds.map(pId => this.find({ _id: { $in: pId } }));
+  return this.find({ _id: { $in: postIds } });
 };
 
 PostSchema.statics.updatePost = async function (postId, updatedPost) {
@@ -79,13 +87,13 @@ PostSchema.statics.toggleLike = async function (id, userId) {
     post.likes = post.likes
       .filter(postAuthorId => postAuthorId.toString() !== userId);
 
-    post.likeCount -= 1;
+    post.likesCount -= 1;
 
     user.likes.posts = user.likes.posts
       .filter(postId => postId.toString() !== post._id.toString());
   } else {
     post.likes.push(userId);
-    post.likeCount += 1;
+    post.likesCount += 1;
 
     user.likes.posts.unshift(post._id);
   }

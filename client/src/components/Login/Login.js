@@ -1,6 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { func } from 'prop-types';
+import debounce from 'lodash.debounce';
+import Label from '../Label';
+import Input from '../Input';
 import Loader from '../Loader';
 import { UserContext } from '../../context';
 import utils from '../../utils';
@@ -41,41 +44,39 @@ const Login = ({ toggleForms, hideForms }) => {
             <i className="fas fa-times" />
           </button>
           <h1 className="member-form__title">Login</h1>
-          <label className="member-form__label" htmlFor="email">
-            <i className="member-form__icon fas fa-envelope" />
-            Email
-            <input
-              className="member-form__input"
-              autoComplete="true"
-              type="email"
+          <Label labelFor="email">
+            <Input
+              onChange={setEmail}
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              inputType="email"
+              iconClasses="fas fa-envelope"
+              placeholder="Email"
+              validateFunc={utils.validateEmail}
+              autoComplete
               required
             />
-            <i className="member-form__icon fas fa-check" />
-          </label>
-
-          <label className="member-form__label" htmlFor="password">
-            Password
-            <i className="member-form__icon fas fa-lock" />
-            <input
-              className="member-form__input"
-              autoComplete="true"
-              type="password"
+          </Label>
+          <Label labelFor="password">
+            <Input
+              onChange={setPassword}
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              inputType="password"
+              iconClasses="fas fa-lock"
+              placeholder="Password"
+              validateFunc={utils.validatePassword}
+              tooltipText="Password must contain atleast eight characters, one letter and one number."
+              autoComplete
               required
             />
-            <i className="member-form__icon fas fa-check" />
-          </label>
+          </Label>
           <span className="forgot">Forgot your password?</span>
-          <button className="member-form__btn btn btn--primary" type="submit">Login</button>
+          <button className="member-form__submit btn btn--primary" type="submit">Login</button>
           <span
             className="member-form__toggle"
             onClick={toggleForms}
           >
             Don&apos;t have an account?
-            <span className="inner"> Sign Up</span>
+            <span className="member-form__toggle-inner"> Sign Up</span>
           </span>
           {loading && <Loader />}
         </form>

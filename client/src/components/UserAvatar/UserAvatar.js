@@ -1,17 +1,25 @@
 import React from 'react';
-import { string } from 'prop-types';
+import { string, number } from 'prop-types';
 
 import './UserAvatar.sass';
 
-const UserAvatar = ({ avatar, username }) => (
+const UserAvatar = ({
+  avatar, username, classes, width,
+}) => (
   <figure className="avatar__container">
-    <img className="avatar" src={avatar} alt={username} />
+    <img className={`avatar ${classes}`} width={width} src={avatar} alt={username} />
   </figure>
 );
 
 UserAvatar.propTypes = {
   avatar: string.isRequired,
   username: string.isRequired,
+  width: number.isRequired,
+  classes: string,
+};
+
+UserAvatar.defaultProps = {
+  classes: '',
 };
 
 export default UserAvatar;

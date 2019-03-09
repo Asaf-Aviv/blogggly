@@ -3,10 +3,14 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   type Query {
     user(id: ID): User
-    searchUser(username: String): SearchUser
     users: [User!]!
+    getUsersByIds(userIds: [ID]): [User!]!
+    searchUser(username: String): SearchUser
     post(postId: ID): Post
     posts: [Post!]!
+    getPostsByIds(postIds: [ID]): [Post!]!
+    getCommentsByIds(commentIds: [ID]): [Comment!]!
+    postsByTags(tags: [String]): [Post!]!
     userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
     moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
@@ -17,6 +21,7 @@ module.exports = gql`
     relog: CurrentUser
     login(email: String, password: String): CurrentUser
     signup(userInput: UserInput): CurrentUser
+    updateUserInfo(info: UserInfoInput): CurrentUser
     createPost(postInput: PostInput): Post
     addComment(comment: CommentInput): Post
     updatePost(postId: ID, updatedPost: PostInput): Post
@@ -31,55 +36,73 @@ module.exports = gql`
   type CurrentUser {
     token: String
     _id: ID!
-    username: String!
-    email: String!
-    posts: [String!]!
     avatar: String!
-    likes: UserLikes!
-    createdAt: String!
-    inbox: Inbox!
     comments: [ID!]!
+    createdAt: String!
+    email: String!
     followers: [ID!]!
-    following: [ID!]!
     followersCount: Int!
+    following: [ID!]!
     followingCount: Int!
+    inbox: Inbox!
+    info: UserInfo!
+    likes: UserLikes!
+    posts: [String!]!
     tags: [String!]!
+    username: String!
+  }
+
+  type UserInfo {
+    firstname: String
+    lastname: String
+    gender: String
+    country: String
+    dateOfBirth: String
+  }
+
+  input UserInfoInput {
+    country: String
+    dateOfBirth: String
+    firstname: String
+    gender: String
+    lastname: String
   }
 
   type UserLikes {
-    posts: [String!]!
     comments: [String!]!
+    posts: [String!]!
   }
 
   type User {
     _id: ID!
-    username: String!
-    email: String!
-    posts: [String!]!
     avatar: String!
-    createdAt: String!
     comments: [ID!]!
-    likes: UserLikes!
+    createdAt: String!
+    email: String!
     followers: [ID!]!
-    following: [ID!]!
     followersCount: Int!
+    following: [ID!]!
     followingCount: Int!
+    info: UserInfo!
+    likes: UserLikes!
+    posts: [String!]!
     tags: [String!]!
+    username: String!
   }
 
   type Message {
     _id: ID!
-    from: ID!
-    to: ID!
     body: String!
-    read: Boolean!
     createdAt: String!
+    from: ID!
+    read: Boolean!
+    to: ID!
   }
 
   type Inbox {
-    sent: [Message!]!
-    inbox: [Message!]!
     bookmarks: [Message!]!
+    inbox: [Message!]!
+    sent: [Message!]!
     trash: [Message!]!
   }
 
@@ -99,11 +122,11 @@ module.exports = gql`
   type Comment {
     _id: ID!
     author: User!
-    post: Post!
     body: String!
     createdAt: String!
-    likeCount: Int!
     likes: [ID!]!
+    likesCount: Int!
+    post: Post!
   }
 
   type SearchUser {
@@ -113,32 +136,33 @@ module.exports = gql`
   type Post {
     _id: ID!
     author: User!
-    title: String!
-    shortBody: String!
     body: String!
-    createdAt: String!
-    updatedAt: String!
-    commentsCount: Int!
     comments: [Comment!]!
-    likeCount: Int!
+    commentsCount: Int!
+    createdAt: String!
     likes: [ID!]!
+    likesCount: Int!
+    shortBody: String!
     tags: [String!]!
+    title: String!
+    updatedAt: String!
   }
 
   input CommentInput {
-    post: ID!
     body: String!
+    post: ID!
   }
 
   input PostInput {
     author: ID!
-    title: String!
     body: String!
+    tags: [String!]!
+    title: String!
   }
 
   input UserInput {
-    username: String!
     email: String!
     password: String!
+    username: String!
   }
 `;

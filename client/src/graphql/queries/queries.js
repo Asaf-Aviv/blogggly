@@ -5,12 +5,12 @@ export const TOGGLE_LIKE = gql`
     toggleLike(id: $id, userId: $userId, isPost: $isPost) {
       ... on Post {
         _id
-        likeCount
+        likesCount
         likes
       }
       ... on Comment {
         _id
-        likeCount
+        likesCount
         likes
       }
     }
@@ -27,6 +27,43 @@ export const TOGGLE_FOLLOW = gql`
   }
 `;
 
+export const GET_POSTS_BY_IDS = gql`
+  query getPostsByIds($postIds: [ID]) {
+    getPostsByIds(postIds: $postIds) {
+      _id
+    }
+  }
+`;
+
+export const GET_COMMENTS_BY_IDS = gql`
+  query getCommentsByIds($commentIds: [ID]) {
+    getCommentsByIds(commentIds: $commentIds) {
+      _id
+    }
+  }
+`;
+
+export const GET_USERS_BY_IDS = gql`
+  query getUsersByIds($userIds: [ID]) {
+    getUsersByIds(userIds: $userIds) {
+      _id
+      username
+      avatar
+    }
+  }
+`;
+
+export const GET_USER_LIKES = gql`
+  query getUserLikes($postIds: [ID], $commentIds: [ID]) {
+    posts: getPostsByIds(postIds: $postIds) {
+      _id
+    }
+    comments: getCommentsByIds(commentIds: $commentIds) {
+      _id
+    }
+  }
+`;
+
 export const SEARCH_USER = gql`
   query searchUser($username: String) {
     searchUser(username: $username) {
@@ -34,6 +71,40 @@ export const SEARCH_USER = gql`
         _id
         username
         email
+      }
+    }
+
+  }
+`;
+
+export const UPDATE_USER_INFO = gql`
+  mutation updateUserInfo($info: UserInfoInput) {
+    updateUserInfo(info: $info) {
+      _id
+      info {
+        firstname
+        lastname
+        country
+        gender
+        dateOfBirth
+      }
+    }
+  }
+`;
+
+export const GET_POSTS_BY_TAGS = gql`
+  query postsByTags($tags: [String]) {
+    postsByTags(tags: $tags) {
+      _id
+      title
+      tags
+      createdAt
+      likesCount
+      commentsCount
+      author {
+        _id
+        username
+        avatar
       }
     }
   }
@@ -50,7 +121,6 @@ export const USER_POSTS = gql`
   }
 `;
 
-
 export const RELOG = gql`
   mutation {
     relog {
@@ -66,6 +136,13 @@ export const RELOG = gql`
       followersCount
       followingCount
       tags
+      info {
+        firstname
+        lastname
+        gender
+        dateOfBirth
+        country
+      }
       likes {
         posts
         comments
@@ -113,6 +190,13 @@ export const LOGIN = gql`
       followersCount
       followingCount
       tags
+      info {
+        firstname
+        lastname
+        gender
+        dateOfBirth
+        country
+      }
       likes {
         posts
         comments
@@ -160,6 +244,13 @@ export const SIGNUP = gql`
       followersCount
       followingCount
       tags
+      info {
+        firstname
+        lastname
+        gender
+        dateOfBirth
+        country
+      }
       likes {
         posts
         comments
@@ -206,8 +297,9 @@ export const MORE_FROM_AUTHOR = gql`
     moreFromAuthor(authorId: $authorId, viewingPostId: $viewingPostId) {
       _id
       title
-      shortBody
-      likeCount
+      likesCount
+      commentsCount
+      tags
     }
   }
 `;
@@ -218,7 +310,7 @@ export const COMMENTS = gql`
       _id
       body
       createdAt
-      likeCount
+      likesCount
       likes
       author {
         _id
@@ -239,7 +331,7 @@ export const POST = gql`
       updatedAt
       tags
       commentsCount
-      likeCount
+      likesCount
       likes
       author {
         ...userDetails
@@ -248,7 +340,7 @@ export const POST = gql`
         _id
         body
         createdAt
-        likeCount
+        likesCount
         likes
         author {
           ...userDetails
@@ -289,7 +381,7 @@ export const ADD_COMMENT = gql`
         _id
         body
         createdAt
-        likeCount
+        likesCount
         likes
         author {
           _id

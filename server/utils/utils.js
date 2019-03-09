@@ -71,6 +71,7 @@ exports.createFakeData = async () => {
           expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
           que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
         `,
+          tags: ['React', 'Programming'],
         };
 
         return Post.createPost(postInput);

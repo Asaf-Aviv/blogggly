@@ -9,6 +9,20 @@ require('./db');
 
 // createFakeData();
 
+// (async () => {
+//   await User.updateMany({}, {
+//     $set: {
+//       info: {
+//         firstname: '',
+//         lastname: '',
+//         gender: '',
+//         dateofbirth: '',
+//         country: '',
+//       },
+//     },
+//   });
+// })();
+
 const app = require('./app');
 
 const port = process.env.PORT || 5000;

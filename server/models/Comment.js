@@ -14,7 +14,7 @@ const CommentSchema = new Schema({
     required: true,
   },
   body: { type: String, required: true },
-  likeCount: {
+  likesCount: {
     type: Number,
     default: 0,
   },
@@ -39,7 +39,7 @@ CommentSchema.statics.findCommentsByIds = async function (commentIds) {
     return [];
   }
 
-  return commentIds.map(cId => (cId.length ? this.find({ _id: { $in: cId } }) : []));
+  return this.find({ _id: { $in: commentIds } });
 };
 
 CommentSchema.statics.findCommentsForPost = async function (postId) {
@@ -57,6 +57,8 @@ CommentSchema.statics.addComment = async function (commentInput) {
 
   post.comments.push(comment._id);
   user.comments.unshift(comment._id);
+
+  post.commentsCount += 1;
 
   await Promise.all([
     await comment.save(),
@@ -80,13 +82,13 @@ CommentSchema.statics.toggleLike = async function (id, userId) {
     comment.likes = comment.likes
       .filter(commentAuthorId => commentAuthorId.toString() !== userId);
 
-    comment.likeCount -= 1;
+    comment.likesCount -= 1;
 
     user.likes.comments = user.likes.comments
       .filter(commentId => commentId.toString() !== comment._id.toString());
   } else {
     comment.likes.push(userId);
-    comment.likeCount += 1;
+    comment.likesCount += 1;
 
     user.likes.comments.unshift(comment._id);
   }

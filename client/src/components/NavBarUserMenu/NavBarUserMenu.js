@@ -54,7 +54,7 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile/posts" className="dropdown__link">
+              <Link to="/profile" className="dropdown__link">
                 <i className="dropdown__icon fas fa-user" />
                 Profile
               </Link>
