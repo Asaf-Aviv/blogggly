@@ -106,7 +106,7 @@ UserSchema.statics.createUser = async function (userInput) {
     throw new Error('User already exists.');
   }
 
-  const hashedPassword = await bcrypt.hash(userInput.password, 10);
+  const hashedPassword = await bcrypt.hash(userInput.password, 12);
 
   const user = new this({
     ...userInput,
