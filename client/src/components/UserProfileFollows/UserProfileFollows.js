@@ -10,7 +10,7 @@ const UserProfileFollows = ({ userIds }) => (
     onError={utils.UIErrorNotifier}
     variables={{ userIds }}
   >
-    {({ data: { getUsersByIds: users }, loading }) => {
+    {({ data: { users }, loading }) => {
       if (loading) return <h1>loading</h1>;
 
       return users.map(user => (

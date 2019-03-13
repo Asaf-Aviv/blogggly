@@ -12,7 +12,7 @@ const UsersDetailsDropdown = ({ userIds }) => (
     query={queries.GET_USERS_BY_IDS}
     variables={{ userIds }}
   >
-    {({ loading, error, data: { getUsersByIds: users } }) => {
+    {({ loading, error, data: { users } }) => {
       if (loading) {
         return (
           <div className="user-details-modal" onClick={e => e.stopPropagation()}>
