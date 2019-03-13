@@ -10,7 +10,7 @@ const UserProfilePosts = ({ postIds }) => (
     onError={utils.UIErrorNotifier}
     variables={{ postIds }}
   >
-    {({ data: { getPostsByIds: posts }, loading }) => {
+    {({ data: { posts }, loading }) => {
       if (loading) return <h1>loading</h1>;
 
       return posts.map(post => (

@@ -10,7 +10,7 @@ const UserProfileComments = ({ commentIds }) => (
     onError={utils.UIErrorNotifier}
     variables={{ commentIds }}
   >
-    {({ data: { getCommentsByIds: comments }, loading }) => {
+    {({ data: { comments }, loading }) => {
       if (loading) return <h1>loading</h1>;
 
       return comments.map(comment => (

@@ -29,7 +29,7 @@ export const TOGGLE_FOLLOW = gql`
 
 export const GET_POSTS_BY_IDS = gql`
   query getPostsByIds($postIds: [ID]) {
-    getPostsByIds(postIds: $postIds) {
+    posts: getPostsByIds(postIds: $postIds) {
       _id
     }
   }
@@ -37,7 +37,7 @@ export const GET_POSTS_BY_IDS = gql`
 
 export const GET_COMMENTS_BY_IDS = gql`
   query getCommentsByIds($commentIds: [ID]) {
-    getCommentsByIds(commentIds: $commentIds) {
+    comments: getCommentsByIds(commentIds: $commentIds) {
       _id
     }
   }
@@ -45,7 +45,7 @@ export const GET_COMMENTS_BY_IDS = gql`
 
 export const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [ID]) {
-    getUsersByIds(userIds: $userIds) {
+    users: getUsersByIds(userIds: $userIds) {
       _id
       username
       avatar
@@ -73,7 +73,6 @@ export const SEARCH_USER = gql`
         email
       }
     }
-
   }
 `;
 
@@ -94,7 +93,7 @@ export const UPDATE_USER_INFO = gql`
 
 export const GET_POSTS_BY_TAGS = gql`
   query postsByTags($tags: [String]) {
-    postsByTags(tags: $tags) {
+    posts: postsByTags(tags: $tags) {
       _id
       title
       tags
@@ -112,7 +111,7 @@ export const GET_POSTS_BY_TAGS = gql`
 
 export const USER_POSTS = gql`
   query userPosts($id: ID) {
-    userPosts(id: $id) {
+    posts: userPosts(id: $id) {
       _id
       title
       body
@@ -318,7 +317,7 @@ export const COMMENTS = gql`
         avatar
       }
     }
-  } 
+  }
 `;
 
 export const POST = gql`
