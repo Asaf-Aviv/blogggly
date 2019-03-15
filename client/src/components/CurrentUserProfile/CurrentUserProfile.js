@@ -31,7 +31,6 @@ const CurrentUserProfile = () => {
   return (
     <Container>
       <main className="user-profile">
-        <h1>{loggedUser.username}</h1>
         <UserProfileMenu setCategory={handleMenuClick} />
         {showCategory === 'Information' && <UserProfileInformation userInfo={loggedUser.info} />}
         {showCategory === 'Posts' && <UserProfilePosts postIds={loggedUser.posts} />}

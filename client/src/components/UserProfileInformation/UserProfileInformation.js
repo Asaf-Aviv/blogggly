@@ -8,6 +8,8 @@ import Label from '../Label';
 import Input from '../Input';
 import queries from '../../graphql/queries';
 
+import './UserInformation.sass';
+
 const UserProfileInformation = ({ userInfo }) => {
   const [firstname, setFirstname] = useState(userInfo.firstname);
   const [lastname, setLastname] = useState(userInfo.lastname);
@@ -56,17 +58,33 @@ const UserProfileInformation = ({ userInfo }) => {
                 />
               </Label>
             </div>
-            <CountryDropdown value={country} onChange={val => setCountry(val)} />
-            <select onChange={e => setGender(e.target.value)} value={gender}>
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-            <DatePicker
-              selected={dateOfBirth}
-              onChange={date => setDateOfBirth(date)}
-            />
-            <button className="btn btn--primary" type="submit">Update</button>
+            <div className="user-info__input-group">
+              <Label labelFor="country">
+                <CountryDropdown className="input" value={country} onChange={val => setCountry(val)} />
+              </Label>
+              <Label labelFor="gender">
+                <select
+                  className="input"
+                  onChange={e => setGender(e.target.value)}
+                  value={gender}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </Label>
+            </div>
+            <div className="user-info__input-group">
+              <Label labelFor="date of birth" text="Date Of Birth">
+                <DatePicker
+                  placeholderText="MM/DD/YYYY"
+                  className="input"
+                  selected={dateOfBirth}
+                  onChange={date => setDateOfBirth(date)}
+                />
+              </Label>
+            </div>
+            <button className="btn btn--primary user-info__submit-btn" type="submit">Update</button>
           </form>
         </div>
       )}
