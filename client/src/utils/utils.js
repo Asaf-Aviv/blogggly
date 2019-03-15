@@ -1,39 +1,21 @@
 import Alert from 'react-s-alert';
 
-export const validateEmail = (email, cb) => {
+export const validateEmail = (email) => {
   console.log('validating email');
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const isValid = re.test(String(email).toLowerCase());
-
-  if (cb) {
-    return cb(isValid);
-  }
-
-  return isValid;
+  return re.test(String(email).toLowerCase());
 };
 
-export const validatePassword = (password, cb) => {
+export const validatePassword = (password) => {
   console.log('validating password');
   const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  const isValid = re.test(password);
-
-  if (cb) {
-    return cb(isValid);
-  }
-
-  return isValid;
+  return re.test(password);
 };
 
-export const validateUsername = (password, cb) => {
-  console.log('validating password');
+export const validateUsername = (username) => {
+  console.log('validating username');
   const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  const isValid = re.test(password);
-
-  if (cb) {
-    return cb(isValid);
-  }
-
-  return isValid;
+  return re.test(username);
 };
 
 export const UIErrorNotifier = (err) => {
