@@ -132,6 +132,7 @@ const PostEditor = () => {
             rows="2"
           />
           <Select
+            className="select-categories"
             options={options}
             onChange={handleChange}
             value={tags}
