@@ -10,7 +10,7 @@ import Tags from '../Tags/Tags';
 const ShowcaseCard = ({ post }) => (
   <Link key={post._id} className="showcase__link" to={`/posts/${post._id}`}>
     <div className="showcase__card">
-      <h3 className="showcase__card-title">{post.title}</h3>
+      <h4 className="showcase__card-title">{post.title}</h4>
       <Tags tags={post.tags} />
       <div className="showcase__footer">
         <div className="showcase__feedback">

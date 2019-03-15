@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const DataLoader = require('dataloader');
+const { sample } = require('lodash');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
@@ -23,6 +24,13 @@ exports.createLoaders = () => ({
   postLoader: new DataLoader(postIds => Post.findPostsByIds(postIds)),
   commentLoader: new DataLoader(commentIds => Comment.findCommentsByIds(commentIds)),
 });
+
+const titles = [
+  'que magni, nemo fugit culpa explicabo laborum.',
+  'que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.',
+  'que magni, nemo fugit culpa',
+  'que magni, nemo fugit culpa que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.',
+];
 
 exports.createFakeData = async () => {
   await Promise.all([
@@ -53,7 +61,7 @@ exports.createFakeData = async () => {
       [...Array(5)].map(async (_, i) => { // eslint-disable-line
         const postInput = {
           author: user._id,
-          title: `${user.username} ${i} post`,
+          title: sample(titles),
           body: `
           Lorem ipsum dolor sit, amet consectetur 
           adipisicing elit. Dolore laboriosam praesentium ab 

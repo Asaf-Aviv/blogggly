@@ -3,6 +3,9 @@ import { Query } from 'react-apollo';
 import { arrayOf, string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
+import ShowcaseCard from '../ShowcaseCard';
+
+import './UserProfilePosts.sass';
 
 const UserProfilePosts = ({ postIds }) => (
   <Query
@@ -10,12 +13,16 @@ const UserProfilePosts = ({ postIds }) => (
     onError={utils.UIErrorNotifier}
     variables={{ postIds }}
   >
-    {({ data: { posts }, loading }) => {
-      if (loading) return <h1>loading</h1>;
+    {({ loading, data: { posts } }) => {
+      if (loading) return null;
 
-      return posts.map(post => (
-        <h1 key={post._id}>{post._id}</h1>
-      ));
+      return (
+        <div className="user-profile__posts">
+          {posts.map(post => (
+            <ShowcaseCard post={post} />
+          ))}
+        </div>
+      );
     }}
   </Query>
 );

@@ -31,6 +31,15 @@ export const GET_POSTS_BY_IDS = gql`
   query getPostsByIds($postIds: [ID]) {
     posts: getPostsByIds(postIds: $postIds) {
       _id
+      title
+      likesCount
+      commentsCount
+      tags
+      author {
+        _id
+        username
+        avatar
+      }
     }
   }
 `;

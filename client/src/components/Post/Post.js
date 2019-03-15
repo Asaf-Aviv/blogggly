@@ -12,9 +12,9 @@ import MoreFromAuthor from '../MoreFromAuthor';
 import FollowButton from '../FollowButton';
 import utils from '../../utils';
 import { UserContext } from '../../context';
+import Tags from '../Tags/Tags';
 
 import './Post.sass';
-import Tags from '../Tags/Tags';
 
 const Post = ({ match: { params: { postId } } }) => {
   const { loggedUser } = useContext(UserContext);

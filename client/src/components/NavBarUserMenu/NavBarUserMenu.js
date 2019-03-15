@@ -48,44 +48,29 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
         <div ref={dropdown} className="dropdown__container">
           <ul className="dropdown faster animated fadeIn">
             <li className="dropdown__item">
-              <Link to="/create" className="dropdown__link">
+              <Link to="/create" className="dropdown__link" onClick={() => setIsOpen(false)}>
                 <i className="dropdown__icon fas fa-plus" />
-                Create post
+                Create
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile" className="dropdown__link">
+              <Link to="/profile" className="dropdown__link" onClick={() => setIsOpen(false)}>
                 <i className="dropdown__icon fas fa-user" />
                 Profile
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile/posts" className="dropdown__link">
-                <i className="dropdown__icon fas fa-newspaper" />
-                Posts
-              </Link>
-            </li>
-            <li className="dropdown__item">
-              <Link to="/profile/inbox" className="dropdown__link">
+              <Link to="/profile/inbox" className="dropdown__link" onClick={() => setIsOpen(false)}>
                 <i className="dropdown__icon fas fa-inbox" />
                 Inbox
-              </Link>
-            </li>
-            <li className="dropdown__item">
-              <Link to="/profile/posts" className="dropdown__link">
-                <i className="dropdown__icon fas fa-comments" />
-                Comments
               </Link>
             </li>
             <div className="dropdown__divider" />
             <li
               className="dropdown__item dropdown__link"
               onClick={logout}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') logout();
-              }}
             >
-              <i className="dropdown__icon fas fa-sign-out-alt" />
+              <i className="dropdown__icon fas fa-sign-out-alt" onClick={() => setIsOpen(false)} />
               Log Out
             </li>
           </ul>
