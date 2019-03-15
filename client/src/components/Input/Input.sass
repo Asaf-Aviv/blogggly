@@ -2,38 +2,38 @@
   border: none
   font-size: 18px
   padding-left: 1rem
-  margin-top: 0.5rem
   width: 100%
   height: 45px
   border-radius: 5px
+  color: #545454
   &--with-icon
     padding-left: 2.5rem
+  &__wrapper
+    margin-top: 0.5rem
   &__container
     position: relative
+    display: flex
+    align-items: center
   &__icon, &__valid, &__invalid
     position: absolute
-    font-size: 20px
-    top: 50%
-    transform: translateY(calc(-50% + 0.25rem))
+  &__valid, &__invalid
+    right: 10px
   &__icon
-    left: 0.65rem
+    left: 10px
     color: #4d537b
   &__valid
     color: #2be000
-    right: 0.65rem
   &__invalid
     color: #e00000
-    right: 0.65rem
 
 .tooltip
   position: absolute
-  top: 21px
   right: 40px
   &:hover
     .tooltip__text
       display: block
   &__icon
-    font-size: 18px
+    display: block
     color: rgba(0, 0, 0, 0.75)
   &__inner
     position: relative
