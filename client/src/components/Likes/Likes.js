@@ -35,7 +35,7 @@ const Likes = ({
   });
 
   let likeText;
-  const loggedUserAlreadyLike = loggedUser && likes.includes(loggedUser._id);
+  const loggedUserAlreadyLike = !!loggedUser && likes.includes(loggedUser._id);
 
   if (loggedUser && loggedUserAlreadyLike) {
     const numberOfLikesWithoutUser = likesCount - 1;
