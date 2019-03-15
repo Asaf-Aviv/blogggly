@@ -30,38 +30,39 @@ const Input = ({
   }, [value]);
 
   return (
-    <div className="input__container">
-      {iconClasses && (
-        <i className={`input__icon ${iconClasses}`} />
-      )}
-      <input
-        className={`input ${iconClasses ? 'input--with-icon' : ''} ${classes}`}
-        autoComplete={autoComplete ? 'true' : 'false'}
-        type={inputType}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        required={required}
-      />
-      {validateFunc && value.length > 3 && (
-        <>
-          {isValid
-            ? <i className="input__valid fas fa-check" />
-            : <i className="input__invalid fas fa-times" />
-          }
-        </>
-      )}
-      {tooltipText && (
-        <div className="tooltip">
-          <i className="tooltip__icon fas fa-info-circle" />
-          <div className="tooltip__inner">
-            <span className="tooltip__text">
-              Password must contain atleast eight characters,
-              one letter and one number.
-            </span>
+    <div className="input__wrapper">
+      <div className="input__container">
+        {iconClasses && (
+          <i className={`input__icon ${iconClasses}`} />
+        )}
+        <input
+          className={`input ${iconClasses ? 'input--with-icon' : ''} ${classes}`}
+          autoComplete={autoComplete ? 'true' : 'false'}
+          type={inputType}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          required={required}
+        />
+        {validateFunc && value.length > 3 && (
+          <>
+            {isValid
+              ? <i className="input__valid fas fa-check" />
+              : <i className="input__invalid fas fa-times" />
+            }
+          </>
+        )}
+        {tooltipText && (
+          <div className="tooltip">
+            <i className="tooltip__icon fas fa-info-circle" />
+            <div className="tooltip__inner">
+              <span className="tooltip__text">
+                {tooltipText}
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
