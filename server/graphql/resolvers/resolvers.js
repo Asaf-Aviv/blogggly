@@ -93,7 +93,7 @@ module.exports = {
   },
   Post: {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
-    comments: ({ comments }, args, { commentLoader }) => commentLoader.load(comments),
+    comments: ({ comments }, args, { commentLoader }) => commentLoader.loadMany(comments),
   },
   Comment: {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
