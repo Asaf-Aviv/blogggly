@@ -10,17 +10,11 @@ require('./db');
 // createFakeData();
 
 // (async () => {
-//   await User.updateMany({}, {
-//     $set: {
-//       info: {
-//         firstname: '',
-//         lastname: '',
-//         gender: '',
-//         dateofbirth: '',
-//         country: '',
-//       },
-//     },
-//   });
+//   await Promise.all([
+//     User.remove(),
+//     Post.remove(),
+//     Comment.remove(),
+//   ]);
 // })();
 
 const app = require('./app');

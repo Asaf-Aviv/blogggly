@@ -3,27 +3,27 @@ import { Link } from 'react-router-dom';
 import {
   shape, number, string, arrayOf,
 } from 'prop-types';
+import Tags from '../Tags';
 
 import './ShowcaseCard.sass';
-import Tags from '../Tags/Tags';
 
 const ShowcaseCard = ({ post }) => (
-  <Link key={post._id} className="showcase__link" to={`/posts/${post._id}`}>
-    <div className="showcase__card">
+  <div className="showcase__card">
+    <Link to={`/post/${post._id}`}>
       <h4 className="showcase__card-title">{post.title}</h4>
-      <Tags tags={post.tags} />
-      <div className="showcase__footer">
-        <div className="showcase__feedback">
-          <i className="icon heart fas fa-heart" />
-          <span className="showcase__feedback-count">{post.likesCount}</span>
-        </div>
-        <div className="showcase__feedback">
-          <i className="icon comments-icon fas fa-comments" />
-          <span className="showcase__feedback-count">{post.commentsCount}</span>
-        </div>
+    </Link>
+    <Tags tags={post.tags} />
+    <div className="showcase__footer">
+      <div className="showcase__feedback">
+        <i className="icon heart fas fa-heart" />
+        <span className="showcase__feedback-count">{post.likesCount}</span>
+      </div>
+      <div className="showcase__feedback">
+        <i className="icon comments-icon fas fa-comments" />
+        <span className="showcase__feedback-count">{post.commentsCount}</span>
       </div>
     </div>
-  </Link>
+  </div>
 );
 
 ShowcaseCard.propTypes = {

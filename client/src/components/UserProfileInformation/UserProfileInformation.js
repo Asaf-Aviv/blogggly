@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { CountryDropdown } from 'react-country-region-selector';
 import { shape, string } from 'prop-types';
@@ -9,15 +9,20 @@ import Input from '../Input';
 import queries from '../../graphql/queries';
 
 import './UserInformation.sass';
+import 'react-datepicker/dist/react-datepicker.css';
+import { UserContext } from '../../context';
 
 const UserProfileInformation = ({ userInfo }) => {
   const [firstname, setFirstname] = useState(userInfo.firstname);
   const [lastname, setLastname] = useState(userInfo.lastname);
   const [country, setCountry] = useState(userInfo.country);
   const [gender, setGender] = useState(userInfo.gender);
+  const [bio, setBio] = useState(userInfo.bio);
   const [dateOfBirth, setDateOfBirth] = useState(
     (userInfo.dateOfBirth && new Date(userInfo.dateOfBirth)) || null,
   );
+
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
@@ -26,12 +31,16 @@ const UserProfileInformation = ({ userInfo }) => {
         info: {
           firstname,
           lastname,
+          bio,
           country,
           gender,
           dateOfBirth,
         },
       }}
-      onCompleted={() => Alert.success('Information updated successfully.')}
+      onCompleted={(data) => {
+        setLoggedUser({ ...loggedUser, info: data.updateUserInfo.info });
+        Alert.success('Information updated successfully.');
+      }}
     >
       {updateUserInfo => (
         <div className="user-info">
@@ -81,6 +90,17 @@ const UserProfileInformation = ({ userInfo }) => {
                   className="input"
                   selected={dateOfBirth}
                   onChange={date => setDateOfBirth(date)}
+                />
+              </Label>
+            </div>
+            <div className="user-info__input-group">
+              <Label labelFor="bio">
+                <textarea
+                  placeholder="Bio"
+                  className="user-info__textarea"
+                  value={bio}
+                  onChange={e => setBio(e.target.value)}
+                  rows="6"
                 />
               </Label>
             </div>

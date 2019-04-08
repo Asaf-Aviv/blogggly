@@ -1,0 +1,41 @@
+.confirmation
+  position: relative
+  cursor: default
+  background: #FFF
+  color: var(--main-text-color)
+  padding: 2rem 4rem 2rem 2rem
+  border-radius: 8px
+  flex: 1
+  margin: auto
+  max-width: 768px
+  &__text
+    margin-bottom: 3rem
+  &__modal
+    display: flex
+    position: fixed
+    background: rgba(0, 0, 0, 0.7)
+    top: 0
+    right: 0
+    left: 0
+    padding: 0 1rem
+    height: 100vh
+    z-index: 600
+  &__close-btn
+    position: absolute
+    top: 15px
+    right: 15px
+    background: none
+    border: none
+    display: block
+    width: 45px
+    height: 45px
+    font-size: 25px
+    color: #c1c1c1
+    transition: color 150ms
+    &:hover, &:active
+      color: #000
+  &__btn-group
+    display: flex
+    align-items: flex-end
+    .btn:first-of-type
+      margin: 0 2rem 0 auto

@@ -19,7 +19,7 @@ const UserProfilePosts = ({ postIds }) => (
       return (
         <div className="user-profile__posts">
           {posts.map(post => (
-            <ShowcaseCard post={post} />
+            <ShowcaseCard key={post._id} post={post} />
           ))}
         </div>
       );

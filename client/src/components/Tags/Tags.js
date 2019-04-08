@@ -1,30 +1,21 @@
 import React from 'react';
-import {
-  arrayOf, string, shape, func,
-} from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { arrayOf, string } from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import './Tags.sass';
 
-const Tags = ({ tags, history }) => (
-  <div className="tags">
+const Tags = ({ tags }) => (
+  <div className="tags" onClick={e => e.stopPropagation()}>
     {tags.map(tag => (
-      <span
-        className="tags__item"
-        key={tag}
-        onClick={() => history.push(`/posts?tags=${tag}`)}
-      >
-        {tag}
-      </span>
+      <Link className="tags__link" key={tag} to={`/posts/tag/${tag}`}>
+        <span>{tag}</span>
+      </Link>
     ))}
   </div>
 );
 
 Tags.propTypes = {
   tags: arrayOf(string).isRequired,
-  history: shape({
-    push: func.isRequired,
-  }).isRequired,
 };
 
-export default withRouter(Tags);
+export default Tags;

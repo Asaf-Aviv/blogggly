@@ -15,6 +15,7 @@ const Input = ({
   tooltipText,
   validateFunc,
   required,
+  disabled,
 }) => {
   const [isValid, setIsValid] = useState(false);
 
@@ -43,6 +44,7 @@ const Input = ({
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
           required={required}
+          disabled={!!disabled}
         />
         {validateFunc && value.length > 3 && (
           <>
@@ -73,22 +75,26 @@ Input.propTypes = {
   inputType: string,
   tooltipText: string,
   iconClasses: string,
-  placeholder: string.isRequired,
+  placeholder: string,
   value: string,
   required: bool,
+  disabled: bool,
   validateFunc: func,
-  onChange: func.isRequired,
+  onChange: func,
 };
 
 Input.defaultProps = {
-  inputType: 'text',
-  classes: '',
-  tooltipText: '',
-  value: '',
-  iconClasses: '',
   autoComplete: false,
+  classes: '',
+  inputType: 'text',
+  tooltipText: '',
+  iconClasses: '',
+  placeholder: '',
+  value: '',
   required: false,
+  disabled: false,
   validateFunc: null,
+  onChange: () => {},
 };
 
 

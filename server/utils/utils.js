@@ -93,7 +93,7 @@ exports.createFakeData = async () => {
 
   for (const post of posts) {
     for (const user of users) {
-      await Comment.addComment({ // eslint-disable-line
+      await Comment.addComment({
         author: user._id,
         post: post._id,
         body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, cum.',
@@ -102,8 +102,9 @@ exports.createFakeData = async () => {
   }
 
   for (const user1 of users) {
+    await User.findByIdAndUpdate(user1._id, { $set: { 'info.bio': sample(titles) } });
     for (const user2 of users) {
-      if (user1._id !== user2._id) {
+      if (user1.username !== user2.username) {
         await User.sendMessage(user1._id, user2._id, 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque, tempora.');
       }
     }

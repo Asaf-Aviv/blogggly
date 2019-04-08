@@ -14,22 +14,21 @@ module.exports = {
     getPostsByIds: async (root, { postIds }, { postLoader }) => (
       postLoader.loadMany(postIds)
     ),
-    getCommentsByIds: async (root, { commentIds }, { commentLoader }) => (
-      commentLoader.loadMany(commentIds)
-    ),
-    searchUser: async (root, { username }) => {
-      const user = await User.findOne({ username });
-      return { user };
+    getCommentsByIds: async (root, { commentIds }, { commentLoader }) => {
+      const comments = await commentLoader.loadMany(commentIds);
+      console.log(comments);
+      return comments;
     },
+    getUserByUsername: async (root, { username }) => User.findOne({ username }),
     users: async (root, args, { userLoader }) => {
-      const users = await User.find({});
+      const users = await User.find({}, { inbox: 0 });
       users.map(user => userLoader.prime(user._id, user));
       return users;
     },
     userPosts: (root, { id }) => Post.findPostsForUser(id),
     post: (root, { postId }) => Post.findPostById(postId),
     posts: async () => Post.find({ deleted: false }),
-    postsByTags: async (root, { tags }) => Post.find({ tags: { $in: tags } }),
+    postsByTag: async (root, { tag }) => Post.find({ tags: { $in: [tag] } }),
     postComments: async (root, { postId }, { commentLoader }) => {
       const commentIds = await Comment.findCommentsForPost(postId);
       return commentLoader.load(commentIds.map(String));
@@ -81,7 +80,76 @@ module.exports = {
       const message = await User.sendMessage(userId, to, body);
       return message;
     },
-    toggleFollow: (root, { userIdToFollow }, { userId }) => {
+    bookmarkMessage: async (root, { messageId }, { userId }) => {
+      const user = await User.findUserById(userId);
+
+      const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
+        || user.inbox.sent.find(m => m._id.toString() === messageId);
+
+      message.inBookmarks = !message.inBookmarks;
+      message.inTrash = false;
+
+      await user.save();
+      return message;
+    },
+    moveMessageToTrash: async (root, { messageId }, { userId }) => {
+      const user = await User.findUserById(userId);
+
+      const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
+        || user.inbox.sent.find(m => m._id.toString() === messageId);
+
+      message.inTrash = !message.inTrash;
+      message.inBookmarks = false;
+
+      await user.save();
+      return message;
+    },
+    deleteMessage: async (root, { messageId }, { userId }) => {
+      const user = await User.findUserById(userId);
+
+      let message = user.inbox.inbox
+        .splice(user.inbox.inbox
+          .findIndex(m => m._id.toString() === messageId), 1);
+
+      if (!message.length) {
+        message = user.inbox.sent
+          .splice(user.inbox.sent
+            .findIndex(m => m._id.toString() === messageId), 1);
+      }
+
+      await user.save();
+      return message[0]._id;
+    },
+    deleteComment: async (root, { commentId, postId }, { userId }) => {
+      const [user, post, comment] = await Promise.all([
+        User.findUserById(userId),
+        Post.findPostById(postId),
+        Comment.findCommentById(commentId),
+      ]);
+
+      user.comments = user.comments
+        .filter(cId => cId.toString() !== commentId);
+
+      post.comments = post.comments
+        .filter(commentRefId => commentRefId.toString() !== commentId);
+
+      post.commentsCount -= 1;
+
+      console.log(comment);
+
+      await Promise.all([
+        comment.likes.map(async likeUserId => User.findByIdAndUpdate(
+          likeUserId,
+          { $pull: { 'likes.comments': commentId } },
+        )),
+        Comment.findByIdAndRemove(commentId),
+        post.save(),
+        user.save(),
+      ]);
+
+      return comment._id;
+    },
+    toggleFollow: (root, { userId: userIdToFollow }, { userId }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to follow this author.');
       return User.toggleFollow(userId, userIdToFollow);
     },
@@ -95,7 +163,12 @@ module.exports = {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
     comments: ({ comments }, args, { commentLoader }) => commentLoader.loadMany(comments),
   },
+  Message: {
+    from: ({ from }, args, { userLoader }) => userLoader.load(from.toString()),
+    to: ({ to }, args, { userLoader }) => userLoader.load(to.toString()),
+  },
   Comment: {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
+    post: ({ post }, args, { postLoader }) => postLoader.load(post.toString()),
   },
 };

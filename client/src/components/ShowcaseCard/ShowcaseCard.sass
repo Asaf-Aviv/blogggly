@@ -1,17 +1,15 @@
 .showcase
-  &__link
-    display: block
-    text-decoration: none
-    background: #FFF
-    border-radius: 8px
   &__card
+    border-radius: 8px
+    background: #FFF
     height: 100%
     padding: 1rem
-    color: #545454
+    color: var(--main-text-color)
     display: flex
     flex-direction: column
+    align-items: flex-start
     .tags
-      &__item
+      &__link
         margin-bottom: 0.5rem
     &-title
       margin-bottom: 0.5rem
@@ -20,6 +18,7 @@
     display: flex
     align-items: center
     .heart
+      cursor: default
       margin-right: 0.5rem
     &-count
       font-size: 18px

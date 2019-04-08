@@ -46,21 +46,21 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
       </button>
       {isOpen && (
         <div ref={dropdown} className="dropdown__container">
-          <ul className="dropdown faster animated fadeIn">
+          <ul className="dropdown faster animated fadeIn" onClick={() => setIsOpen(false)}>
             <li className="dropdown__item">
-              <Link to="/create" className="dropdown__link" onClick={() => setIsOpen(false)}>
+              <Link to="/create" className="dropdown__link">
                 <i className="dropdown__icon fas fa-plus" />
                 Create
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile" className="dropdown__link" onClick={() => setIsOpen(false)}>
+              <Link to="/profile/information" className="dropdown__link">
                 <i className="dropdown__icon fas fa-user" />
                 Profile
               </Link>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile/inbox" className="dropdown__link" onClick={() => setIsOpen(false)}>
+              <Link to="/inbox" className="dropdown__link">
                 <i className="dropdown__icon fas fa-inbox" />
                 Inbox
               </Link>
@@ -70,7 +70,7 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
               className="dropdown__item dropdown__link"
               onClick={logout}
             >
-              <i className="dropdown__icon fas fa-sign-out-alt" onClick={() => setIsOpen(false)} />
+              <i className="dropdown__icon fas fa-sign-out-alt" />
               Log Out
             </li>
           </ul>

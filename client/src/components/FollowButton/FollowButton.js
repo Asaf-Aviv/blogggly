@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Mutation } from 'react-apollo';
 import { bool, string } from 'prop-types';
 import queries from '../../graphql/queries';
@@ -7,25 +7,36 @@ import { UserContext } from '../../context';
 
 import './FollowButton.sass';
 
-const FollowButton = ({ following, authorId }) => {
+const FollowButton = ({ following, userId }) => {
   const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const followButtonRef = useRef(null);
+
+  const changeFollowText = () => {
+    const followButtonText = followButtonRef.current.innerHTML;
+    followButtonRef.current.innerHTML = followButtonText === 'Unfollow'
+      ? 'Follow' : 'Unfollow';
+  };
 
   return (
     <Mutation
       mutation={queries.TOGGLE_FOLLOW}
       errorPolicy="all"
-      variables={{ userIdToFollow: authorId }}
-      onError={utils.UIErrorNotifier}
+      variables={{ userId }}
+      onError={(err) => {
+        utils.UIErrorNotifier(err);
+        changeFollowText();
+      }}
       onCompleted={({ toggleFollow }) => setLoggedUser({ ...loggedUser, ...toggleFollow })}
     >
       {follow => (
         <button
-          className="btn btn--primary follow-btn"
+          ref={followButtonRef}
+          className="btn btn--primary btn--sm follow-btn"
           type="button"
-          onClick={(e) => {
+          onClick={() => {
             if (!loggedUser) return;
             follow();
-            e.target.innerHTML = e.target.innerHTML === 'Unfollow' ? 'Follow' : 'Unfollow';
+            changeFollowText();
           }}
         >
           {following ? 'Unfollow' : 'Follow'}
@@ -36,7 +47,7 @@ const FollowButton = ({ following, authorId }) => {
 };
 FollowButton.propTypes = {
   following: bool.isRequired,
-  authorId: string.isRequired,
+  userId: string.isRequired,
 };
 
 export default FollowButton;

@@ -4,13 +4,14 @@ module.exports = gql`
   type Query {
     user(id: ID): User
     users: [User!]!
+    getUserByUsername(username: String): User!
     getUsersByIds(userIds: [ID]): [User!]!
     searchUser(username: String): SearchUser
     post(postId: ID): Post
     posts: [Post!]!
     getPostsByIds(postIds: [ID]): [Post!]!
     getCommentsByIds(commentIds: [ID]): [Comment!]!
-    postsByTags(tags: [String]): [Post!]!
+    postsByTag(tag: String): [Post!]!
     userPosts(id: ID): [Post!]!
     postComments(postId: ID): [Comment!]!
     moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
@@ -28,7 +29,11 @@ module.exports = gql`
     deletePost(id: ID): Post
     toggleLike(id: ID, userId: ID, isPost: Boolean): ToggleLikeResult
     sendMessage(to: ID, body: String): Message
-    toggleFollow(userIdToFollow: ID): CurrentUser
+    bookmarkMessage(messageId: ID): Message
+    moveMessageToTrash(messageId: ID): Message
+    deleteMessage(messageId: ID): ID
+    deleteComment(commentId: ID, postId: ID): ID
+    toggleFollow(userId: ID): CurrentUser
   }
 
   union ToggleLikeResult = Post | Comment
@@ -53,19 +58,21 @@ module.exports = gql`
   }
 
   type UserInfo {
-    firstname: String
-    lastname: String
-    gender: String
-    country: String
+    firstname: String!
+    lastname: String!
+    bio: String!
+    gender: String!
+    country: String!
     dateOfBirth: String
   }
 
   input UserInfoInput {
+    firstname: String
+    lastname: String
+    bio: String
+    gender: String
     country: String
     dateOfBirth: String
-    firstname: String
-    gender: String
-    lastname: String
   }
 
   type UserLikes {
@@ -94,16 +101,16 @@ module.exports = gql`
     _id: ID!
     body: String!
     createdAt: String!
-    from: ID!
+    from: User!
     read: Boolean!
-    to: ID!
+    inBookmarks: Boolean!
+    inTrash: Boolean!
+    to: User!
   }
 
   type Inbox {
-    bookmarks: [Message!]!
     inbox: [Message!]!
     sent: [Message!]!
-    trash: [Message!]!
   }
 
   type Relog {

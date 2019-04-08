@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import Inbox from '../../components/Inbox';
 
 export const TOGGLE_LIKE = gql`
   mutation toggleLike($id: ID, $userId: ID, $isPost: Boolean) {
@@ -18,8 +19,8 @@ export const TOGGLE_LIKE = gql`
 `;
 
 export const TOGGLE_FOLLOW = gql`
-  mutation toggleFollow($userIdToFollow: ID) {
-    toggleFollow(userIdToFollow: $userIdToFollow) {
+  mutation toggleFollow($userId: ID) {
+    toggleFollow(userId: $userId) {
       _id
       following
       followingCount
@@ -44,10 +45,55 @@ export const GET_POSTS_BY_IDS = gql`
   }
 `;
 
+export const COMMENTS = gql`
+  query postComments($postId: ID) {
+    postComments(postId: $postId) {
+      _id
+      body
+      createdAt
+      likesCount
+      likes
+      author {
+        _id
+        username
+        avatar
+      }
+    }
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($commentId: ID, $postId: ID) {
+    deleteComment(commentId: $commentId, postId: $postId)
+  }
+`;
+
 export const GET_COMMENTS_BY_IDS = gql`
-  query getCommentsByIds($commentIds: [ID]) {
+  query getCommentsByIds(
+    $commentIds: [ID],
+    $withPostInfo: Boolean = false,
+    $withAuthorInfo: Boolean = false
+  ) {
     comments: getCommentsByIds(commentIds: $commentIds) {
       _id
+      body
+      createdAt
+      likesCount
+      likes
+      post @include (if: $withPostInfo) {
+        _id
+        title
+        author {
+          _id
+          username
+          avatar
+        }
+      }
+      author @include (if: $withAuthorInfo) {
+        _id
+        username
+        avatar
+      }
     }
   }
 `;
@@ -58,6 +104,21 @@ export const GET_USERS_BY_IDS = gql`
       _id
       username
       avatar
+      createdAt
+      info {
+        bio
+      }
+    }
+  }
+`;
+
+export const GET_USER_BY_USERNAME = gql`
+  query getUserByUsername($username: String) {
+    user: getUserByUsername(username: $username) {
+      _id
+      username
+      avatar
+      createdAt
     }
   }
 `;
@@ -66,22 +127,32 @@ export const GET_USER_LIKES = gql`
   query getUserLikes($postIds: [ID], $commentIds: [ID]) {
     posts: getPostsByIds(postIds: $postIds) {
       _id
+      title
+      likes
+      likesCount
+      author {
+        ...userDetails
+      }
     }
     comments: getCommentsByIds(commentIds: $commentIds) {
       _id
-    }
-  }
-`;
-
-export const SEARCH_USER = gql`
-  query searchUser($username: String) {
-    searchUser(username: $username) {
-      user {
+      body
+      likes
+      likesCount
+      post {
         _id
-        username
-        email
+        title
+      }
+      author {
+        ...userDetails
       }
     }
+  }
+
+  fragment userDetails on User {
+    _id
+    username
+    avatar
   }
 `;
 
@@ -100,9 +171,9 @@ export const UPDATE_USER_INFO = gql`
   }
 `;
 
-export const GET_POSTS_BY_TAGS = gql`
-  query postsByTags($tags: [String]) {
-    posts: postsByTags(tags: $tags) {
+export const GET_POSTS_BY_TAG = gql`
+  query postsByTag($tag: String) {
+    posts: postsByTag(tag: $tag) {
       _id
       title
       tags
@@ -129,6 +200,110 @@ export const USER_POSTS = gql`
   }
 `;
 
+export const BOOKMARK_MESSAGE = gql`
+  mutation bookmarkMessage($messageId: ID) {
+    bookmarkMessage(messageId: $messageId) {
+      _id
+      read
+      createdAt
+      body
+      inBookmarks
+      inTrash
+      from {
+        ...userSummaryFields
+      }
+      to {
+        ...userSummaryFields
+      }
+    }
+  }
+
+  fragment userSummaryFields on User {
+    _id
+    username
+    avatar
+  }
+`;
+
+export const MOVE_MESSAGE_TO_TRASH = gql`
+  mutation moveMessageToTrash($messageId: ID) {
+    moveMessageToTrash(messageId: $messageId) {
+      _id
+      read
+      createdAt
+      body
+      inBookmarks
+      inTrash
+      from {
+        ...userSummaryFields
+      }
+      to {
+        ...userSummaryFields
+      }
+    }
+  }
+
+  fragment userSummaryFields on User {
+    _id
+    username
+    avatar
+  }
+`;
+
+export const SEND_MESSAGE = gql`
+  mutation sendMessage($to: ID, $body: String) {
+    sendMessage(to: $to, body: $body) {
+      _id
+      body
+      createdAt
+      from {
+        ...userSummaryFields
+      }
+      read
+      inBookmarks
+      inTrash
+      to {
+        ...userSummaryFields
+      }
+    }
+  }
+
+  fragment userSummaryFields on User {
+    _id
+    username
+    avatar
+  }
+`;
+
+export const DELETE_MESSAGE = gql`
+  mutation deleteMessage($messageId: ID) {
+    deleteMessage(messageId: $messageId)
+  }
+`;
+
+Inbox.fragments = {
+  message: gql`
+    fragment messageFields on Message {
+      _id
+      createdAt
+      body
+      read
+      inBookmarks
+      inTrash
+      from {
+        _id
+        username
+        avatar
+      }
+      to {
+        _id
+        username
+        avatar
+      }
+    }
+  `,
+};
+
 export const RELOG = gql`
   mutation {
     relog {
@@ -147,6 +322,7 @@ export const RELOG = gql`
       info {
         firstname
         lastname
+        bio
         gender
         dateOfBirth
         country
@@ -156,30 +332,16 @@ export const RELOG = gql`
         comments
       }
       inbox {
-        sent {
-          ...messageFields
-        }
         inbox {
           ...messageFields
         }
-        bookmarks {
-          ...messageFields
-        }
-        trash {
+        sent {
           ...messageFields
         }
       }
     }
   }
-
-  fragment messageFields on Message {
-    _id
-    from
-    to
-    body
-    read
-    createdAt
-  }
+  ${Inbox.fragments.message}
 `;
 
 export const LOGIN = gql`
@@ -201,6 +363,7 @@ export const LOGIN = gql`
       info {
         firstname
         lastname
+        bio
         gender
         dateOfBirth
         country
@@ -210,16 +373,10 @@ export const LOGIN = gql`
         comments
       }
       inbox {
-        sent {
-          ...messageFields
-        }
         inbox {
           ...messageFields
         }
-        bookmarks {
-          ...messageFields
-        }
-        trash {
+        sent {
           ...messageFields
         }
       }
@@ -228,11 +385,21 @@ export const LOGIN = gql`
 
   fragment messageFields on Message {
     _id
-    from
-    to
+    createdAt
     body
     read
-    createdAt
+    inBookmarks
+    inTrash
+    from {
+      _id
+      username
+      avatar
+    }
+    to {
+      _id
+      username
+      avatar
+    }
   }
 `;
 
@@ -255,6 +422,7 @@ export const SIGNUP = gql`
       info {
         firstname
         lastname
+        bio
         gender
         dateOfBirth
         country
@@ -264,16 +432,10 @@ export const SIGNUP = gql`
         comments
       }
       inbox {
-        sent {
-          ...messageFields
-        }
         inbox {
           ...messageFields
         }
-        bookmarks {
-          ...messageFields
-        }
-        trash {
+        sent {
           ...messageFields
         }
       }
@@ -282,11 +444,21 @@ export const SIGNUP = gql`
 
   fragment messageFields on Message {
     _id
-    from
-    to
+    createdAt
     body
     read
-    createdAt
+    inBookmarks
+    inTrash
+    from {
+      _id
+      username
+      avatar
+    }
+    to {
+      _id
+      username
+      avatar
+    }
   }
 `;
 
@@ -308,23 +480,6 @@ export const MORE_FROM_AUTHOR = gql`
       likesCount
       commentsCount
       tags
-    }
-  }
-`;
-
-export const COMMENTS = gql`
-  query postComments($postId: ID) {
-    postComments(postId: $postId) {
-      _id
-      body
-      createdAt
-      likesCount
-      likes
-      author {
-        _id
-        username
-        avatar
-      }
     }
   }
 `;

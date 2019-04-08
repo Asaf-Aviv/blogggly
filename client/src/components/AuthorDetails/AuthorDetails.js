@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   string, oneOfType, node, arrayOf,
 } from 'prop-types';
@@ -13,7 +14,9 @@ const AuthorDetails = ({ avatar, username, children }) => (
       avatar={avatar}
       username={username}
     />
-    <span className="author__username">{username}</span>
+    <Link to={`/user/${username}`} className="author__username-link">
+      {username}
+    </Link>
     {children}
   </div>
 );

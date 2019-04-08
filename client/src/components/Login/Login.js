@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { func } from 'prop-types';
-import debounce from 'lodash.debounce';
 import Label from '../Label';
 import Input from '../Input';
 import Loader from '../Loader';

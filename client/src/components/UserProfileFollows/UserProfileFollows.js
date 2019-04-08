@@ -3,6 +3,9 @@ import { Query } from 'react-apollo';
 import { arrayOf, string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
+import UserSummaryCard from '../UserSummaryCard';
+
+import './UserProfileFollows.sass';
 
 const UserProfileFollows = ({ userIds }) => (
   <Query
@@ -11,11 +14,15 @@ const UserProfileFollows = ({ userIds }) => (
     variables={{ userIds }}
   >
     {({ data: { users }, loading }) => {
-      if (loading) return <h1>loading</h1>;
+      if (loading) return null;
 
-      return users.map(user => (
-        <h1 key={user._id}>{user._id}</h1>
-      ));
+      return (
+        <div className="user-profile-follows__container">
+          {users.map(user => (
+            <UserSummaryCard key={user._id} user={user} />
+          ))}
+        </div>
+      );
     }}
   </Query>
 );

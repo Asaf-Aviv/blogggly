@@ -5,7 +5,7 @@ import {
   number, string, arrayOf, bool,
 } from 'prop-types';
 import { UserContext } from '../../context';
-import UsersDetailsDropdown from '../UsersDetailsDropdown/UsersDetailsDropdown';
+import UsersDetailsDropdown from '../UsersDetailsDropdown';
 import LikeButton from '../LikeButton/LikeButton';
 
 import './Likes.sass';

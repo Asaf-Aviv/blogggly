@@ -79,7 +79,7 @@ const PostEditor = () => {
 
   if (newPostId) {
     return (
-      <Redirect to={`/posts/${newPostId}`} />
+      <Redirect to={`/post/${newPostId}`} />
     );
   }
 
@@ -156,14 +156,14 @@ const PostEditor = () => {
               if (!postTitle) {
                 Alert.warning('Please enter post title.');
               }
-              if (postBodyLength < 2) {
-                Alert.warning('Please enter post content.');
+              if (postBodyLength < 10) {
+                Alert.warning('Post content is too short.');
               }
               if (!tags.length) {
                 Alert.warning('Please add atleast 1 tag to your post.');
               }
 
-              // if (!postTitle || !tags.length || postBodyLength < 2) return;
+              // if (!postTitle || !tags.length || postBodyLength < 10) return;
 
               console.log(postBody);
               createPost();

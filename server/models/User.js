@@ -13,6 +13,8 @@ const UserSchema = new Schema({
     unique: true,
     required: true,
     uniqueCaseInsensitive: true,
+    minlength: 3,
+    maxlength: 16,
     validate: [
       /^[a-zA-Z0-9_]+$/,
       'Username can contain only Characters, Numbers and Underscores',
@@ -30,10 +32,10 @@ const UserSchema = new Schema({
     select: false,
     required: true,
     maxlength: [100, 'Password is too long'],
-    validate: [
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-      'Password must contain atleast eight characters, one letter and one number',
-    ],
+    // validate: [
+    //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+    //   'Password must contain atleast eight characters, one letter and one number',
+    // ],
   },
   avatar: { type: String, default: '/public/assets/avatar/man.svg' },
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
@@ -44,6 +46,7 @@ const UserSchema = new Schema({
   info: {
     firstname: { type: String, default: '' },
     lastname: { type: String, default: '' },
+    bio: { type: String, default: '' },
     gender: {
       type: String,
       default: '',
@@ -63,8 +66,6 @@ const UserSchema = new Schema({
   inbox: {
     sent: [MessageSchema],
     inbox: [MessageSchema],
-    bookmarks: [MessageSchema],
-    trash: [MessageSchema],
   },
   tags: [String],
 }, { timestamps: true });
@@ -113,6 +114,7 @@ UserSchema.statics.createUser = async function (userInput) {
     password: hashedPassword,
   });
 
+
   return user.save();
 };
 
@@ -131,12 +133,11 @@ UserSchema.statics.login = async function (email, password) {
 };
 
 UserSchema.statics.updateInfo = async function (userId, info) {
-  console.log(info);
   return this.findOneAndUpdate(
     { _id: userId },
-    { $set: { info, $set: { $dateFromString: { dateString: info.dateOfbirth, format: '%m-%d-%y' } } } },
+    { $set: { info, $set: { $dateFromString: { dateString: info.dateOfBirth, format: '%m-%d-%y' } } } },
     { new: true },
-  );
+  ).select('info');
 };
 
 UserSchema.statics.sendMessage = async function (from, to, body) {

@@ -3,11 +3,13 @@
   padding: 2rem
   background: #FFF
   border-radius: 8px
-  color: #545454
+  color: var(--main-text-color)
+  .follow-btn
+    margin-right: 1rem
   &__title
     font-size: 22px
-    margin-bottom: 2rem
-    padding: 0 4.2rem
+    margin-bottom: 1rem
+    padding: 0 3.8rem
   &__tags
     padding-left: 4rem
     margin-bottom: 1rem
@@ -16,16 +18,12 @@
     line-height: 24px
   &__body
     display: block
-    padding: 0 4.2rem
+    padding: 0 3.8rem
     margin-bottom: 1rem
-
-.likes__container
-  margin-left: 4rem
-  .heart
-    margin-right: 1.5rem
+  .likes__container
+    margin-left: 3.8rem
+    .heart
+      margin-right: 1rem
 
 .heart, .like-count
   cursor: pointer
-
-.heart
-  color: #ef1717

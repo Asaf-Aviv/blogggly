@@ -3,17 +3,23 @@
   padding: 0
   box-sizing: border-box
 
+\:root
+  font-size: 18px
+  --main-text-color: #545454;
+
 body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: 'Montserrat', sans-serif
   letter-spacing: 0.5px
   background: #4a4a5f
-  color: #FFF
-  font-size: 18px
+  color: var(--main-text-color)
   padding-top: 100px
   overflow-x: hidden
   line-height: 1.6
+
+a
+  text-decoration: none
 
 button
   cursor: pointer
@@ -21,7 +27,7 @@ button
 button, input, textarea
   font-family: inherit
   font-size: inherit
-
+  
 ol
   padding-left: 1rem
 
@@ -29,13 +35,15 @@ ul
   list-style: none
 
 .icon
-  width: 35px
-  height: 35px
-  font-size: 24px
-  padding: 0.3rem
+  font-size: 1.25rem
+  padding: 0.3rem 0
   margin-right: 0.5rem
 
+.heart
+  color: #ef1717
+
 .btn
+  font-size: 1rem
   display: inline-block
   height: 50px
   padding: 0 1.5rem
@@ -46,6 +54,7 @@ ul
   transition: background 150ms, color 150ms
   color: #FFF
   &--default
+    color: var(--main-text-color)
   &--primary
     background: #716bcc
     &:hover
@@ -53,4 +62,11 @@ ul
     &:active
       background: #44417d
   &--secondary
+  &--success
+    background: green
   &--danger
+    background: red
+  &--sm
+    padding: 0 0.5rem
+    height: 30px
+    font-size: 0.8rem

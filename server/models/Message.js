@@ -19,6 +19,18 @@ const MessageSchema = new Schema({
     type: Boolean,
     default: false,
   },
-}, { timestamps: true });
+  inBookmarks: {
+    type: Boolean,
+    default: false,
+  },
+  inTrash: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 module.exports = MessageSchema;

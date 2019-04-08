@@ -6,20 +6,23 @@ import './UserAvatar.sass';
 const UserAvatar = ({
   avatar, username, classes, width,
 }) => (
-  <figure className="avatar__container">
-    <img className={`avatar ${classes}`} width={width} src={avatar} alt={username} />
-  </figure>
+  <div className="avatar__container">
+    <figure className="avatar__figure">
+      <img className={`avatar ${classes}`} width={width} src={avatar} alt={username} />
+    </figure>
+  </div>
 );
 
 UserAvatar.propTypes = {
   avatar: string.isRequired,
   username: string.isRequired,
-  width: number.isRequired,
+  width: number,
   classes: string,
 };
 
 UserAvatar.defaultProps = {
   classes: '',
+  width: 80,
 };
 
 export default UserAvatar;

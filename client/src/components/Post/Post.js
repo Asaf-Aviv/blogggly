@@ -41,7 +41,7 @@ const Post = ({ match: { params: { postId } } }) => {
                   {post.author._id !== (loggedUser && loggedUser._id) && (
                     <FollowButton
                       following={!!loggedUser && loggedUser.following.includes(post.author._id)}
-                      authorId={post.author._id}
+                      userId={post.author._id}
                     />
                   )}
                   <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
