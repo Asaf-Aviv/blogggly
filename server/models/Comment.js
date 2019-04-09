@@ -3,25 +3,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const CommentSchema = new Schema({
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  post: {
-    type: Schema.Types.ObjectId,
-    ref: 'Post',
-    required: true,
-  },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
   body: { type: String, required: true },
-  likesCount: {
-    type: Number,
-    default: 0,
-  },
-  likes: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  likesCount: { type: Number, default: 0 },
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 CommentSchema.statics.findCommentById = async function (commentId) {

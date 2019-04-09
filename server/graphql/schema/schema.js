@@ -26,7 +26,7 @@ module.exports = gql`
     createPost(postInput: PostInput): Post
     addComment(comment: CommentInput): Post
     updatePost(postId: ID, updatedPost: PostInput): Post
-    deletePost(id: ID): Post
+    deletePost(postId: ID): String!
     toggleLike(id: ID, userId: ID, isPost: Boolean): ToggleLikeResult
     sendMessage(to: ID, body: String): Message
     bookmarkMessage(messageId: ID): Message

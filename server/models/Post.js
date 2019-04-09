@@ -3,11 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const PostSchema = new Schema({
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   tags: {
     type: Array,
     required: true,
@@ -19,27 +15,42 @@ const PostSchema = new Schema({
   },
   title: { type: String, required: true },
   body: { type: String, required: true },
-  shortBody: String,
-  deleted: { type: Boolean, default: false },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   likesCount: { type: Number, default: 0 },
   commentsCount: { type: Number, default: 0 },
 }, { timestamps: true });
 
-PostSchema.pre('save', function (done) {
-  if (this.isNew) {
-    this.shortBody = this.body.slice(0, 150).trim();
-  }
-  return done();
-});
+PostSchema.statics.deletePost = async function (postId) {
+  const post = await this.findById(postId);
+  const commentIds = post.comments;
 
-PostSchema.statics.deletePost = async function (id) {
-  return this.findByIdAndUpdate(
-    id,
-    { $set: { deleted: true } },
-    { new: true },
-  );
+  await Promise.all([
+    User.findByIdAndUpdate(
+      post.author,
+      { $pull: { posts: postId } },
+    ),
+    User.updateMany(
+      { _id: { $in: post.likes } },
+      { $pull: { 'likes.posts': postId } },
+    ),
+    commentIds.map(async (commentId) => {
+      const comment = await Comment.findById(commentId);
+
+      User.findByIdAndUpdate(
+        comment.author._id,
+        { $pull: { comments: commentId } },
+      );
+
+      User.updateMany(
+        { _id: { $in: comment.likes } },
+        { $pull: { 'likes.comments': commentId } },
+      );
+    }),
+    this.findByIdAndDelete(postId),
+  ]);
+
+  return post._id;
 };
 
 PostSchema.statics.findPostsForUser = async function (id) {

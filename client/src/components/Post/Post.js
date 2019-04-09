@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { shape, string } from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
@@ -25,7 +25,7 @@ const Post = ({ match: { params: { postId } } }) => {
       variables={{ postId, withComments: true }}
       onError={utils.UIErrorNotifier}
     >
-      {({ loading, error, data: { post } }) => {
+      {({ loading, error, data: { post } = {} }) => {
         if (loading) return <Container><h1>loading</h1></Container>;
         if (error) return <Redirect to="/" />;
 
@@ -54,6 +54,14 @@ const Post = ({ match: { params: { postId } } }) => {
                   likes={post.likes}
                   isPost
                 />
+                <Mutation
+                  mutation={queries.DELETE_POST}
+                  variables={{ postId: post._id }}
+                >
+                  {deletePost => (
+                    <button type="button" onClick={deletePost}>Delete</button>
+                  )}
+                </Mutation>
               </article>
               <MoreFromAuthor
                 authorName={post.author.username}

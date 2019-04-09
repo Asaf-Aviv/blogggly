@@ -26,7 +26,14 @@ module.exports = {
       return users;
     },
     userPosts: (root, { id }) => Post.findPostsForUser(id),
-    post: (root, { postId }) => Post.findPostById(postId),
+    post: async (root, { postId }) => {
+      const post = await Post.findPostById(postId);
+      console.log(post);
+      if (post.deleted) {
+        throw new Error('This post has been deleted');
+      }
+      return post;
+    },
     posts: async () => Post.find({ deleted: false }),
     postsByTag: async (root, { tag }) => Post.find({ tags: { $in: [tag] } }),
     postComments: async (root, { postId }, { commentLoader }) => {
@@ -66,7 +73,6 @@ module.exports = {
     },
     createPost: (root, { postInput }) => Post.createPost(postInput),
     updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),
-    deletePost: (root, { id }) => Post.deletePost(id),
     addComment: (root, { comment }, { userId }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to comment.');
       return Comment.addComment({ author: userId, ...comment });
@@ -84,7 +90,7 @@ module.exports = {
       const user = await User.findUserById(userId);
 
       const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
-        || user.inbox.sent.find(m => m._id.toString() === messageId);
+      || user.inbox.sent.find(m => m._id.toString() === messageId);
 
       message.inBookmarks = !message.inBookmarks;
       message.inTrash = false;
@@ -96,13 +102,22 @@ module.exports = {
       const user = await User.findUserById(userId);
 
       const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
-        || user.inbox.sent.find(m => m._id.toString() === messageId);
+      || user.inbox.sent.find(m => m._id.toString() === messageId);
 
       message.inTrash = !message.inTrash;
       message.inBookmarks = false;
 
       await user.save();
       return message;
+    },
+    deletePost: async (root, { postId }, { userId }) => {
+      const post = await Post.findById(postId);
+
+      if (post.author.toString() !== userId) {
+        throw new Error('Unauthorized');
+      }
+
+      return Post.deletePost(postId);
     },
     deleteMessage: async (root, { messageId }, { userId }) => {
       const user = await User.findUserById(userId);
