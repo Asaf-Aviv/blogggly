@@ -26,6 +26,7 @@ PostSchema.statics.deletePost = async function (postId) {
   const commentIds = post.comments;
 
   await Promise.all([
+    this.findByIdAndDelete(postId),
     User.findByIdAndUpdate(
       post.author,
       { $pull: { posts: postId } },
@@ -37,17 +38,17 @@ PostSchema.statics.deletePost = async function (postId) {
     commentIds.map(async (commentId) => {
       const comment = await Comment.findById(commentId);
 
-      User.findByIdAndUpdate(
-        comment.author._id,
-        { $pull: { comments: commentId } },
-      );
-
-      User.updateMany(
-        { _id: { $in: comment.likes } },
-        { $pull: { 'likes.comments': commentId } },
-      );
+      return Promise.all([
+        User.findByIdAndUpdate(
+          comment.author._id,
+          { $pull: { comments: commentId } },
+        ),
+        User.updateMany(
+          { _id: { $in: comment.likes } },
+          { $pull: { 'likes.comments': commentId } },
+        ),
+      ]);
     }),
-    this.findByIdAndDelete(postId),
   ]);
 
   return post._id;
