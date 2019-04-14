@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import {
-  arrayOf, string, number, shape,
+  arrayOf, string, number, shape, func, bool,
 } from 'prop-types';
 import Alert from 'react-s-alert';
 import queries from '../../graphql/queries';
@@ -14,13 +14,13 @@ import { UserContext } from '../../context';
 
 import './UserProfileComment.sass';
 
-const UserProfileComment = ({ comment, comment: { post } }) => {
+const UserProfileComment = ({
+  comment, comment: { post }, isDeleted, addToDeletionQueue,
+}) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
-
   return (
-    <div className="user-profile-comment__container">
+    <li className={`user-profile-comment__container ${isDeleted ? 'deleted' : ''}`}>
       <Link to={`/post/${post._id}`}>
         <h5 className="user-profile-comment__post-title">
           {`on ${post.author.username} post ${post.title}`}
@@ -37,17 +37,8 @@ const UserProfileComment = ({ comment, comment: { post } }) => {
           mutation={queries.DELETE_COMMENT}
           variables={{ commentId: comment._id, postId: post._id }}
           onCompleted={({ deleteComment: deletedCommentId }) => {
-            const updatedComments = loggedUser.comments
-              .filter(commentId => commentId !== deletedCommentId);
-
-            setLoggedUser({
-              ...loggedUser,
-              comments: updatedComments,
-              likes: {
-                ...loggedUser.likes,
-                comments: loggedUser.likes.comments.filter(cId => cId !== comment._id),
-              },
-            });
+            addToDeletionQueue(deletedCommentId);
+            Alert.success('Comment deleted successfully.');
           }}
         >
           {deleteComment => (
@@ -65,7 +56,6 @@ const UserProfileComment = ({ comment, comment: { post } }) => {
                   onConfirm={async () => {
                     await deleteComment();
                     setShowConfirmationModal(false);
-                    Alert.success('Comment deleted successfully.');
                   }}
                   onCancel={() => setShowConfirmationModal(false)}
                   theme="danger"
@@ -75,7 +65,7 @@ const UserProfileComment = ({ comment, comment: { post } }) => {
           )}
         </Mutation>
       </div>
-    </div>
+    </li>
   );
 };
 
@@ -92,27 +82,70 @@ UserProfileComment.propTypes = {
       author: UserShortSummaryPropTypes.isRequired,
     }).isRequired,
   }).isRequired,
+  isDeleted: bool.isRequired,
+  addToDeletionQueue: func.isRequired,
 };
 
-const UserProfileComments = ({ commentIds }) => (
-  <Query
-    query={queries.GET_COMMENTS_BY_IDS}
-    onError={utils.UIErrorNotifier}
-    variables={{ commentIds, withPostInfo: true }}
-  >
-    {({ data, loading }) => {
-      if (loading) return null;
+let cacheDeletedComments = [];
 
-      return (
-        <div>
-          {data.comments.map(comment => (
-            <UserProfileComment key={comment._id} comment={comment} />
-          ))}
-        </div>
-      );
-    }}
-  </Query>
-);
+const UserProfileComments = ({ commentIds }) => {
+  const [deletedCommentsIds, setDeletedCommentsIds] = useState([]);
+
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
+
+  const addToDeletionQueue = (commentId) => {
+    setDeletedCommentsIds([...deletedCommentsIds, commentId]);
+  };
+
+  useEffect(() => {
+    if (deletedCommentsIds.length) {
+      cacheDeletedComments = [...deletedCommentsIds];
+    }
+  }, [deletedCommentsIds]);
+
+  useEffect(() => () => {
+    const updatedComments = loggedUser.comments
+      .filter(commentId => !cacheDeletedComments.includes(commentId));
+
+    setLoggedUser({
+      ...loggedUser,
+      comments: updatedComments,
+      likes: {
+        ...loggedUser.likes,
+        comments: loggedUser.likes.comments
+          .filter(commentId => !cacheDeletedComments.includes(commentId)),
+      },
+    });
+  }, []);
+
+  return (
+    <Query
+      query={queries.GET_COMMENTS_BY_IDS}
+      onError={utils.UIErrorNotifier}
+      variables={{ commentIds, withPostInfo: true }}
+    >
+      {({ data, loading }) => {
+        if (loading) return null;
+
+        return (
+          <div className="user-profile__comments-container">
+            <ul>
+              {data.comments.map(comment => (
+                <UserProfileComment
+                  key={comment._id}
+                  comment={comment}
+                  isDeleted={deletedCommentsIds.includes(comment._id)}
+                  addToDeletionQueue={addToDeletionQueue}
+                />
+              ))}
+            </ul>
+          </div>
+        );
+      }}
+    </Query>
+  );
+};
+
 
 UserProfileComments.propTypes = {
   commentIds: arrayOf(string).isRequired,
