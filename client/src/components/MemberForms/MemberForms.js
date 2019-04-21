@@ -1,31 +1,23 @@
-import React, { useState } from 'react';
-import { func } from 'prop-types';
+import React, { useContext } from 'react';
 import Login from '../Login';
 import SignUp from '../SignUp';
+import { MemberFormsContext } from '../../context';
 
 import './MemberForms.sass';
 
-const MemberForms = ({ hideForms }) => {
-  const [showSignUp, setShowSignUp] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
+const MemberForms = () => {
+  const { toggleForms, showLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
-  const toggleForms = () => {
-    setShowSignUp(!showSignUp);
-    setShowLogin(!showLogin);
-  };
+  const hideForms = () => setShowMemberForms(false);
 
   return (
     <div className="member-form__container" onClick={hideForms}>
       {showLogin
         ? <Login toggleForms={toggleForms} hideForms={hideForms} />
         : <SignUp toggleForms={toggleForms} hideForms={hideForms} />
-      }
+    }
     </div>
   );
-};
-
-MemberForms.propTypes = {
-  hideForms: func.isRequired,
 };
 
 export default MemberForms;

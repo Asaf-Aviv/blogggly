@@ -5,7 +5,7 @@ import apolloClient from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
 import Home from './components/Home';
-import { UserContext } from './context';
+import { UserContext, MemberFormsContext } from './context';
 import queries from './graphql/queries';
 import PostEditor from './components/PostEditor';
 import Posts from './components/Posts';
@@ -19,8 +19,20 @@ import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
 import './App.sass';
 
 const App = () => {
-  const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState(null);
+  const [token, setToken] = useState(null);
+
+  const [showMemberForms, setShowMemberForms] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+
+  const toggleForms = () => {
+    console.log('toggling');
+    setShowLogin(!showLogin);
+  };
+
+  useEffect(() => {
+    if (loggedUser) setShowMemberForms(false);
+  }, [showMemberForms]);
 
   useLayoutEffect(() => {
     const cachedToken = localStorage.getItem('token');
@@ -61,21 +73,37 @@ const App = () => {
 
   return (
     <>
-      <UserContext.Provider value={{ loggedUser, setLoggedUser, setToken }}>
-        <div className="App">
-          <NavBar logout={logout} />
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/posts/tag/:tag" exact component={Posts} />
-            <Route path="/post/:postId" exact component={Post} />
-            <Route path="/user/:username" exact component={UserProfile} />
-            <Route path="/users" exact component={Users} />
-            <Route path="/profile" component={CurrentUserProfile} />
-            <Route path="/inbox" exact component={Inbox} />
-            <Route path="/create" exact component={PostEditor} />
-            <Route render={() => <Redirect to="/" />} />
-          </Switch>
-        </div>
+      <UserContext.Provider
+        value={{
+          loggedUser,
+          setLoggedUser,
+          setToken,
+        }}
+      >
+        <MemberFormsContext.Provider
+          value={{
+            showMemberForms,
+            setShowMemberForms,
+            showLogin,
+            setShowLogin,
+            toggleForms,
+          }}
+        >
+          <div className="App">
+            <NavBar logout={logout} />
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/posts/tag/:tag" exact component={Posts} />
+              <Route path="/post/:postId" exact component={Post} />
+              <Route path="/user/:username" exact component={UserProfile} />
+              <Route path="/users" exact component={Users} />
+              <Route path="/profile" component={CurrentUserProfile} />
+              <Route path="/inbox" exact component={Inbox} />
+              <Route path="/create" exact component={PostEditor} />
+              <Route render={() => <Redirect to="/" />} />
+            </Switch>
+          </div>
+        </MemberFormsContext.Provider>
       </UserContext.Provider>
       <Alert
         effect="jelly"
