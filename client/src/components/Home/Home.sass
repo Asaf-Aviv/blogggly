@@ -1,13 +1,10 @@
 .home
-  .container
-    &:first-of-type
-      border-radius: 5px
-      background: #FFF
-      margin-bottom: 2rem
-    &:last-of-type
-      padding: 0
+  min-height: calc(100vh - 100px)
+  &__header
+    padding: 2rem 1rem
+    background: #FFF
+    border-radius: 5px
   &__title
-    padding-top: 2rem
   &__subtitle
     display: inline-block
     margin: 2rem 3rem 4rem 0
@@ -15,9 +12,17 @@
 .features
   display: flex
   justify-content: space-between
+  padding: 2rem 0
+  border-radius: 5px
   &__card
     border-radius: 5px
     padding: 1rem
     background: #FFF
     flex-basis: 32%
     text-align: center
+  &-card
+    &__icon
+      display: inline-block
+      margin: 0 auto
+      height: 120px
+      width: 120px

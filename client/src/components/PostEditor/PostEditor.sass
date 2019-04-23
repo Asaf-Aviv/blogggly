@@ -1,9 +1,13 @@
+.create
+  min-height: calc(100vh - 100px)
+  
 .post-title
+  font-weight: 600
   display: block
   padding: 1rem
   margin-bottom: 1rem
   background: #FFF
-  border-radius: 8px
+  border-radius: 5px
   outline: none
   font-size: 20px
   font-family: inherit
@@ -15,7 +19,7 @@
 
 .quill
   margin-bottom: 1rem
-  border-radius: 8px
+  border-radius: 5px
 
 .ql
   &-editor
@@ -25,13 +29,13 @@
   &-toolbar
     background: #FFF
     font-family: inherit
-    border-top-left-radius: 8px
-    border-top-right-radius: 8px
+    border-top-left-radius: 5px
+    border-top-right-radius: 5px
   &-container
     color: var(--main-text-color)
     font-family: inherit
-    border-bottom-left-radius: 8px
-    border-bottom-right-radius: 8px
+    border-bottom-left-radius: 5px
+    border-bottom-right-radius: 5px
     overflow: hidden
 
 .ql-snow .ql-editor blockquote
@@ -40,3 +44,7 @@
 
 .select-categories
   margin-bottom: 1rem
+
+.btn.create-post__btn
+  display: block
+  margin-left: auto
