@@ -1,9 +1,9 @@
 const { mergeTypes } = require('merge-graphql-schemas');
-const general = require('./general');
-const user = require('./user');
-const post = require('./post');
-const comment = require('./comment');
-const message = require('./message');
+const general = require('./generalTypeDefs');
+const user = require('./userTypeDefs');
+const post = require('./postTypeDefs');
+const comment = require('./commentTypeDefs');
+const message = require('./messageTypeDefs');
 
 const typeDefs = [
   general,
