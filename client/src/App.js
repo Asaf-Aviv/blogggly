@@ -5,6 +5,7 @@ import apolloClient from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
 import Home from './components/Home';
+import Footer from './components/Footer';
 import { UserContext, MemberFormsContext } from './context';
 import queries from './graphql/queries';
 import PostEditor from './components/PostEditor';
@@ -102,6 +103,7 @@ const App = () => {
               <Route path="/create" exact component={PostEditor} />
               <Route render={() => <Redirect to="/" />} />
             </Switch>
+            <Footer />
           </div>
         </MemberFormsContext.Provider>
       </UserContext.Provider>
