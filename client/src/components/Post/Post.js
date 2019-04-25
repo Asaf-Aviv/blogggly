@@ -26,22 +26,25 @@ const Post = ({ match: { params: { postId } } }) => {
       onError={utils.UIErrorNotifier}
     >
       {({ loading, error, data: { post } = {} }) => {
-        if (loading) return <Container><h1>loading</h1></Container>;
+        if (loading) return null;
         if (error) return <Redirect to="/" />;
 
         return (
-          <Container>
-            <main>
+          <main className="post__main">
+            <Container>
               <article className="post">
-                <h1 className="post__title">{post.title}</h1>
-                <div className="post__tags">
-                  <Tags tags={post.tags} />
-                </div>
+                <header className="post__header">
+                  <h1 className="post__title">{post.title}</h1>
+                  <div className="post__tags">
+                    <Tags tags={post.tags} />
+                  </div>
+                </header>
                 <AuthorDetails {...post.author}>
                   {post.author._id !== (loggedUser && loggedUser._id) && (
                     <FollowButton
                       following={!!loggedUser && loggedUser.following.includes(post.author._id)}
                       userId={post.author._id}
+                      username={post.author.username}
                     />
                   )}
                   <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
@@ -54,14 +57,16 @@ const Post = ({ match: { params: { postId } } }) => {
                   likes={post.likes}
                   isPost
                 />
-                <Mutation
-                  mutation={queries.DELETE_POST}
-                  variables={{ postId: post._id }}
-                >
-                  {deletePost => (
-                    <button type="button" onClick={deletePost}>Delete</button>
-                  )}
-                </Mutation>
+                {loggedUser && loggedUser._id === post.author._id && (
+                  <Mutation
+                    mutation={queries.DELETE_POST}
+                    variables={{ postId: post._id }}
+                  >
+                    {deletePost => (
+                      <button type="button" onClick={deletePost}>Delete</button>
+                    )}
+                  </Mutation>
+                )}
               </article>
               <MoreFromAuthor
                 authorName={post.author.username}
@@ -69,8 +74,8 @@ const Post = ({ match: { params: { postId } } }) => {
                 viewingPostId={postId}
               />
               <Comments postId={post._id} comments={post.comments} />
-            </main>
-          </Container>
+            </Container>
+          </main>
         );
       }}
     </Query>

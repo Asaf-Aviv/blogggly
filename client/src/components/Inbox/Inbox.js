@@ -47,8 +47,8 @@ const Inbox = () => {
     });
 
   return (
-    <Container>
-      <div className="inbox">
+    <main className="inbox">
+      <Container>
         <InboxSideBar setCategory={setCategory}>
           {renderInboxItem('Inbox', 'inbox', inbox.filter(notInTrash).length, showCategory === 'inbox')}
           {renderInboxItem('Sent', 'envelope', sent.filter(notInTrash).length, showCategory === 'sent')}
@@ -61,8 +61,8 @@ const Inbox = () => {
           <MessageBoard loggedUserId={loggedUser._id} messages={bookmarks} active={showCategory === 'bookmarks'} />
           <MessageBoard loggedUserId={loggedUser._id} messages={trash} active={showCategory === 'trash'} />
         </InboxContent>
-      </div>
-    </Container>
+      </Container>
+    </main>
   );
 };
 

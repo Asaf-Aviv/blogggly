@@ -7,15 +7,17 @@ import { CommentPropTypes } from '../../propTypes';
 import './Comments.sass';
 
 const Comments = ({ comments, postId }) => (
-  <div className="comments">
-    <h2 className="comments__header">Comments</h2>
+  <section className="comments">
+    <header className="comments__header">
+      <h2>Comments</h2>
+    </header>
     <AddComment postId={postId} />
     <ul className="comments__list">
       {comments.map(comment => (
         <Comment key={comment._id} comment={comment} postId={postId} />
       ))}
     </ul>
-  </div>
+  </section>
 );
 
 Comments.propTypes = {
