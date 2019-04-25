@@ -1,14 +1,17 @@
 import React, { useContext, useRef } from 'react';
 import { Mutation } from 'react-apollo';
+import Alert from 'react-s-alert';
 import { bool, string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
-import { UserContext } from '../../context';
+import { UserContext, MemberFormsContext } from '../../context';
 
 import './FollowButton.sass';
 
-const FollowButton = ({ following, userId }) => {
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+const FollowButton = ({ following, userId, username }) => {
+  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
+
   const followButtonRef = useRef(null);
 
   const changeFollowText = () => {
@@ -26,7 +29,9 @@ const FollowButton = ({ following, userId }) => {
         utils.UIErrorNotifier(err);
         changeFollowText();
       }}
-      onCompleted={({ toggleFollow }) => setLoggedUser({ ...loggedUser, ...toggleFollow })}
+      onCompleted={({ toggleFollow }) => {
+        setLoggedUser({ ...loggedUser, ...toggleFollow });
+      }}
     >
       {follow => (
         <button
@@ -34,7 +39,12 @@ const FollowButton = ({ following, userId }) => {
           className="btn btn--primary btn--sm follow-btn"
           type="button"
           onClick={() => {
-            if (!loggedUser) return;
+            if (!isLogged) {
+              Alert.info(`Please login or signup to follow ${username}.`);
+              setShowLogin(true);
+              setShowMemberForms(true);
+              return;
+            }
             follow();
             changeFollowText();
           }}
@@ -48,6 +58,7 @@ const FollowButton = ({ following, userId }) => {
 FollowButton.propTypes = {
   following: bool.isRequired,
   userId: string.isRequired,
+  username: string.isRequired,
 };
 
 export default FollowButton;

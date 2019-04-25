@@ -1,17 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
+import Alert from 'react-s-alert';
 import { string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Loader from '../Loader';
+import { UserContext, MemberFormsContext } from '../../context';
 
 import './AddComment.sass';
-import { UserContext } from '../../context';
 
 const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   return (
     <Mutation
@@ -40,7 +42,12 @@ const AddComment = ({ postId }) => {
           className="add-comment"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!loggedUser) return;
+            if (!isLogged) {
+              Alert.info('Please login or signup to comment.');
+              setShowLogin(true);
+              setShowMemberForms(true);
+              return;
+            }
             addComment();
           }}
         >

@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Mutation } from 'react-apollo';
+import Alert from 'react-s-alert';
 import { bool, string } from 'prop-types';
 import utils from '../../utils';
 import queries from '../../graphql/queries';
-import { UserContext } from '../../context';
+import { UserContext, MemberFormsContext } from '../../context';
 
 const toggleHeartClass = (e) => {
   if (e.target.classList.contains('fas')) {
@@ -16,19 +17,19 @@ const toggleHeartClass = (e) => {
 };
 
 const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   return (
     <Mutation
       mutation={queries.TOGGLE_LIKE}
       variables={{
         id: commentOrPostId,
-        userId: loggedUser && loggedUser._id,
         isPost,
       }}
       onError={utils.UIErrorNotifier}
       onCompleted={({ toggleLike }) => {
-        const likeOnWhat = toggleLike.__typename === 'Post' ? 'posts' : 'comments';
+        const likeOnWhat = isPost ? 'posts' : 'comments';
 
         loggedUser.likes[likeOnWhat].includes(toggleLike._id)
           ? setLoggedUser({
@@ -55,7 +56,12 @@ const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
         <i
           className={`icon heart fa-heart ${loggedUserAlreadyLike ? 'fas' : 'far'}`}
           onClick={(e) => {
-            if (!loggedUser) return;
+            if (!isLogged) {
+              Alert.info(`Please login or signup to like this ${isPost ? 'post' : 'comment'}.`);
+              setShowLogin(true);
+              setShowMemberForms(true);
+              return;
+            }
             toggleLike();
             toggleHeartClass(e);
           }}

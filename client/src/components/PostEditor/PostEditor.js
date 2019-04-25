@@ -8,7 +8,7 @@ import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
 import debounce from 'lodash.debounce';
 import Select from 'react-select';
-import { UserContext } from '../../context';
+import { UserContext, MemberFormsContext } from '../../context';
 import Container from '../Container';
 import utils from '../../utils';
 import queries from '../../graphql/queries';
@@ -36,7 +36,7 @@ const editorOptions = {
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
       [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-      ['blockquote', 'code-block', 'image'],
+      ['blockquote', 'code-block'], // 'imgage'
       [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
       [{ direction: 'rtl' }], // text direction
       [{ align: [] }],
@@ -63,7 +63,8 @@ const PostEditor = () => {
   const postTitleRef = useRef(null);
   const quillRef = useRef(null);
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   useEffect(() => {
     const cachedTitle = localStorage.getItem('title');
@@ -93,87 +94,96 @@ const PostEditor = () => {
   };
 
   return (
-    <Mutation
-      mutation={queries.CREATE_POST}
-      variables={{
-        postInput: {
-          author: loggedUser && loggedUser._id,
-          title: postTitle,
-          body: postBody,
-          tags: tags.map(({ value }) => value),
-        },
-      }}
-      errorPolicy="all"
-      onError={utils.UIErrorNotifier}
-      onCompleted={({ createPost: newPost }) => {
-        localStorage.removeItem('postTitle');
-        localStorage.removeItem('postBody');
-        setLoggedUser({
-          ...loggedUser,
-          posts: [
-            newPost._id,
-            ...loggedUser.posts,
-          ],
-        });
-        setNewPostId(newPost._id);
-      }}
-    >
-      {createPost => (
-        <Container>
-          <textarea
-            ref={postTitleRef}
-            className="post-title"
-            value={postTitle}
-            onChange={(e) => {
-              setPostTitle(e.target.value);
-              saveToLocalStorage('postTitle', e.target.value);
-            }}
-            placeholder="Enter Post title"
-            rows="2"
-          />
-          <Select
-            className="select-categories"
-            options={options}
-            onChange={handleChange}
-            value={tags}
-            isMulti
-          />
-          <ReactQuill
-            ref={quillRef}
-            value={postBody}
-            onChange={(postBodyMarkdown) => {
-              setPostBody(postBodyMarkdown);
-              saveToLocalStorage('postBody', postBodyMarkdown);
-            }}
-            {...editorOptions}
-          />
-          <button
-            type="button"
-            className="btn btn--primary create-post__btn"
-            onClick={() => {
-              const postBodyLength = quillRef.current.getEditor().getLength();
+    <main className="create">
+      <Mutation
+        mutation={queries.CREATE_POST}
+        variables={{
+          postInput: {
+            author: loggedUser && loggedUser._id,
+            title: postTitle,
+            body: postBody,
+            tags: tags.map(({ value }) => value),
+          },
+        }}
+        errorPolicy="all"
+        onError={utils.UIErrorNotifier}
+        onCompleted={({ createPost: newPost }) => {
+          localStorage.removeItem('postTitle');
+          localStorage.removeItem('postBody');
+          setLoggedUser({
+            ...loggedUser,
+            posts: [
+              newPost._id,
+              ...loggedUser.posts,
+            ],
+          });
+          setNewPostId(newPost._id);
+        }}
+      >
+        {createPost => (
+          <Container>
+            <textarea
+              ref={postTitleRef}
+              className="post-title"
+              value={postTitle}
+              onChange={(e) => {
+                setPostTitle(e.target.value);
+                saveToLocalStorage('postTitle', e.target.value);
+              }}
+              placeholder="Enter Post title"
+              rows="2"
+            />
+            <Select
+              className="select-categories"
+              options={options}
+              onChange={handleChange}
+              value={tags}
+              isMulti
+            />
+            <ReactQuill
+              ref={quillRef}
+              value={postBody}
+              onChange={(postBodyMarkdown) => {
+                setPostBody(postBodyMarkdown);
+                saveToLocalStorage('postBody', postBodyMarkdown);
+              }}
+              {...editorOptions}
+            />
+            <button
+              type="button"
+              className="btn btn--primary create-post__btn"
+              onClick={() => {
+                if (!isLogged) {
+                  Alert.info('Please login or signup to post a story.');
+                  setShowLogin(true);
+                  setShowMemberForms(true);
+                  return;
+                }
 
-              if (!postTitle) {
-                Alert.warning('Please enter post title.');
-              }
-              if (postBodyLength < 10) {
-                Alert.warning('Post content is too short.');
-              }
-              if (!tags.length) {
-                Alert.warning('Please add atleast 1 tag to your post.');
-              }
+                const postBodyLength = quillRef.current.getEditor().getLength();
 
-              // if (!postTitle || !tags.length || postBodyLength < 10) return;
+                if (!postTitle) {
+                  Alert.error('Please enter post title.');
+                }
+                if (postBodyLength < 10) {
+                  Alert.error('Post content is too short.');
+                }
+                if (!tags.length) {
+                  Alert.error('Please add atleast 1 tag to your post.');
+                }
 
-              console.log(postBody);
-              createPost();
-            }}
-          >
+                if (!postTitle || !tags.length || postBodyLength < 10) return;
+
+                console.log(postBody);
+                createPost();
+              }}
+            >
               Create Post
-          </button>
-        </Container>
-      )}
-    </Mutation>
+            </button>
+          </Container>
+        )}
+      </Mutation>
+    </main>
   );
 };
 
