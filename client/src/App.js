@@ -79,6 +79,7 @@ const App = () => {
           loggedUser,
           setLoggedUser,
           setToken,
+          isLogged: !!loggedUser,
         }}
       >
         <MemberFormsContext.Provider
