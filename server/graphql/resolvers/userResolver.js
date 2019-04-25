@@ -15,6 +15,10 @@ module.exports = {
       return users;
     },
     getUserByUsername: async (root, { username }) => User.findOne({ username }),
+    searchUsers: async (root, { userQuery }) => {
+      const regEx = new RegExp(userQuery, 'i');
+      return User.find({ username: regEx });
+    },
   },
   Mutation: {
     relog: async (root, args, { userId, userLoader }) => {
