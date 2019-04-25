@@ -4,6 +4,7 @@ const user = require('./userTypeDefs');
 const post = require('./postTypeDefs');
 const comment = require('./commentTypeDefs');
 const message = require('./messageTypeDefs');
+const report = require('./reportTypeDefs');
 
 const typeDefs = [
   general,
@@ -11,6 +12,7 @@ const typeDefs = [
   post,
   comment,
   message,
+  report,
 ];
 
 module.exports = mergeTypes(typeDefs, { all: true });

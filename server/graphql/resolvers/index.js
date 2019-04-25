@@ -4,6 +4,7 @@ const userResolver = require('./userResolver');
 const postResolver = require('./postResolver');
 const commentResolver = require('./commentResolver');
 const messageResolver = require('./messageResolver');
+const reportResolver = require('./reportResolver');
 
 const resolvers = [
   userResolver,
@@ -11,6 +12,7 @@ const resolvers = [
   postResolver,
   commentResolver,
   messageResolver,
+  reportResolver,
 ];
 
 module.exports = mergeResolvers(resolvers);

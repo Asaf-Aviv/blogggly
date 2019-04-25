@@ -1,9 +1,8 @@
 import gql from 'graphql-tag';
-import Inbox from '../../components/Inbox';
 
 export const TOGGLE_LIKE = gql`
-  mutation toggleLike($id: ID, $userId: ID, $isPost: Boolean) {
-    toggleLike(id: $id, userId: $userId, isPost: $isPost) {
+  mutation toggleLike($id: ID, $isPost: Boolean) {
+    toggleLike(id: $id, isPost: $isPost) {
       ... on Post {
         _id
         likesCount
@@ -24,6 +23,25 @@ export const TOGGLE_FOLLOW = gql`
       _id
       following
       followingCount
+    }
+  }
+`;
+
+export const SEARCH_USERS = gql`
+  query searchUsers($userQuery: String!) {
+    users: searchUsers(userQuery: $userQuery) {
+      _id
+      username
+      avatar
+      createdAt
+      followersCount
+      followingCount
+      info {
+        firstname
+        lastname
+        bio
+        country
+      }
     }
   }
 `;
@@ -262,12 +280,12 @@ export const SEND_MESSAGE = gql`
       _id
       body
       createdAt
-      from {
-        ...userSummaryFields
-      }
       read
       inBookmarks
       inTrash
+      from {
+        ...userSummaryFields
+      }
       to {
         ...userSummaryFields
       }
@@ -283,32 +301,9 @@ export const SEND_MESSAGE = gql`
 
 export const DELETE_MESSAGE = gql`
   mutation deleteMessage($messageId: ID) {
-    deleteMessage(messageId: $messageId)
+    deleteMessageId: deleteMessage(messageId: $messageId)
   }
 `;
-
-Inbox.fragments = {
-  message: gql`
-    fragment messageFields on Message {
-      _id
-      createdAt
-      body
-      read
-      inBookmarks
-      inTrash
-      from {
-        _id
-        username
-        avatar
-      }
-      to {
-        _id
-        username
-        avatar
-      }
-    }
-  `,
-};
 
 export const RELOG = gql`
   mutation {
@@ -347,7 +342,25 @@ export const RELOG = gql`
       }
     }
   }
-  ${Inbox.fragments.message}
+
+  fragment messageFields on Message {
+    _id
+    createdAt
+    body
+    read
+    inBookmarks
+    inTrash
+    from {
+      _id
+      username
+      avatar
+    }
+    to {
+      _id
+      username
+      avatar
+    }
+  }
 `;
 
 export const LOGIN = gql`
@@ -559,5 +572,11 @@ export const ADD_COMMENT = gql`
         }
       }
     }
+  }
+`;
+
+export const REPORT = gql`
+  mutation report($report: ReportInput) {
+    report(report: $report)
   }
 `;

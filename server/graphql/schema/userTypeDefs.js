@@ -6,7 +6,7 @@ module.exports = gql`
     users: [User!]!
     getUserByUsername(username: String): User!
     getUsersByIds(userIds: [ID]): [User!]!
-    searchUser(username: String): SearchUser
+    searchUsers(userQuery: String!): [User!]!
   }
 
   type Mutation {
@@ -75,10 +75,6 @@ module.exports = gql`
   type Auth {
     token: String!
     user: User!
-  }
-
-  type SearchUser {
-    user: User
   }
 
   input UserInput {
