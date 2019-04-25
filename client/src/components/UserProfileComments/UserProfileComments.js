@@ -37,8 +37,8 @@ const UserProfileComment = ({
           mutation={queries.DELETE_COMMENT}
           variables={{ commentId: comment._id, postId: post._id }}
           onCompleted={({ deleteComment: deletedCommentId }) => {
-            addToDeletionQueue(deletedCommentId);
             Alert.success('Comment deleted successfully.');
+            addToDeletionQueue(deletedCommentId);
           }}
         >
           {deleteComment => (

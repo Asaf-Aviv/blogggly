@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import {
-  arrayOf, string, shape, number,
+  arrayOf, string, shape, number, bool, func,
 } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
@@ -38,6 +38,7 @@ const UserProfileCommentLike = ({ comment }) => (
     <Link className="user-likes__link" to={`/post/${comment.post._id}`}>
       <span>{comment.post.title}</span>
     </Link>
+    <p>{comment.body}</p>
     <Likes
       likesCount={comment.likesCount}
       id={comment._id}
@@ -64,15 +65,21 @@ UserProfileCommentLike.propTypes = {
   }).isRequired,
 };
 
-const UserProfileLikesTab = ({ onClick, text, active }) => (
+const UserProfileLikesTab = ({ changeTab, text, active }) => (
   <button
     className={`user-likes__tab ${active ? 'user-likes__tab--active' : ''}`}
     type="button"
-    onClick={onClick}
+    onClick={changeTab}
   >
     {text}
   </button>
 );
+
+UserProfileLikesTab.propTypes = {
+  changeTab: func.isRequired,
+  text: string.isRequired,
+  active: bool.isRequired,
+};
 
 const UserProfileLikes = ({ likes }) => {
   const [showCategory, setShowCategory] = useState('posts');
@@ -91,12 +98,12 @@ const UserProfileLikes = ({ likes }) => {
             <div className="user-likes__tabs-container">
               <UserProfileLikesTab
                 text="Posts"
-                onClick={() => setShowCategory('posts')}
+                changeTab={() => setShowCategory('posts')}
                 active={showCategory === 'posts'}
               />
               <UserProfileLikesTab
                 text="Comments"
-                onClick={() => setShowCategory('comments')}
+                changeTab={() => setShowCategory('comments')}
                 active={showCategory === 'comments'}
               />
             </div>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { func } from 'prop-types';
-import { MemberFormsContext } from '../../context';
+import { MemberFormsContext, UserContext } from '../../context';
 import Container from '../Container';
 import MemberForms from '../MemberForms';
 import NavBarUserMenu from '../NavBarUserMenu';
@@ -9,9 +9,9 @@ import NavMenu from '../NavMenu';
 import './NavBar.sass';
 
 const NavBar = ({ logout }) => {
-  const {
-    loggedUser, showMemberForms, setShowMemberForms, setShowLogin,
-  } = useContext(MemberFormsContext);
+  const { loggedUser } = useContext(UserContext);
+
+  const { showMemberForms, setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
 
   return (
     <header className="navbar">

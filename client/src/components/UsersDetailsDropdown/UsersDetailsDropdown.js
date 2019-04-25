@@ -33,8 +33,8 @@ const UsersDetailsDropdown = ({ userIds }) => (
       return (
         <div className="user-details-modal">
           {users.map(user => (
-            <Link to={`/user/${user.username}`}>
-              <div key={user._id} className="user-details-modal__item">
+            <Link to={`/user/${user.username}`} key={user._id}>
+              <div className="user-details-modal__item">
                 <UserAvatar width={30} {...user} />
                 <h4 className="user-details-modal__username">{user.username}</h4>
               </div>

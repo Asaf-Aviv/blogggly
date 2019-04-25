@@ -118,7 +118,7 @@ UserProfileInformation.propTypes = {
     lastname: string.isRequired,
     gender: string.isRequired,
     country: string.isRequired,
-    dateOfBirth: string.isRequired,
+    dateOfBirth: string,
   }).isRequired,
 };
 

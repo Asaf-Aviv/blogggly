@@ -47,7 +47,6 @@ const Likes = ({
   return (
     <div className="likes__container">
       <LikeButton
-        loggedUser={loggedUser}
         commentOrPostId={commentOrPostId}
         loggedUserAlreadyLike={loggedUserAlreadyLike}
         isPost={isPost}
