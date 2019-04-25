@@ -70,13 +70,13 @@ const Input = ({
 };
 
 Input.propTypes = {
-  autoComplete: bool,
-  classes: string,
   inputType: string,
+  classes: string,
   tooltipText: string,
   iconClasses: string,
   placeholder: string,
   value: string,
+  autoComplete: bool,
   required: bool,
   disabled: bool,
   validateFunc: func,
@@ -84,13 +84,13 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-  autoComplete: false,
-  classes: '',
   inputType: 'text',
+  classes: '',
   tooltipText: '',
   iconClasses: '',
   placeholder: '',
   value: '',
+  autoComplete: false,
   required: false,
   disabled: false,
   validateFunc: null,
