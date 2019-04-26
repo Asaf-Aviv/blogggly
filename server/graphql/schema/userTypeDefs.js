@@ -33,9 +33,9 @@ module.exports = gql`
     followersCount: Int!
     following: [ID!]!
     followingCount: Int!
-    sentFriendRequests: [SentFriendRequests!]!
-    incomingFriendRequests: [IncomingFriendRequests!]!
-    friends: [User!]!
+    sentFriendRequests: [ID!]!
+    incomingFriendRequests: [ID!]!
+    friends: [ID!]!
     inbox: Inbox!
     info: UserInfo!
     likes: UserLikes!
@@ -79,14 +79,6 @@ module.exports = gql`
   type Inbox {
     inbox: [Message!]!
     sent: [Message!]!
-  }
-
-  type IncomingFriendRequests {
-    from: User!
-  }
-
-  type SentFriendRequests {
-    to: User!
   }
 
   input UserInput {

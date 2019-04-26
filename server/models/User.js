@@ -7,24 +7,6 @@ const MessageSchema = require('./Message');
 
 const { Schema } = mongoose;
 
-const IncomingFriendRequestSchema = new Schema({
-  _id: false,
-  from: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-});
-
-const SentFriendRequestSchema = new Schema({
-  _id: false,
-  to: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-});
-
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -77,8 +59,8 @@ const UserSchema = new Schema({
     country: { type: String, default: '' },
   },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', required: true }],
-  sentFriendRequests: [SentFriendRequestSchema],
-  incomingFriendRequests: [IncomingFriendRequestSchema],
+  sentFriendRequests: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+  incomingFriendRequests: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
   friends: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
   followersCount: { type: Number, default: 0 },
   followingCount: { type: Number, default: 0 },

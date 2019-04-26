@@ -49,16 +49,17 @@ module.exports = {
       if (!userId) throw new Error('Unauthorized.');
       return User.toggleFollow(userId, userIdToFollow);
     },
-    sendFriendRequest: async (root, { userId: requstedUserId }, { userId }) => {
+    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cbfc0140389d842b895be4d' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       const [isRequestExist, alreadyFriends] = await Promise.all([
         User.findOne(
-          { _id: userId, 'sentFriendRequests.to': requstedUserId },
-          { _id: 1, friends: 1 },
+          { _id: userId, sentFriendRequests: { $elemMatch: { $eq: requestedUserId } } },
+          { _id: 1 },
         ),
         User.findOne(
-          { _id: userId, friends: { $elemMatch: { $eq: requstedUserId } } },
+          { _id: userId, friends: { $elemMatch: { $eq: requestedUserId } } },
+          { _id: 1 },
         ),
       ]);
 
@@ -68,47 +69,41 @@ module.exports = {
       await Promise.all([
         User.findByIdAndUpdate(
           userId,
-          { $push: { sentFriendRequests: { to: requstedUserId } } },
+          { $push: { sentFriendRequests: requestedUserId } },
         ),
         User.findByIdAndUpdate(
-          requstedUserId,
-          { $push: { incomingFriendRequests: { from: userId } } },
+          requestedUserId,
+          { $push: { incomingFriendRequests: userId } },
         ),
       ]);
-      return requstedUserId;
+      return requestedUserId;
     },
     acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cbfc0140389d842b895be4d' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      console.log(
-        await User.findById(userId),
-      );
-
       const isRequestExist = await User.findOne(
-        { _id: userId, 'incomingFriendRequests.from': userIdToAccept },
-        { friends: 1 },
+        { _id: userId, incomingFriendRequests: { $elemMatch: { $eq: userIdToAccept } } },
+        { friends: 1, username: 1 },
       );
-
-      console.log(isRequestExist);
 
       if (!isRequestExist) throw new Error('This request does not exist anymore.');
 
       if (isRequestExist.friends.some(f => f.toString() === userIdToAccept)) {
-        throw new Error('Already friends.');
+        throw new Error('already friends.');
       }
 
       await Promise.all([
         User.findByIdAndUpdate(
           userIdToAccept,
           {
-            $pull: { sentFriendRequests: { to: userId } },
+            $pull: { sentFriendRequests: userId },
             $push: { friends: userId },
           },
         ),
         User.findByIdAndUpdate(
           userId,
           {
-            $pull: { incomingFriendRequests: { from: userIdToAccept } },
+            $pull: { incomingFriendRequests: userIdToAccept },
             $push: { friends: userIdToAccept },
           },
         ),
@@ -119,16 +114,14 @@ module.exports = {
     cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      console.log(userId, userIdToCancel);
-
       await Promise.all([
         User.findByIdAndUpdate(
           userId,
-          { $pull: { sentFriendRequests: { to: userIdToCancel } } },
+          { $pull: { sentFriendRequests: userIdToCancel } },
         ),
         User.findByIdAndUpdate(
           userIdToCancel,
-          { $pull: { incomingFriendRequests: { from: userId } } },
+          { $pull: { incomingFriendRequests: userId } },
         ),
       ]);
 
@@ -140,11 +133,11 @@ module.exports = {
       await Promise.all([
         User.findByIdAndUpdate(
           userId,
-          { $pull: { incomingFriendRequests: { from: userIdToDecline } } },
+          { $pull: { incomingFriendRequests: userIdToDecline } },
         ),
         User.findByIdAndUpdate(
           userIdToDecline,
-          { $pull: { sentFriendRequests: { to: userId } } },
+          { $pull: { sentFriendRequests: userId } },
         ),
       ]);
 
