@@ -15,6 +15,11 @@ module.exports = gql`
     signup(userInput: UserInput): CurrentUser
     updateUserInfo(info: UserInfoInput): CurrentUser
     toggleFollow(userId: ID): CurrentUser
+    sendFriendRequest(userId: ID!): ID
+    acceptFriendRequest(userId: ID!): ID
+    cancelFriendRequest(userId: ID!): Boolean
+    declineFriendRequest(userId: ID!): Boolean
+    removeFriend(userId: ID!): Boolean
   }
 
   type CurrentUser {
@@ -28,6 +33,9 @@ module.exports = gql`
     followersCount: Int!
     following: [ID!]!
     followingCount: Int!
+    sentFriendRequests: [SentFriendRequests!]!
+    incomingFriendRequests: [IncomingFriendRequests!]!
+    friends: [User!]!
     inbox: Inbox!
     info: UserInfo!
     likes: UserLikes!
@@ -46,6 +54,7 @@ module.exports = gql`
     followersCount: Int!
     following: [ID!]!
     followingCount: Int!
+    friends: [User!]!
     info: UserInfo!
     likes: UserLikes!
     posts: [String!]!
@@ -72,9 +81,12 @@ module.exports = gql`
     sent: [Message!]!
   }
 
-  type Auth {
-    token: String!
-    user: User!
+  type IncomingFriendRequests {
+    from: User!
+  }
+
+  type SentFriendRequests {
+    to: User!
   }
 
   input UserInput {
