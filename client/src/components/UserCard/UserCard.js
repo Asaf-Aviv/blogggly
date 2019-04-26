@@ -9,7 +9,10 @@ import UserActionsPanel from '../UserActionsPanel';
 
 import './UserCard.sass';
 
-const UserCard = ({ user, following }) => (
+const UserCard = ({
+  user, following, friendRequestPending, isAFriend,
+  isIncomingFriendRequest,
+}) => (
   <div className="user-card">
     <header className="user-card__header">
       <UserAvatar avatar={user.avatar} username={user.username} />
@@ -42,6 +45,9 @@ const UserCard = ({ user, following }) => (
       following={following}
       userId={user._id}
       username={user.username}
+      isIncomingFriendRequest={isIncomingFriendRequest}
+      friendRequestPending={friendRequestPending}
+      isAFriend={isAFriend}
     />
     <span className="user-card__member-since">{`Member since ${moment(+user.createdAt).format('LL')}`}</span>
   </div>
@@ -64,6 +70,9 @@ UserCard.propTypes = {
     }).isRequired,
   }).isRequired,
   following: bool.isRequired,
+  friendRequestPending: bool.isRequired,
+  isAFriend: bool.isRequired,
+  isIncomingFriendRequest: bool.isRequired,
 };
 
 export default UserCard;

@@ -40,6 +40,14 @@ const Users = () => {
                     <li key={user._id}>
                       <UserCard
                         user={user}
+                        isIncomingFriendRequest={isLogged
+                          && loggedUser.incomingFriendRequests.includes(user._id)
+                        }
+                        friendRequestPending={isLogged && (
+                          loggedUser.incomingFriendRequests.includes(user._id)
+                          || loggedUser.sentFriendRequests.includes(user._id)
+                        )}
+                        isAFriend={isLogged && loggedUser.friends.includes(user._id)}
                         following={isLogged && loggedUser.following.includes(user._id)}
                       />
                     </li>
