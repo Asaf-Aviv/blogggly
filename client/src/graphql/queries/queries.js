@@ -317,6 +317,9 @@ export const RELOG = gql`
       comments
       followers
       following
+      friends
+      incomingFriendRequests
+      sentFriendRequests
       followersCount
       followingCount
       tags
@@ -374,6 +377,9 @@ export const LOGIN = gql`
       avatar
       createdAt
       comments
+      friends
+      incomingFriendRequests
+      sentFriendRequests
       followers
       following
       followersCount
@@ -433,6 +439,9 @@ export const SIGNUP = gql`
       avatar
       createdAt
       comments
+      friends
+      incomingFriendRequests
+      sentFriendRequests
       followers
       following
       followersCount
@@ -578,5 +587,35 @@ export const ADD_COMMENT = gql`
 export const REPORT = gql`
   mutation report($report: ReportInput) {
     report(report: $report)
+  }
+`;
+
+export const SEND_FRIEND_REQUEST = gql`
+  mutation sendFriendRequest($userId: ID!) {
+    sendFriendRequest(userId: $userId)
+  }
+`;
+
+export const ACCEPT_FRIEND_REQUEST = gql`
+  mutation acceptFriendRequest($userId: ID!) {
+    acceptFriendRequest(userId: $userId)
+  }
+`;
+
+export const DECLINE_FRIEND_REQUEST = gql`
+  mutation declineFriendRequest($userId: ID!) {
+    declineFriendRequest(userId: $userId)
+  }
+`;
+
+export const CANCEL_FRIEND_REQUEST = gql`
+  mutation cancelFriendRequest($userId: ID!) {
+    cancelFriendRequest(userId: $userId)
+  }
+`;
+
+export const REMOVE_FRIEND = gql`
+  mutation removeFriend($userId: ID!) {
+    removeFriend(userId: $userId)
   }
 `;
