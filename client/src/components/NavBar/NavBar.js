@@ -3,13 +3,13 @@ import { func } from 'prop-types';
 import { MemberFormsContext, UserContext } from '../../context';
 import Container from '../Container';
 import MemberForms from '../MemberForms';
-import NavBarUserMenu from '../NavBarUserMenu';
 import NavMenu from '../NavMenu';
+import NavBarUserPanel from '../NavBarUserPanel';
 
 import './NavBar.sass';
 
 const NavBar = ({ logout }) => {
-  const { loggedUser } = useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
 
   const { showMemberForms, setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
 
@@ -18,22 +18,21 @@ const NavBar = ({ logout }) => {
       <Container>
         <nav className="nav">
           <NavMenu />
-          {loggedUser
-            ? <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
-            : (
-              <button
-                type="button"
-                className="login-btn btn btn--primary"
-                onClick={() => {
-                  setShowLogin(true);
-                  setShowMemberForms(true);
-                }}
-              >
-                Log In
-              </button>
-            )
-          }
-          {showMemberForms && !loggedUser && <MemberForms />}
+          {isLogged ? (
+            <NavBarUserPanel logout={logout} />
+          ) : (
+            <button
+              type="button"
+              className="login-btn btn btn--primary"
+              onClick={() => {
+                setShowLogin(true);
+                setShowMemberForms(true);
+              }}
+            >
+              Log In
+            </button>
+          )}
+          {showMemberForms && !isLogged && <MemberForms />}
         </nav>
       </Container>
     </header>

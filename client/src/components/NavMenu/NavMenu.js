@@ -3,20 +3,25 @@ import { NavLink } from 'react-router-dom';
 
 import './NavMenu.sass';
 
+const navLink = (to, text) => (
+  <li className="nav-menu__item">
+    <NavLink
+      activeClassName="nav-menu__link--active"
+      className="nav-menu__link"
+      exact
+      to={to}
+    >
+      {text}
+    </NavLink>
+  </li>
+);
+
 const NavMenu = () => (
   <ul className="nav-menu">
-    <li className="nav-menu__item">
-      <NavLink className="nav-menu__link" to="/">Home</NavLink>
-    </li>
-    <li className="nav-menu__item">
-      <NavLink className="nav-menu__link" to="/posts">Posts</NavLink>
-    </li>
-    <li className="nav-menu__item">
-      <NavLink className="nav-menu__link" to="/users">Users</NavLink>
-    </li>
-    <li className="nav-menu__item">
-      <NavLink className="nav-menu__link" to="/create">Create</NavLink>
-    </li>
+    {navLink('/', 'Home')}
+    {navLink('/posts', 'Posts')}
+    {navLink('/users', 'Users')}
+    {navLink('/create', 'Create')}
   </ul>
 );
 

@@ -104,7 +104,7 @@ const UserProfileInformation = ({ userInfo }) => {
                 />
               </Label>
             </div>
-            <button className="btn btn--primary user-info__submit-btn" type="submit">Update</button>
+            <button className="btn btn--success user-info__submit-btn" type="submit">Update</button>
           </form>
         </div>
       )}

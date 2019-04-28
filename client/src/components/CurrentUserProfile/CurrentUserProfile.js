@@ -8,12 +8,13 @@ import UserProfileNav from '../UserProfileNav';
 import UserProfileInformation from '../UserProfileInformation';
 import UserProfilePosts from '../UserProfilePosts';
 import UserProfileComments from '../UserProfileComments';
+import UserProfileFriends from '../UserProfileFriends';
 import UserProfileFollows from '../UserProfileFollows';
 import UserProfileLikes from '../UserProfileLikes';
 
 import './CurrentUserProfile.sass';
 
-const CurrentUserProfile = ({ match }) => {
+const CurrentUserProfile = ({ match: { path } }) => {
   const { loggedUser } = useContext(UserContext);
 
   if (!loggedUser) return null;
@@ -23,14 +24,15 @@ const CurrentUserProfile = ({ match }) => {
       <Container>
         <UserProfileNav />
         <Switch>
-          <Route exact path={`${match.path}/information`} render={() => <UserProfileInformation userInfo={loggedUser.info} />} />
-          <Route exact path={`${match.path}/posts`} render={() => <UserProfilePosts postIds={loggedUser.posts} />} />
-          <Route exact path={`${match.path}/comments`} render={() => <UserProfileComments commentIds={loggedUser.comments} />} />
-          <Route exact path={`${match.path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} />} />
-          <Route exact path={`${match.path}/following`} render={() => <UserProfileFollows userIds={loggedUser.following} />} />
-          <Route exact path={`${match.path}/likes`} render={() => <UserProfileLikes likes={loggedUser.likes} />} />
-          <Route exact path={`${match.path}/settings`} render={() => <UserSettings />} />
-          <Route exact path={match.path} render={() => <Redirect to={`${match.path}/information`} />} />
+          <Route path={`${path}/information`} render={() => <UserProfileInformation userInfo={loggedUser.info} />} />
+          <Route path={`${path}/posts`} render={() => <UserProfilePosts postIds={loggedUser.posts} />} />
+          <Route path={`${path}/comments`} render={() => <UserProfileComments commentIds={loggedUser.comments} />} />
+          <Route path={`${path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} />} />
+          <Route path={`${path}/following`} render={() => <UserProfileFollows userIds={loggedUser.following} />} />
+          <Route path={`${path}/friends`} render={() => <UserProfileFriends userIds={loggedUser.friends} />} />
+          <Route path={`${path}/likes`} render={() => <UserProfileLikes likes={loggedUser.likes} />} />
+          <Route path={`${path}/settings`} render={() => <UserSettings />} />
+          <Route path={path} render={() => <Redirect to={`${path}/information`} />} />
           <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Container>

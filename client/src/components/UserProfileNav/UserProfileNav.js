@@ -1,35 +1,36 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { shape, string } from 'prop-types';
+import capitalize from 'lodash.capitalize';
 
 import './UserProfileNav.sass';
 
-const UserProfileNavLink = ({ to, text }) => (
+const UserProfileNavLink = ({ to }) => (
   <li className="user-profile__menu-item">
     <NavLink
       activeClassName="user-profile__menu-link--active"
       className="user-profile__menu-link"
       to={to}
     >
-      {text}
+      {capitalize(to.split('/')[2])}
     </NavLink>
   </li>
 );
 
 UserProfileNavLink.propTypes = {
   to: string.isRequired,
-  text: string.isRequired,
 };
 
-const UserProfileNav = ({ match }) => (
+const UserProfileNav = ({ match: { url } }) => (
   <nav className="user-profile__sidebar">
     <ul className="user-profile__menu">
-      <UserProfileNavLink to={`${match.url}/information`} text="Information" />
-      <UserProfileNavLink to={`${match.url}/posts`} text="Posts" />
-      <UserProfileNavLink to={`${match.url}/comments`} text="Comments" />
-      <UserProfileNavLink to={`${match.url}/followers`} text="Followers" />
-      <UserProfileNavLink to={`${match.url}/following`} text="Following" />
-      <UserProfileNavLink to={`${match.url}/likes`} text="Likes" />
+      <UserProfileNavLink to={`${url}/information`} />
+      <UserProfileNavLink to={`${url}/posts`} />
+      <UserProfileNavLink to={`${url}/comments`} />
+      <UserProfileNavLink to={`${url}/followers`} />
+      <UserProfileNavLink to={`${url}/following`} />
+      <UserProfileNavLink to={`${url}/friends`} />
+      <UserProfileNavLink to={`${url}/likes`} />
     </ul>
   </nav>
 );

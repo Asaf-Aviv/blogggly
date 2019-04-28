@@ -4,9 +4,9 @@ import queries from '../../graphql/queries';
 import Container from '../Container';
 import UserSearchBar from '../UserSearchBar';
 import UserCard from '../UserCard';
+import { UserContext } from '../../context';
 
 import './Users.sass';
-import { UserContext } from '../../context';
 
 const Users = () => {
   const [userQuery, setUserQuery] = useState('');
@@ -26,9 +26,8 @@ const Users = () => {
             query={queries.SEARCH_USERS}
             variables={{ userQuery }}
           >
-            {({ loading, error, data: { users } = {} }) => {
-              if (loading) return <h1>loading</h1>;
-              if (error) return <h1>Error</h1>;
+            {({ loading, data: { users } = {} }) => {
+              if (loading) return null;
 
               if (!users.length) {
                 return <h3 className="users__not-found">No users found.</h3>;

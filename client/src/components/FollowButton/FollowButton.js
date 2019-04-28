@@ -36,7 +36,7 @@ const FollowButton = ({ following, userId, username }) => {
       {follow => (
         <button
           ref={followButtonRef}
-          className="btn btn--primary btn--sm follow-btn"
+          className="btn btn--success btn--sm follow-btn"
           type="button"
           onClick={() => {
             if (!isLogged) {

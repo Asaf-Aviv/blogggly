@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   string, arrayOf, shape, func,
 } from 'prop-types';
@@ -48,30 +48,32 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
         <div ref={dropdown} className="dropdown__container">
           <ul className="dropdown faster animated fadeIn" onClick={() => setIsOpen(false)}>
             <li className="dropdown__item">
-              <Link to="/create" className="dropdown__link">
+              <NavLink activeClassName="dropdown__link--active" to="/create" className="dropdown__link">
                 <i className="dropdown__icon fas fa-plus" />
                 Create
-              </Link>
+              </NavLink>
             </li>
             <li className="dropdown__item">
-              <Link to="/profile/information" className="dropdown__link">
+              <NavLink activeClassName="dropdown__link--active" to="/profile/information" className="dropdown__link">
                 <i className="dropdown__icon fas fa-user" />
                 Profile
-              </Link>
+              </NavLink>
             </li>
             <li className="dropdown__item">
-              <Link to="/inbox" className="dropdown__link">
+              <NavLink activeClassName="dropdown__link--active" to="/inbox" className="dropdown__link">
                 <i className="dropdown__icon fas fa-inbox" />
                 Inbox
-              </Link>
+              </NavLink>
             </li>
             <div className="dropdown__divider" />
             <li
-              className="dropdown__item dropdown__link"
+              className="dropdown__item"
               onClick={logout}
             >
-              <i className="dropdown__icon fas fa-sign-out-alt" />
-              Log Out
+              <span className="dropdown__link">
+                <i className="dropdown__icon fas fa-sign-out-alt" />
+                Log Out
+              </span>
             </li>
           </ul>
         </div>
