@@ -1,20 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import { string, func } from 'prop-types';
+import Alert from 'react-s-alert';
 import queries from '../../graphql/queries';
 import Input from '../Input';
 import Label from '../Label';
+import { UserContext } from '../../context';
 
 import './SendMessageModal.sass';
 
 const SendMessageModal = ({ userId, username, closeModal }) => {
   const [body, setBody] = useState('');
 
+  const { setLoggedUser } = useContext(UserContext);
+
   return (
     <Mutation
       mutation={queries.SEND_MESSAGE}
       variables={{ to: userId, body }}
-      onCompleted={closeModal}
+      onCompleted={({ sendMessage: message }) => {
+        Alert.success('Message sent successfully');
+        setLoggedUser(loggedUser => ({
+          ...loggedUser,
+          inbox: {
+            ...loggedUser.inbox,
+            sent: [message, ...loggedUser.inbox.sent],
+          },
+        }));
+        closeModal();
+      }}
     >
       {sendMessage => (
         <div className="send-message__modal" onClick={closeModal}>
