@@ -1,4 +1,17 @@
 .nav-menu
+  height: 100%
+  display: flex
+  align-items: center
   &__link
     color: #FFF
     border-radius: 3px
+  &__item
+    height: 100%
+    display: flex
+    align-items: center
+  &__link
+    text-decoration: none
+    margin-right: 1rem
+    transition: color 150ms
+    &:hover, &:active, &--active
+      color: var(--light-green)

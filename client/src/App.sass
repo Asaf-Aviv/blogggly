@@ -5,15 +5,18 @@
 
 \:root
   font-size: 18px
-  --main-text-color: #545454;
-  --green: #2ab32a;
+  --main-text-color: #545454
+  --nav-bg-color: #5a5c73
+  --green: #1ab181
+  --light-green: #29ffb9
+  --light-black: #565656
 
 body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: 'Montserrat', sans-serif
   letter-spacing: 0.5px
-  background: #4a4a5f
+  background: #f3f3f3
   color: var(--main-text-color)
   padding-top: 100px
   overflow-x: hidden
@@ -53,19 +56,26 @@ ul
   outline: none
   border-radius: 5px
   transition: background 150ms, color 150ms
-  color: #FFF
   &--default
     color: var(--main-text-color)
+    &:hover
+      background: #dedede
   &--primary
+    color: #FFF
     background: #716bcc
     &:hover
       background: #57539e
     &:active
       background: #44417d
   &--secondary
+    color: #FFF
   &--success
-    background: var(--green)
+    color: #FFF
+    background: #1cbf8b
+    &:hover, &:active
+      background: #14966e
   &--danger
+    color: #FFF
     background: red
   &--sm
     padding: 0 0.5rem

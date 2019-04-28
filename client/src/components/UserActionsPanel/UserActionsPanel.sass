@@ -1,23 +1,78 @@
 .action
+  position: relative
   padding: 0.3rem
   cursor: pointer
   border-radius: 50%
-  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.2)
-  margin: 0 0.3rem
+  box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.15)
+  margin: 0 0.5rem
   transition: transform 100ms
-  &:hover
-    transform: scale(1.1)
+  height: 35px
+  width: 35px
+  display: flex
+  justify-content: center
+  align-items: center
+  .fa-flag
+    color: #ff4343
+  .fa-envelope
+    color: #706bcc
+  .fa-user-plus, .fa-user-check
+    color: #1cbf8a
+  .fa-user-clock
+    color: #f3d01d
   &__icon
     font-size: 20px
     display: block
+  &--friend-request::after
+    position: absolute
+    content: ''
+    width: 12px
+    height: 12px
+    background: #f3d01d
+    border-radius: 50%
+    top: -2px
+    right: -2px
   &s-panel
     width: 100%
     display: flex
-    padding: 0.5rem 1rem
+    padding: 0.5rem
+    align-items: center
+    justify-content: center
+    margin: 1rem
     .follow-btn
-      margin-left: auto
+      margin: 0 0.5rem
       box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.3)
       transition: transform 100ms, box-shadow 100ms
       &:hover
         transform: scale(1.07)
         box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.5)
+
+.pop-up
+  padding: 0.5rem
+  cursor: default
+  border-radius: 5px
+  position: absolute
+  top: -70px
+  right: 50%
+  height: 50px
+  display: flex
+  justify-content: space-evenly
+  align-items: center
+  background: #FFF
+  transform: translateX(50%)
+  box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
+  &::after
+    content: ''
+    position: absolute
+    top: 100%
+    left: 50%
+    margin-left: -15px
+    width: 0
+    height: 0
+    border-top: solid 15px #FFF
+    border-left: solid 15px transparent
+    border-right: solid 15px transparent
+  .btn--default
+    margin: 0 0.5rem
+  .friend-request-actions
+    display: flex
+    align-items: center

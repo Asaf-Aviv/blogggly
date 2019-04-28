@@ -1,6 +1,5 @@
 .user-menu
   position: relative
-  margin-left: auto
   width: 50px
   height: 50px
   padding: 0.3rem
@@ -33,7 +32,7 @@
     margin-left: -12px
   &__container
     position: absolute
-    width: 270px
+    width: 200px
     left: 50%
     top: 73px
     transform: translateX(-50%)
@@ -42,20 +41,30 @@
     transition: background 150ms
     display: flex
     align-items: center
+    border-radius: 5px
+    overflow: hidden
+    .dropdown__link--active
+      background: #5a5c72
+      color: #29ffb9
+    &:hover, &:active, .dropdown__link--active
+      background: #5a5c72
+      .dropdown
+        &__link, &__icon
+          color: #29ffb9
   &__link
     width: 100%
     padding: 0.5rem
     text-decoration: none
-    color: #4d537b
+    color: var(--nav-bg-color)
     font-weight: 600
     display: flex
     align-items: center
-    &:hover, &:active
-      background: #eee
+    transition: all 150ms
+    &
   &__icon
     font-size: 20px
     width: 35px
-    color: #4d537b
+    color: var(--nav-bg-color)
   &__divider
     margin: 1rem 0
     height: 1px

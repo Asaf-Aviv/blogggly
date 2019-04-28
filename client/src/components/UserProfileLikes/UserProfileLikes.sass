@@ -2,25 +2,28 @@
   flex: 1
   &__tabs-container
     display: flex
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
+    margin-bottom: 1rem
   &__tab
     flex: 1
     cursor: pointer
     padding: 0.5rem 0
     font-weight: 600
+    letter-spacing: inherit
     outline: 0
     background: #FFF
     color: #4d537b
     border: 0
     transition: all 150ms
-    margin-bottom: 1rem
     &:hover, &--active
-      background: #4d537b
+      background: var(--nav-bg-color)
       color: #FFF
   &__item
     padding: 1rem
     background: #FFF
     margin-bottom: 1rem
     border-radius: 5px
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
   &__link
     font-weight: 600
     display: inline-block
