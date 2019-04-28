@@ -122,6 +122,16 @@ export const GET_COMMENTS_BY_IDS = gql`
   }
 `;
 
+export const GET_SHORT_USERS_SUMMARY_BY_IDS = gql`
+  query getUsersByIds($userIds: [ID]) {
+    users: getUsersByIds(userIds: $userIds) {
+      _id
+      username
+      avatar
+    }
+  }
+`;
+
 export const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [ID]) {
     users: getUsersByIds(userIds: $userIds) {
@@ -129,8 +139,13 @@ export const GET_USERS_BY_IDS = gql`
       username
       avatar
       createdAt
+      followersCount
+      followingCount
       info {
+        firstname
+        lastname
         bio
+        country
       }
     }
   }
