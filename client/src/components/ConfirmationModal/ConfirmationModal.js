@@ -8,8 +8,8 @@ const ConfirmationModal = ({
   confirmationQuestion, onConfirmText,
   theme,
 }) => (
-  <div className={`confirmation__modal confirmation__modal--${theme}`}>
-    <div className="confirmation">
+  <div className={`confirmation__modal confirmation__modal--${theme}`} onClick={onCancel}>
+    <div className="confirmation" onClick={e => e.stopPropagation()}>
       <button
         className="confirmation__close-btn"
         type="button"
@@ -17,7 +17,7 @@ const ConfirmationModal = ({
       >
         <i className="fas fa-times" />
       </button>
-      <p className="confirmation__text">{confirmationQuestion}</p>
+      <h3 className="confirmation__text">{confirmationQuestion}</h3>
       <div className="confirmation__btn-group">
         <button
           className="btn btn--default"
