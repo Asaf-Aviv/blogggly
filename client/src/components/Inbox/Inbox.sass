@@ -1,10 +1,14 @@
 .inbox
-  height: calc(100vh - 100px)
+  min-height: calc(100vh - 100px)
   .container
     border-radius: 5px
     display: flex
-    flex-wrap: wrap
     align-items: flex-start
+    .empty__container
+      padding: 2rem 0
+      border-radius: 5px
+      background: #FFF
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
   &__header
     border-radius: 5px
     margin: 0 1rem 1rem 0

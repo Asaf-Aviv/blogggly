@@ -1,15 +1,7 @@
 .report
-  &__modal
-    padding: 1rem
-    position: fixed
-    top: 0
-    right: 0
-    left: 0
-    bottom: 0
-    z-index: 500
-    display: flex
-    background: rgba(0, 0, 0, 0.7)
   &__form
+    position: relative
+    cursor: default
     padding: 2rem
     margin: auto
     background: #FFF
@@ -18,6 +10,23 @@
     flex-direction: column
     align-items: flex-start
   &-form
+    &__close-btn
+      position: absolute
+      top: 15px
+      right: 15px
+      background: none
+      border: none
+      display: block
+      width: 45px
+      height: 45px
+      font-size: 25px
+      color: #c1c1c1
+      -webkit-transition: color 150ms
+      transition: color 150ms
+      &:hover, &:active
+        color: #000
+    &__title
+      margin-top: 1rem
     &__textarea
       width: 100%
       margin: 1.5rem 0

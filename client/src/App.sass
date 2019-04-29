@@ -10,13 +10,14 @@
   --green: #1ab181
   --light-green: #29ffb9
   --light-black: #565656
+  --body-bg-color: #f3f3f3
 
 body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   font-family: 'Montserrat', sans-serif
   letter-spacing: 0.5px
-  background: #f3f3f3
+  background:  var(--body-bg-color)
   color: var(--main-text-color)
   padding-top: 100px
   overflow-x: hidden
@@ -51,6 +52,7 @@ ul
   display: inline-block
   height: 50px
   padding: 0 1.5rem
+  font-weight: 600
   background: none
   border: none
   outline: none
@@ -63,6 +65,7 @@ ul
   &--primary
     color: #FFF
     background: #716bcc
+    box-shadow: 0 9px 10px -8px #3c3b5d
     &:hover
       background: #57539e
     &:active
@@ -78,6 +81,15 @@ ul
     color: #FFF
     background: red
   &--sm
+    border-radius: 3px
     padding: 0 0.5rem
     height: 30px
     font-size: 0.8rem
+
+.trash-btn
+  background: none
+  color: #ef1717
+  outline: none
+  border: none
+  font-size: 20px
+  padding: 0.1rem

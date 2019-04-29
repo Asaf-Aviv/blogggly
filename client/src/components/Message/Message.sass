@@ -1,6 +1,5 @@
 .message
   &__container
-    font-size: 14px
     margin-bottom: 1rem
     background: #FFF
     border-radius: 5px
@@ -21,9 +20,16 @@
     display: inline-block
     margin-left: 0.5rem
   &__actions
+    display: flex
     padding: 0.2rem 0.5rem
+    .fa-trash, .fa-flag
+      color: #ef1717
+    .fa-bookmark
+      color: #1cbf8a
+    .fa-reply
+      color: var(--green)
   &__btn
-    margin-right: 0.3rem
+    margin-right: 0.5rem
     font-size: 18px
     padding: 0.2rem
     border: none
