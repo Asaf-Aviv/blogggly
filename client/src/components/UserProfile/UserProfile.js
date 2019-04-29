@@ -9,9 +9,9 @@ const UserProfile = ({ match: { params: { username } } }) => (
     query={queries.GET_USER_BY_USERNAME}
     variables={{ username }}
   >
-    {({ loading, error, data: { user } }) => {
+    {({ loading, error, data: { user } = {} }) => {
       if (loading) return null;
-      if (error) return <Redirect to="/" />;
+      if (error) return <Redirect to="/users" />;
 
       return (
         <div>

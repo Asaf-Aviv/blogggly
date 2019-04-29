@@ -5,19 +5,11 @@ import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import { UserContext } from '../../context';
 import UserAvatar from '../UserAvatar';
+import EmptySentence from '../EmptySentence';
 import FriendRequestActions from '../FriendRequestActions';
 import queries from '../../graphql/queries';
 
 import './FriendRequestNotifications.sass';
-import Emoji from '../Emoji';
-
-const EmptyNotification = () => (
-  <h6 className="notifications__empty">
-    Everything is clear captain
-    {' '}
-    <Emoji emoji="👌" label="OK hand" />
-  </h6>
-);
 
 const FriendRequestNotifications = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -109,7 +101,7 @@ const FriendRequestNotifications = () => {
                 }}
               </Query>
             )
-            : <EmptyNotification />}
+            : <EmptySentence />}
         </div>
       )}
     </div>
