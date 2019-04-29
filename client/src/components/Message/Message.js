@@ -10,6 +10,7 @@ import SendMessageModal from '../SendMessageModal';
 import MessageModal from '../MessageModal';
 import ConfirmationModal from '../ConfirmationModal';
 import { UserContext } from '../../context';
+import ReportModal from '../ReportModal';
 
 import './Message.sass';
 
@@ -19,6 +20,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const { loggedUser, setLoggedUser } = useContext(UserContext);
 
@@ -41,8 +43,8 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     <li key={message._id} className="message__container">
       <div className="message__wrapper" onClick={() => setShowMessageModal(true)}>
         <span className="message__from">{message[fromOrTo].username}</span>
-        <span className="message__body">{message.body}</span>
         <span className="message__date">{moment(+message.createdAt).startOf('seconds').fromNow()}</span>
+        <p className="message__body">{message.body}</p>
       </div>
       <div className="message__actions">
         <Mutation
@@ -84,8 +86,8 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
             variables={{ messageId: message._id }}
             onCompleted={({ deleteMessageId }) => {
               Alert.success('Message deleted successfully');
+              setShowConfirmationModal(false);
               const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
-              console.log(deleteMessageId);
 
               const updatedMessages = loggedUser.inbox[sentOrReceived]
                 .filter(msg => msg._id !== deleteMessageId);
@@ -119,9 +121,21 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           </Mutation>
         )}
         {message.from._id !== loggedUserId && (
-          <button className="message__btn" type="button" onClick={() => setShowReplyModal(true)}>
-            <i className="fas fa-reply" />
-          </button>
+          <>
+            <button className="message__btn" type="button" onClick={() => setShowReplyModal(true)}>
+              <i className="fas fa-reply" />
+            </button>
+            <button className="message__btn message__report-btn" type="button" onClick={() => setShowReportModal(true)}>
+              <i className="fas fa-flag" />
+            </button>
+            {showReportModal && (
+            <ReportModal
+              reportedId={message._id}
+              type="message"
+              closeModal={() => setShowReportModal(false)}
+            />
+            )}
+          </>
         )}
       </div>
       {showReplyModal && (
@@ -136,10 +150,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
       )}
       {showConfirmationModal && (
         <ConfirmationModal
-          onConfirm={async () => {
-            await deleteFunc();
-            setShowConfirmationModal(false);
-          }}
+          onConfirm={deleteFunc}
           onCancel={() => setShowConfirmationModal(false)}
           onConfirmText="Delete"
           confirmationQuestion="Are you sure you want to delete this message?"
