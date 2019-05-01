@@ -24,15 +24,15 @@ const CurrentUserProfile = ({ match: { path } }) => {
       <Container>
         <UserProfileNav />
         <Switch>
-          <Route path={`${path}/information`} render={() => <UserProfileInformation userInfo={loggedUser.info} />} />
-          <Route path={`${path}/posts`} render={() => <UserProfilePosts postIds={loggedUser.posts} />} />
-          <Route path={`${path}/comments`} render={() => <UserProfileComments commentIds={loggedUser.comments} />} />
-          <Route path={`${path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} />} />
-          <Route path={`${path}/following`} render={() => <UserProfileFollows userIds={loggedUser.following} />} />
-          <Route path={`${path}/friends`} render={() => <UserProfileFriends userIds={loggedUser.friends} />} />
-          <Route path={`${path}/likes`} render={() => <UserProfileLikes likes={loggedUser.likes} />} />
-          <Route path={`${path}/settings`} render={() => <UserSettings />} />
-          <Route path={path} render={() => <Redirect to={`${path}/information`} />} />
+          <Route exact path={`${path}/information`} render={() => <UserProfileInformation userInfo={loggedUser.info} />} />
+          <Route exact path={`${path}/posts`} render={() => <UserProfilePosts postIds={loggedUser.posts} />} />
+          <Route exact path={`${path}/comments`} render={() => <UserProfileComments commentIds={loggedUser.comments} />} />
+          <Route exact path={`${path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} />} />
+          <Route exact path={`${path}/following`} render={() => <UserProfileFollows userIds={loggedUser.following} />} />
+          <Route exact path={`${path}/friends`} render={() => <UserProfileFriends userIds={loggedUser.friends} />} />
+          <Route exact path={`${path}/likes`} render={() => <UserProfileLikes likes={loggedUser.likes} />} />
+          <Route exact path={`${path}/settings`} render={() => <UserSettings />} />
+          <Route exact path={path} render={() => <Redirect to={`${path}/information`} />} />
           <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Container>
