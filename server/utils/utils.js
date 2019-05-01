@@ -39,8 +39,8 @@ exports.createFakeData = async () => {
     await Comment.deleteMany(),
   ]);
 
-  const fakeUsersAndPosts = [...Array(5)]
-    .map(async (_, i) => {
+  const fakeUsers = await Promise.all(
+    [...Array(5)].map(async (_, i) => {
       let userInput;
       if (i) {
         userInput = {
@@ -55,45 +55,44 @@ exports.createFakeData = async () => {
           password: '12345',
         };
       }
+      return User.createUser(userInput);
+    }),
+  );
 
-      const user = await User.createUser(userInput);
+  await Promise.all(
+    [...Array(5)].map(async (_, i) => { // eslint-disable-line
+      const postInput = {
+        author: fakeUsers[i],
+        title: sample(titles),
+        body: `
+        Lorem ipsum dolor sit, amet consectetur 
+        adipisicing elit. Dolore laboriosam praesentium ab 
+        animi totam! Quas sapiente ipsa nobis porro unde dignissimos 
+        expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+        que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
 
-      [...Array(5)].map(async (_, i) => { // eslint-disable-line
-        const postInput = {
-          author: user._id,
-          title: sample(titles),
-          body: `
-          Lorem ipsum dolor sit, amet consectetur 
-          adipisicing elit. Dolore laboriosam praesentium ab 
-          animi totam! Quas sapiente ipsa nobis porro unde dignissimos 
-          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
-          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
+        Loa nobis porro unde dignissimos 
+        expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+        que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
 
-          Loa nobis porro unde dignissimos 
-          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
-          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
-
-          Lorem ipsum dolor sit, amet consectetur 
-          adipisicing elit. Dolore laboriosam praesentium ab 
-          animi totam!nde dignissimos 
-          expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
-          que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
-        `,
-          tags: ['React', 'Programming'],
-        };
-
-        return Post.createPost(postInput);
-      });
-    });
-
-  await Promise.all(fakeUsersAndPosts);
+        Lorem ipsum dolor sit, amet consectetur 
+        adipisicing elit. Dolore laboriosam praesentium ab 
+        animi totam!nde dignissimos 
+        expedita incidunt doloribus corrupti quasi enim ullam voluptas ea 
+        que magni, nemo fugit culpa cum dolores deleniti sequi explicabo laborum.
+      `,
+        tags: ['React', 'Programming'],
+      };
+      return Post.createPost(postInput);
+    }),
+  );
 
   const users = await User.find();
   const posts = await Post.find();
-
-  for (const post of posts) {
-    for (const user of users) {
-      await Comment.addComment({
+  // eslint-disable
+  for (const post of posts) {// eslint-disable-line
+    for (const user of users) {// eslint-disable-line
+      await Comment.addComment({ // eslint-disable-line
         author: user._id,
         post: post._id,
         body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, cum.',
@@ -101,11 +100,11 @@ exports.createFakeData = async () => {
     }
   }
 
-  for (const user1 of users) {
-    await User.findByIdAndUpdate(user1._id, { $set: { 'info.bio': sample(titles) } });
-    for (const user2 of users) {
+  for (const user1 of users) {// eslint-disable-line
+    await User.findByIdAndUpdate(user1._id, { $set: { 'info.bio': sample(titles) } });// eslint-disable-line
+    for (const user2 of users) {// eslint-disable-line
       if (user1.username !== user2.username) {
-        await User.sendMessage(user1._id, user2._id, 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque, tempora.');
+        await User.sendMessage(user1._id, user2._id, 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque, tempora.');// eslint-disable-line
       }
     }
   }
