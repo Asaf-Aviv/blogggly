@@ -3,18 +3,12 @@ const Post = require('../../models/Post');
 
 module.exports = {
   Query: {
-    post: async (root, { postId }) => {
-      const post = await Post.findPostById(postId);
-      console.log(post);
-      if (post.deleted) {
-        throw new Error('This post has been deleted');
-      }
-      return post;
-    },
-    posts: async () => Post.find({ deleted: false }),
+    post: async (root, { postId }, { postLoader }) => (
+      postLoader.load(postId)
+    ),
     postsByTag: async (root, { tag }) => Post.find({ tags: { $in: [tag] } }),
     userPosts: (root, { id }) => Post.findPostsForUser(id),
-    getPostsByIds: async (root, { postIds }, { postLoader }) => (
+    getPostsByIds: (root, { postIds }, { postLoader }) => (
       postLoader.loadMany(postIds)
     ),
     moreFromAuthor: (root, { authorId, viewingPostId }) => (
@@ -36,6 +30,5 @@ module.exports = {
   },
   Post: {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
-    comments: ({ comments }, args, { commentLoader }) => commentLoader.loadMany(comments),
   },
 };

@@ -2,10 +2,10 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Mutation {
-    sendMessage(to: ID, body: String): Message
-    bookmarkMessage(messageId: ID): Message
-    moveMessageToTrash(messageId: ID): Message
-    deleteMessage(messageId: ID): ID
+    sendMessage(to: ID, body: String): Message!
+    bookmarkMessage(messageId: ID): Message!
+    moveMessageToTrash(messageId: ID): Message!
+    deleteMessage(messageId: ID): ID!
   }
 
   type Message {

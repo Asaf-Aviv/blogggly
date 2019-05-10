@@ -3,12 +3,11 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   type Query {
     getCommentsByIds(commentIds: [ID]): [Comment!]!
-    postComments(postId: ID): [Comment!]!
   }
   
   type Mutation {
-    addComment(comment: CommentInput): Post
-    deleteComment(commentId: ID, postId: ID): ID
+    addComment(comment: CommentInput): Post!
+    deleteComment(commentId: ID, postId: ID): ID!
   }
 
   type Comment {

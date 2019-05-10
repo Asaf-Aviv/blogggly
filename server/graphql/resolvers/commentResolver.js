@@ -4,20 +4,14 @@ const Comment = require('../../models/Comment');
 
 module.exports = {
   Query: {
-    getCommentsByIds: async (root, { commentIds }, { commentLoader }) => {
-      const comments = await commentLoader.loadMany(commentIds);
-      console.log(comments);
-      return comments;
-    },
-    postComments: async (root, { postId }, { commentLoader }) => {
-      const commentIds = await Comment.findCommentsForPost(postId);
-      return commentLoader.load(commentIds.map(String));
-    },
+    getCommentsByIds: async (root, { commentIds }, { commentLoader }) => (
+      commentLoader.loadMany(commentIds)
+    ),
   },
   Mutation: {
     addComment: (root, { comment }, { userId }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to comment.');
-      return Comment.addComment({ author: userId, ...comment });
+      return Comment.addComment({ ...comment, author: userId });
     },
     deleteComment: async (root, { commentId, postId }, { userId }) => {
       const [user, post, comment] = await Promise.all([
@@ -34,16 +28,14 @@ module.exports = {
 
       post.commentsCount -= 1;
 
-      console.log(comment);
-
       await Promise.all([
-        comment.likes.map(async likeUserId => User.findByIdAndUpdate(
+        user.save(),
+        post.save(),
+        Comment.findByIdAndRemove(commentId),
+        ...comment.likes.map(likeUserId => User.findByIdAndUpdate(
           likeUserId,
           { $pull: { 'likes.comments': commentId } },
         )),
-        Comment.findByIdAndRemove(commentId),
-        post.save(),
-        user.save(),
       ]);
 
       return comment._id;

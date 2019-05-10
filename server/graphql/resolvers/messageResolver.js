@@ -19,8 +19,8 @@ module.exports = {
       await user.save();
       return message;
     },
-    moveMessageToTrash: async (root, { messageId }, { userId }) => {
-      const user = await User.findUserById(userId);
+    moveMessageToTrash: async (root, { messageId }, { userId, userLoader }) => {
+      const user = await userLoader.load(userId);
 
       const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
         || user.inbox.sent.find(m => m._id.toString() === messageId);
@@ -31,9 +31,8 @@ module.exports = {
       await user.save();
       return message;
     },
-
-    deleteMessage: async (root, { messageId }, { userId }) => {
-      const user = await User.findUserById(userId);
+    deleteMessage: async (root, { messageId }, { userId, userLoader }) => {
+      const user = await userLoader.load(userId);
 
       let message = user.inbox.inbox
         .splice(user.inbox.inbox
@@ -48,7 +47,6 @@ module.exports = {
       await user.save();
       return message[0]._id;
     },
-
   },
   Message: {
     // FIXME: userLoader return from data as to and vice versa

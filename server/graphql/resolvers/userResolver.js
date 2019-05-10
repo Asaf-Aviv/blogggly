@@ -9,11 +9,9 @@ module.exports = {
       users.map(user => userLoader.prime(user._id, user));
       return users;
     },
-    getUsersByIds: async (root, { userIds }, { userLoader }) => {
-      const users = await userLoader.loadMany(userIds);
-      console.log(users);
-      return users;
-    },
+    getUsersByIds: async (root, { userIds }, { userLoader }) => (
+      userLoader.loadMany(userIds)
+    ),
     getUserByUsername: async (root, { username }) => User.findOne({ username }),
     searchUsers: async (root, { userQuery }) => {
       const regEx = new RegExp(userQuery, 'i');
@@ -31,8 +29,6 @@ module.exports = {
       const token = generateToken(currentUser._id);
 
       const user = (await userLoader.load(currentUser._id)).toObject();
-
-      console.log(user);
 
       return { ...user, token };
     },

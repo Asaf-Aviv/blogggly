@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Mutation {
-    toggleLike(id: ID, isPost: Boolean): ToggleLikeResult
+    toggleLike(id: ID, isPost: Boolean): ToggleLikeResult!
   }
 
   union ToggleLikeResult = Post | Comment
