@@ -2,7 +2,6 @@ import React from 'react';
 import { string } from 'prop-types';
 import { Query } from 'react-apollo';
 import utils from '../../utils';
-import Container from '../Container';
 import queries from '../../graphql/queries';
 import ShowcaseCard from '../ShowcaseCard';
 
@@ -14,9 +13,8 @@ const MoreFromAuthor = ({ authorId, viewingPostId, authorName }) => (
     variables={{ authorId, viewingPostId }}
     onError={utils.UIErrorNotifier}
   >
-    {({ loading, error, data: { moreFromAuthor } }) => {
-      if (loading) return <Container><h1>loading</h1></Container>;
-      if (error) return <Container><h1>Failed to fetch comments.</h1></Container>;
+    {({ loading, data: { moreFromAuthor } }) => {
+      if (loading) return null;
 
       if (!moreFromAuthor.length) return null;
 
