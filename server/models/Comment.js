@@ -25,7 +25,7 @@ CommentSchema.statics.findCommentsByIds = async function (commentIds) {
     return [];
   }
 
-  return this.find({ _id: { $in: commentIds } });
+  return this.find({ _id: { $in: commentIds } }).sort({ createdAt: -1 });
 };
 
 CommentSchema.statics.findCommentsForPost = async function (postId) {
