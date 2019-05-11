@@ -19,13 +19,14 @@ const UserProfilePosts = ({ postIds }) => (
       return (
         <div className="user-profile__posts">
           {posts.map(post => (
-            <ShowcaseCard key={post._id} post={post} />
+            <ShowcaseCard key={post._id} post={post} isAuthor />
           ))}
         </div>
       );
     }}
   </Query>
 );
+
 
 UserProfilePosts.propTypes = {
   postIds: arrayOf(string).isRequired,
