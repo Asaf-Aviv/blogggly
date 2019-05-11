@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  shape, number, string, arrayOf,
+  shape, number, string, arrayOf, bool,
 } from 'prop-types';
 import Tags from '../Tags';
+import DeletePostButton from '../DeletePostButton';
 
 import './ShowcaseCard.sass';
 
-const ShowcaseCard = ({ post }) => (
+const ShowcaseCard = ({ post, isAuthor }) => (
   <div className="showcase__card">
-    <Link to={`/post/${post._id}`}>
-      <h4 className="showcase__card-title">{post.title}</h4>
+    <Link to={`/post/${post._id}`} className="showcase__card-link">
+      <h5 className="showcase__card-title">{post.title}</h5>
     </Link>
     <Tags tags={post.tags} />
     <div className="showcase__footer">
@@ -22,6 +23,7 @@ const ShowcaseCard = ({ post }) => (
         <i className="icon comments-icon fas fa-comments" />
         <span className="showcase__feedback-count">{post.commentsCount}</span>
       </div>
+      {isAuthor && <DeletePostButton postId={post._id} />}
     </div>
   </div>
 );
@@ -34,6 +36,7 @@ ShowcaseCard.propTypes = {
     tags: arrayOf(string).isRequired,
     commentsCount: number.isRequired,
   }).isRequired,
+  isAuthor: bool.isRequired,
 };
 
 export default ShowcaseCard;
