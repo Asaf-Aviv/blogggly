@@ -9,7 +9,7 @@ import { UserContext, MemberFormsContext } from '../../context';
 import './FollowButton.sass';
 
 const FollowButton = ({ following, userId, username }) => {
-  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { isLogged, setLoggedUser } = useContext(UserContext);
   const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   const followButtonRef = useRef(null);
@@ -23,14 +23,13 @@ const FollowButton = ({ following, userId, username }) => {
   return (
     <Mutation
       mutation={queries.TOGGLE_FOLLOW}
-      errorPolicy="all"
       variables={{ userId }}
       onError={(err) => {
         utils.UIErrorNotifier(err);
         changeFollowText();
       }}
       onCompleted={({ toggleFollow }) => {
-        setLoggedUser({ ...loggedUser, ...toggleFollow });
+        setLoggedUser(loggedUser => ({ ...loggedUser, ...toggleFollow }));
       }}
     >
       {follow => (
@@ -55,6 +54,7 @@ const FollowButton = ({ following, userId, username }) => {
     </Mutation>
   );
 };
+
 FollowButton.propTypes = {
   following: bool.isRequired,
   userId: string.isRequired,
