@@ -15,7 +15,7 @@ const Posts = ({ match: { params: { tag } } }) => (
     onError={utils.UIErrorNotifier}
   >
     {({ loading, data: { posts } }) => {
-      if (loading) return <h1>loading</h1>;
+      if (loading) return null;
 
       return (
         <Container>
