@@ -528,7 +528,7 @@ export const MORE_FROM_AUTHOR = gql`
 `;
 
 export const POST = gql`
-  query post($postId: ID, $withComments: Boolean = false) {
+  query post($postId: ID) {
     post(postId: $postId) {
       _id
       title
@@ -539,18 +539,9 @@ export const POST = gql`
       commentsCount
       likesCount
       likes
+      comments
       author {
         ...userDetails
-      }
-      comments @include(if: $withComments) {
-        _id
-        body
-        createdAt
-        likesCount
-        likes
-        author {
-          ...userDetails
-        }
       }
     }
   }
