@@ -14,9 +14,15 @@ module.exports = {
     moreFromAuthor: (root, { authorId, viewingPostId }) => (
       User.moreFromAuthor(authorId, viewingPostId)
     ),
+    searchPosts: async (root, { postQuery }) => (
+      Post.find({ title: new RegExp(postQuery, 'i') })
+    ),
   },
   Mutation: {
-    createPost: (root, { postInput }) => Post.createPost(postInput),
+    createPost: (root, { postInput }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized, Please Login to publish a post.');
+      return Post.createPost({ author: userId, ...postInput });
+    },
     updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),
     deletePost: async (root, { postId }, { userId }) => {
       const post = await Post.findById(postId);

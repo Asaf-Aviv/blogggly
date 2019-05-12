@@ -7,6 +7,7 @@ module.exports = gql`
     postsByTag(tag: String): [Post!]!
     userPosts(id: ID): [Post!]!
     moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
+    searchPosts(postQuery: String!): [Post!]!
   }
 
   type Mutation {
@@ -31,7 +32,6 @@ module.exports = gql`
   }
 
   input PostInput {
-    author: ID!
     body: String!
     tags: [String!]!
     title: String!

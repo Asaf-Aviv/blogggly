@@ -46,6 +46,20 @@ export const SEARCH_USERS = gql`
   }
 `;
 
+export const SEARCH_POSTS = gql`
+  query searchPosts($postQuery: String!) {
+    posts: searchPosts(postQuery: $postQuery) {
+      _id
+      title
+      author {
+        _id
+        avatar
+        username
+      }
+    }
+  }
+`;
+
 export const GET_POSTS_BY_IDS = gql`
   query getPostsByIds($postIds: [ID]) {
     posts: getPostsByIds(postIds: $postIds) {
