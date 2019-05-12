@@ -5,6 +5,7 @@ import Container from '../Container';
 import MemberForms from '../MemberForms';
 import NavMenu from '../NavMenu';
 import NavBarUserPanel from '../NavBarUserPanel';
+import NavSearchBar from '../NavSearchBar';
 
 import './NavBar.sass';
 
@@ -18,6 +19,7 @@ const NavBar = ({ logout }) => {
       <Container>
         <nav className="nav">
           <NavMenu />
+          <NavSearchBar />
           {isLogged ? (
             <NavBarUserPanel logout={logout} />
           ) : (
