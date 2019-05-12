@@ -1,6 +1,6 @@
 import { string, shape, bool } from 'prop-types';
 
-export const UserShortSummaryPropTypes = shape({
+const UserShortSummaryPropTypes = shape({
   _id: string.isRequired,
   username: string.isRequired,
   avatar: string.isRequired,
@@ -21,3 +21,11 @@ export const MessagePropTypes = shape({
   createdAt: string.isRequired,
   read: bool.isRequired,
 });
+
+export const SearchPostPropTypes = shape({
+  _id: string.isRequired,
+  title: string.isRequired,
+  author: UserShortSummaryPropTypes.isRequired,
+});
+
+export { UserShortSummaryPropTypes };
