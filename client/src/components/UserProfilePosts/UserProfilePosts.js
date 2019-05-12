@@ -27,7 +27,6 @@ const UserProfilePosts = ({ postIds }) => (
   </Query>
 );
 
-
 UserProfilePosts.propTypes = {
   postIds: arrayOf(string).isRequired,
 };

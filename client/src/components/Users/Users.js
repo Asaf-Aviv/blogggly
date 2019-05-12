@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Query } from 'react-apollo';
 import queries from '../../graphql/queries';
 import Container from '../Container';
@@ -12,10 +12,6 @@ const Users = () => {
   const [userQuery, setUserQuery] = useState('');
 
   const { loggedUser, isLogged } = useContext(UserContext);
-
-  useEffect(() => {
-    console.log('setting query', userQuery);
-  }, [userQuery]);
 
   return (
     <main className="users__main">

@@ -13,10 +13,9 @@ module.exports = {
       userLoader.loadMany(userIds)
     ),
     getUserByUsername: async (root, { username }) => User.findOne({ username }),
-    searchUsers: async (root, { userQuery }) => {
-      const regEx = new RegExp(userQuery, 'i');
-      return User.find({ username: regEx });
-    },
+    searchUsers: async (root, { userQuery }) => (
+      User.find({ username: new RegExp(userQuery, 'i') })
+    ),
   },
   Mutation: {
     relog: async (root, args, { userId, userLoader }) => {

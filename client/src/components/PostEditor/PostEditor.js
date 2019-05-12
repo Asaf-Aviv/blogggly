@@ -99,7 +99,6 @@ const PostEditor = () => {
         mutation={queries.CREATE_POST}
         variables={{
           postInput: {
-            author: loggedUser && loggedUser._id,
             title: postTitle,
             body: postBody,
             tags: tags.map(({ value }) => value),

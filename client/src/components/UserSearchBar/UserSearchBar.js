@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useDebouncedCallback from 'use-debounce/lib/callback';
+import { func } from 'prop-types';
 
 import './UserSearchBar.sass';
-import { func } from 'prop-types';
 
 const UserSearchBar = ({ setUserQuery }) => {
   const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ const UserSearchBar = ({ setUserQuery }) => {
   return (
     <header className="search-bar">
       <input
-        placeholder="Search a user"
+        placeholder="Search users"
         className="search-bar__input"
         type="text"
         onChange={e => setUsername(e.target.value)}
