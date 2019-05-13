@@ -588,18 +588,7 @@ export const ADD_COMMENT = gql`
   mutation addComment($comment: CommentInput) {
     addComment(comment: $comment) {
       _id
-      comments {
-        _id
-        body
-        createdAt
-        likesCount
-        likes
-        author {
-          _id
-          username
-          avatar
-        }
-      }
+      comments
     }
   }
 `;
