@@ -21,7 +21,7 @@ const Login = ({ toggleForms, hideForms }) => {
       errorPolicy="all"
       onError={utils.UIErrorNotifier}
       onCompleted={({ login: currentUser }) => {
-        setLoggedUser(currentUser);
+        setLoggedUser(() => currentUser);
         setToken(currentUser.token);
         hideForms();
       }}

@@ -12,7 +12,7 @@ import './AddComment.sass';
 const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');
 
-  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setLoggedUser, isLogged } = useContext(UserContext);
   const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   return (
@@ -24,16 +24,22 @@ const AddComment = ({ postId }) => {
           body: commentBody,
         },
       }}
-      onCompleted={({ addComment: { comments } }) => {
-        console.log(comments);
+      onCompleted={({ addComment: { comments, len = comments.length - 1 } }) => {
         setCommentBody('');
-        setLoggedUser({
-          ...loggedUser,
-          comments: [
-            comments[comments.length - 1]._id,
-            ...loggedUser.comments,
-          ],
+
+        console.log(comments);
+
+        setLoggedUser((draft) => {
+          draft.comments.unshift(comments[len]._id);
         });
+
+        // setLoggedUser({
+        //   ...loggedUser,
+        //   comments: [
+        //     comments[comments.length - 1]._id,
+        //     ...loggedUser.comments,
+        //   ],
+        // });
       }}
       onError={utils.UIErrorNotifier}
     >

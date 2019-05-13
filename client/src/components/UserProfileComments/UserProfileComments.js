@@ -11,7 +11,7 @@ import UserProfileComment from '../UserProfileComment/UserProfileComment';
 const UserProfileComments = ({ commentIds }) => {
   const [deletedCommentsIds, setDeletedCommentsIds] = useState([]);
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { setLoggedUser } = useContext(UserContext);
 
   const cacheDeletedComments = useRef([]);
 
@@ -26,18 +26,22 @@ const UserProfileComments = ({ commentIds }) => {
   }, [deletedCommentsIds]);
 
   useEffect(() => () => {
-    const updatedComments = loggedUser.comments
-      .filter(commentId => !cacheDeletedComments.current.includes(commentId));
+    const notInQueue = commentId => !cacheDeletedComments.current.includes(commentId);
 
-    setLoggedUser({
-      ...loggedUser,
-      comments: updatedComments,
-      likes: {
-        ...loggedUser.likes,
-        comments: loggedUser.likes.comments
-          .filter(commentId => !cacheDeletedComments.current.includes(commentId)),
-      },
+    setLoggedUser((draft) => {
+      draft.comments = draft.comments.filter(notInQueue);
+      draft.likes.comments = draft.likes.comments.filter(notInQueue);
     });
+
+    // setLoggedUser({
+    //   ...loggedUser,
+    //   comments: updatedComments,
+    //   likes: {
+    //     ...loggedUser.likes,
+    //     comments: loggedUser.likes.comments
+    //       .filter(commentId => !cacheDeletedComments.current.includes(commentId)),
+    //   },
+    // });
   }, []);
 
   return (

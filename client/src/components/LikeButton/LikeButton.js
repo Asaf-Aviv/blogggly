@@ -17,7 +17,7 @@ const toggleHeartClass = (e) => {
 };
 
 const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
-  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setLoggedUser, isLogged } = useContext(UserContext);
   const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   return (
@@ -31,25 +31,33 @@ const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
       onCompleted={({ toggleLike }) => {
         const likeOnWhat = isPost ? 'posts' : 'comments';
 
-        loggedUser.likes[likeOnWhat].includes(toggleLike._id)
-          ? setLoggedUser({
-            ...loggedUser,
-            likes: {
-              ...loggedUser.likes,
-              [likeOnWhat]: loggedUser.likes[likeOnWhat]
-                .filter(likeId => likeId !== toggleLike._id),
-            },
-          })
-          : setLoggedUser({
-            ...loggedUser,
-            likes: {
-              ...loggedUser.likes,
-              [likeOnWhat]: [
-                toggleLike._id,
-                ...loggedUser.likes[likeOnWhat],
-              ],
-            },
-          });
+        setLoggedUser((draft) => {
+          draft.likes[likeOnWhat].includes(toggleLike._id)
+            ? draft.likes[likeOnWhat].splice(
+              draft.likes[likeOnWhat].indexOf(toggleLike._id), 1,
+            )
+            : draft.likes[likeOnWhat].unshift(toggleLike._id);
+        });
+
+        // loggedUser.likes[likeOnWhat].includes(toggleLike._id)
+        //   ? setLoggedUser({
+        //     ...loggedUser,
+        //     likes: {
+        //       ...loggedUser.likes,
+        //       [likeOnWhat]: loggedUser.likes[likeOnWhat]
+        //         .filter(likeId => likeId !== toggleLike._id),
+        //     },
+        //   })
+        //   : setLoggedUser({
+        //     ...loggedUser,
+        //     likes: {
+        //       ...loggedUser.likes,
+        //       [likeOnWhat]: [
+        //         toggleLike._id,
+        //         ...loggedUser.likes[likeOnWhat],
+        //       ],
+        //     },
+        //   });
       }}
     >
       {toggleLike => (

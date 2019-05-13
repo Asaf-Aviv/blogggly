@@ -22,21 +22,28 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { setLoggedUser } = useContext(UserContext);
 
   const updateLoggedUserInbox = (sentOrReceived, updatedMessage) => {
-    const updatedMessages = loggedUser.inbox[sentOrReceived]
-      .map(msg => (msg._id === updatedMessage._id
-        ? updatedMessage : msg
-      ));
-
-    setLoggedUser({
-      ...loggedUser,
-      inbox: {
-        ...loggedUser.inbox,
-        [sentOrReceived]: updatedMessages,
-      },
+    setLoggedUser((draft) => {
+      const messagesArray = draft.inbox[sentOrReceived];
+      messagesArray.splice(
+        messagesArray.indexOf(msg => msg._id === updatedMessage._id, 1, updatedMessage),
+      );
     });
+
+    // const updatedMessages = loggedUser.inbox[sentOrReceived]
+    //   .map(msg => (msg._id === updatedMessage._id
+    //     ? updatedMessage : msg
+    //   ));
+
+    // setLoggedUser({
+    //   ...loggedUser,
+    //   inbox: {
+    //     ...loggedUser.inbox,
+    //     [sentOrReceived]: updatedMessages,
+    //   },
+    // });
   };
 
   return (
@@ -85,20 +92,26 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
             mutation={queries.DELETE_MESSAGE}
             variables={{ messageId: message._id }}
             onCompleted={({ deleteMessageId }) => {
+              const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
+              setLoggedUser((draft) => {
+                const messagesArray = draft.inbox[sentOrReceived];
+                messagesArray.splice(
+                  messagesArray.indexOf(msg => msg._id !== deleteMessageId), 1,
+                );
+              });
               Alert.success('Message deleted successfully');
               setShowConfirmationModal(false);
-              const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
 
-              const updatedMessages = loggedUser.inbox[sentOrReceived]
-                .filter(msg => msg._id !== deleteMessageId);
+              // const updatedMessages = loggedUser.inbox[sentOrReceived]
+              //   .filter(msg => msg._id !== deleteMessageId);
 
-              setLoggedUser({
-                ...loggedUser,
-                inbox: {
-                  ...loggedUser.inbox,
-                  [sentOrReceived]: updatedMessages,
-                },
-              });
+              // setLoggedUser({
+              //   ...loggedUser,
+              //   inbox: {
+              //     ...loggedUser.inbox,
+              //     [sentOrReceived]: updatedMessages,
+              //   },
+              // });
             }}
             onError={utils.UIErrorNotifier}
           >

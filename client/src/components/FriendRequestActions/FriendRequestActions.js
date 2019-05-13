@@ -19,13 +19,16 @@ const FriendRequestActions = ({
         onError={utils.UIErrorNotifier}
         onCompleted={() => {
           Alert.success('Request sent successfully');
-          setLoggedUser(loggedUser => ({
-            ...loggedUser,
-            sentFriendRequests: [
-              ...loggedUser.sentFriendRequests,
-              userId,
-            ],
-          }));
+          setLoggedUser((draft) => {
+            draft.sentFriendRequests.push(userId);
+          });
+          // setLoggedUser(loggedUser => ({
+          //   ...loggedUser,
+          //   sentFriendRequests: [
+          //     ...loggedUser.sentFriendRequests,
+          //     userId,
+          //   ],
+          // }));
         }}
       >
         {sendFriendRequest => render(sendFriendRequest)}
@@ -40,11 +43,17 @@ const FriendRequestActions = ({
         variables={{ userId }}
         onError={utils.UIErrorNotifier}
         onCompleted={() => {
-          setLoggedUser(loggedUser => ({
-            ...loggedUser,
-            sentFriendRequests: loggedUser.sentFriendRequests
-              .filter(request => request !== userId),
-          }));
+          setLoggedUser((draft) => {
+            draft.sentFriendRequests.splice(
+              draft.sentFriendRequests.indexOf(request => request === userId), 1,
+            );
+          });
+
+          // setLoggedUser(loggedUser => ({
+          //   ...loggedUser,
+          //   sentFriendRequests: loggedUser.sentFriendRequests
+          //     .filter(request => request !== userId),
+          // }));
         }}
       >
         {cancelFriendRequest => render(cancelFriendRequest)}
@@ -58,11 +67,17 @@ const FriendRequestActions = ({
         mutation={queries.DECLINE_FRIEND_REQUEST}
         variables={{ userId }}
         onCompleted={() => {
-          setLoggedUser(loggedUser => ({
-            ...loggedUser,
-            incomingFriendRequests: loggedUser.incomingFriendRequests
-              .filter(request => request !== userId),
-          }));
+          setLoggedUser((draft) => {
+            draft.incomingFriendRequests.splice(
+              draft.incomingFriendRequests.indexOf(request => request === userId), 1,
+            );
+          });
+
+          // setLoggedUser(loggedUser => ({
+          //   ...loggedUser,
+          //   incomingFriendRequests: loggedUser.incomingFriendRequests
+          //     .filter(request => request !== userId),
+          // }));
         }}
       >
         {declineFriendRequest => (
@@ -71,12 +86,19 @@ const FriendRequestActions = ({
             variables={{ userId }}
             onCompleted={() => {
               Alert.success(`You and ${username} are now friends`);
-              setLoggedUser(loggedUser => ({
-                ...loggedUser,
-                incomingFriendRequests: loggedUser.incomingFriendRequests
-                  .filter(request => request !== userId),
-                friends: [...loggedUser.friends, userId],
-              }));
+              setLoggedUser((draft) => {
+                draft.friends.push(userId);
+                draft.incomingFriendRequests.splice(
+                  draft.incomingFriendRequests.indexOf(request => request !== userId, 1),
+                );
+              });
+
+              // setLoggedUser(loggedUser => ({
+              //   ...loggedUser,
+              //   incomingFriendRequests: loggedUser.incomingFriendRequests
+              //     .filter(request => request !== userId),
+              //   friends: [...loggedUser.friends, userId],
+              // }));
             }}
           >
             {accpetFriendRequest => render(declineFriendRequest, accpetFriendRequest)}

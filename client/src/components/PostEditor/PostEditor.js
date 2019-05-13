@@ -63,7 +63,7 @@ const PostEditor = () => {
   const postTitleRef = useRef(null);
   const quillRef = useRef(null);
 
-  const { loggedUser, setLoggedUser, isLogged } = useContext(UserContext);
+  const { setLoggedUser, isLogged } = useContext(UserContext);
   const { setShowLogin, setShowMemberForms } = useContext(MemberFormsContext);
 
   useEffect(() => {
@@ -109,13 +109,18 @@ const PostEditor = () => {
         onCompleted={({ createPost: newPost }) => {
           localStorage.removeItem('postTitle');
           localStorage.removeItem('postBody');
-          setLoggedUser({
-            ...loggedUser,
-            posts: [
-              newPost._id,
-              ...loggedUser.posts,
-            ],
+
+          setLoggedUser((draft) => {
+            draft.posts.unshift(newPost._id);
           });
+
+          // setLoggedUser({
+          //   ...loggedUser,
+          //   posts: [
+          //     newPost._id,
+          //     ...loggedUser.posts,
+          //   ],
+          // });
           setNewPostId(newPost._id);
         }}
       >

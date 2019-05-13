@@ -20,14 +20,10 @@ const SendMessageModal = ({ userId, username, closeModal }) => {
       mutation={queries.SEND_MESSAGE}
       variables={{ to: userId, body }}
       onCompleted={({ sendMessage: message }) => {
+        setLoggedUser((draft) => {
+          draft.inbox.sent.unshift(message);
+        });
         Alert.success('Message sent successfully');
-        setLoggedUser(loggedUser => ({
-          ...loggedUser,
-          inbox: {
-            ...loggedUser.inbox,
-            sent: [message, ...loggedUser.inbox.sent],
-          },
-        }));
         closeModal();
       }}
     >

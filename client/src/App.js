@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
+import { useImmer } from 'use-immer';
 import apolloClient from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
@@ -20,7 +21,7 @@ import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
 import './App.sass';
 
 const App = () => {
-  const [loggedUser, setLoggedUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useImmer(null);
   const [token, setToken] = useState(null);
 
   const [showMemberForms, setShowMemberForms] = useState(false);
@@ -54,7 +55,7 @@ const App = () => {
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
-    setLoggedUser(null);
+    setLoggedUser(() => null);
   };
 
   const relog = async () => {
@@ -63,8 +64,8 @@ const App = () => {
       const { data: { relog: relogResult } } = await apolloClient.mutate({
         mutation: queries.RELOG,
       });
-      console.log(relogResult);
-      setLoggedUser(relogResult);
+      console.log(relog);
+      setLoggedUser(() => relogResult);
     } catch (error) {
       console.log('relog error', error.message);
       setToken(null);

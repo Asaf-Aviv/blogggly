@@ -22,7 +22,7 @@ const UserProfileInformation = ({ userInfo }) => {
     (userInfo.dateOfBirth && new Date(userInfo.dateOfBirth)) || null,
   );
 
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
+  const { setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
@@ -37,8 +37,10 @@ const UserProfileInformation = ({ userInfo }) => {
           dateOfBirth,
         },
       }}
-      onCompleted={(data) => {
-        setLoggedUser({ ...loggedUser, info: data.updateUserInfo.info });
+      onCompleted={({ updateUserInfo }) => {
+        setLoggedUser((draft) => {
+          draft.info = updateUserInfo.info;
+        });
         Alert.success('Information updated successfully.');
       }}
     >
