@@ -1,6 +1,8 @@
+
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const { createServer } = require('http');
 const path = require('path');
 const { ApolloServer } = require('apollo-server-express');
 const isAuth = require('../middleware/isAuth');
@@ -8,11 +10,13 @@ const typeDefs = require('../graphql/schema');
 const resolvers = require('../graphql/resolvers');
 const { createLoaders } = require('../utils');
 
-const productionMode = process.env.NODE_ENV === 'production';
-
 const app = express();
+const httpServer = createServer(app);
 
-if (process.env.NODE_ENV !== 'production') {
+const devMode = process.env.NODE_ENV !== 'production';
+const PORT = process.env.NODE_ENV || 5000;
+
+if (devMode) {
   mongoose.set('debug', true);
   app.use(morgan('dev'));
 }
@@ -25,27 +29,35 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(isAuth);
 
-app.use((req, res, next) => {
-  console.log('isAuth', req.isAuth);
-  next();
-});
-
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({
-    ...createLoaders(),
-    isAuth: req.isAuth,
-    userId: req.userId,
-  }),
+  context: ({ req, connection }) => {
+    if (connection) {
+      console.log(connection);
+      return connection.context;
+    }
+
+    return {
+      ...createLoaders(),
+      isAuth: req.isAuth,
+      userId: req.userId,
+    };
+  },
 });
 
 apolloServer.applyMiddleware({ app });
+apolloServer.installSubscriptionHandlers(httpServer);
+
+httpServer.listen(PORT, () => {
+  console.log(`🚀  Apollo Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
+  console.log(`🚀  Apollo Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`);
+});
 
 app.get('/*', (req, res) => {
   res.sendFile(
     path.join(
-      __dirname, `../../client/${productionMode ? 'dist' : 'public'}`, 'index.html',
+      __dirname, `../../client/${devMode ? 'public' : 'dist'}`, 'index.html',
     ),
   );
 });

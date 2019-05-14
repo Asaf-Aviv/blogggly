@@ -22,6 +22,10 @@ module.exports = gql`
     removeFriend(userId: ID!): Boolean
   }
 
+  type Subscription {
+    newFriendRequest: User
+  }
+
   type CurrentUser {
     token: String
     _id: ID!

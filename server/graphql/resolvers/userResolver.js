@@ -1,5 +1,7 @@
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
+const pubsub = require('../pubsub');
+const { NEW_FRIEND_REQUEST } = require('../tags');
 
 module.exports = {
   Query: {
@@ -44,10 +46,10 @@ module.exports = {
       if (!userId) throw new Error('Unauthorized.');
       return User.toggleFollow(userId, userIdToFollow);
     },
-    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cbfc0140389d842b895be4d' }) => {
+    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cd60ece73783b225425ecbf' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      const [isRequestExist, alreadyFriends] = await Promise.all([
+      const [senderRequestExist, senderAlreadyFriends] = await Promise.all([
         User.findOne(
           { _id: userId, sentFriendRequests: { $elemMatch: { $eq: requestedUserId } } },
           { _id: 1 },
@@ -58,10 +60,10 @@ module.exports = {
         ),
       ]);
 
-      if (isRequestExist) throw new Error('Request already sent.');
-      if (alreadyFriends) throw new Error('Already friends.');
+      if (senderRequestExist) throw new Error('Request already sent.');
+      if (senderAlreadyFriends) throw new Error('Already friends.');
 
-      await Promise.all([
+      const [sender] = await Promise.all([
         User.findByIdAndUpdate(
           userId,
           { $push: { sentFriendRequests: requestedUserId } },
@@ -71,9 +73,14 @@ module.exports = {
           { $push: { incomingFriendRequests: userId } },
         ),
       ]);
+
+      console.log(sender);
+
+      pubsub.publish(NEW_FRIEND_REQUEST, sender);
+
       return requestedUserId;
     },
-    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cbfc0140389d842b895be4d' }) => {
+    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cd60ece73783b225425ecbf' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       const isRequestExist = await User.findOne(
@@ -122,7 +129,7 @@ module.exports = {
 
       return true;
     },
-    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cbfc0140389d842b895be4d' }) => {
+    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbd' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -153,6 +160,12 @@ module.exports = {
       ]);
 
       return true;
+    },
+  },
+  Subscription: {
+    newFriendRequest: {
+      subscribe: () => pubsub.asyncIterator([NEW_FRIEND_REQUEST]),
+      resolve: payload => payload,
     },
   },
 };
