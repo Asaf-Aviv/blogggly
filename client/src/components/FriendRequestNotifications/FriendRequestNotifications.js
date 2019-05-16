@@ -26,10 +26,6 @@ const FriendRequestNotifications = () => {
   }, [isOpen]);
 
   const handleOutsideClick = (e) => {
-    console.log('click');
-    const where = notificationBoxRef.current.contains(e.target) ? 'inside' : 'outside';
-    console.log(notificationBoxRef.current.contains(e.target));
-    console.log(`${e.target} is ${where}`);
     if (notificationBoxRef.current.contains(e.target)) return;
     setIsOpen(false);
   };

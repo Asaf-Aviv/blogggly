@@ -12,7 +12,7 @@ const NavSearchInput = ({ setPostSearchQuery, setShowResults }) => {
 
   useEffect(() => {
     debouncedCallback(postQuery);
-  }, [postQuery]);
+  }, [postQuery, debouncedCallback]);
 
   return (
     <input

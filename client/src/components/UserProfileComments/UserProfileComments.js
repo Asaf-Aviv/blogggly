@@ -42,7 +42,7 @@ const UserProfileComments = ({ commentIds }) => {
     //       .filter(commentId => !cacheDeletedComments.current.includes(commentId)),
     //   },
     // });
-  }, []);
+  }, [setLoggedUser]);
 
   return (
     <Query

@@ -23,7 +23,6 @@ const SignUp = ({ toggleForms, hideForms }) => {
       errorPolicy="all"
       onError={utils.UIErrorNotifier}
       onCompleted={({ signup: currentUser }) => {
-        console.log(currentUser);
         setLoggedUser(() => currentUser);
         setToken(currentUser.token);
         hideForms();

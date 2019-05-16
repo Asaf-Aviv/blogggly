@@ -18,7 +18,6 @@ import 'react-quill/dist/quill.snow.css';
 import './PostEditor.sass';
 
 const saveToLocalStorage = debounce((key, value) => {
-  console.log('saving');
   localStorage.setItem(key, value);
 }, 1000);
 
@@ -74,10 +73,6 @@ const PostEditor = () => {
     postTitleRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    console.log('tags', tags);
-  }, [tags]);
-
   if (newPostId) {
     return (
       <Redirect to={`/post/${newPostId}`} />
@@ -90,7 +85,6 @@ const PostEditor = () => {
       return;
     }
     setTags(selectedOptions);
-    console.log('Option selected:', selectedOptions);
   };
 
   return (
@@ -178,7 +172,6 @@ const PostEditor = () => {
 
                 if (!postTitle || !tags.length || postBodyLength < 10) return;
 
-                console.log(postBody);
                 createPost();
               }}
             >
