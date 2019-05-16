@@ -32,9 +32,20 @@ app.use(isAuth);
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  subscriptions: {
+    onConnect: (connectionParams, webSocket) => {
+      console.log('*'.repeat(20));
+      console.log(connectionParams);
+      console.log('*'.repeat(20));
+      console.log(webSocket);
+      console.log('*'.repeat(20));
+      console.log('websocket connected');
+      console.log('*'.repeat(20));
+    },
+  },
   context: ({ req, connection }) => {
     if (connection) {
-      console.log(connection);
+      console.log(connection.context);
       return connection.context;
     }
 

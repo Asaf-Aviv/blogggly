@@ -23,7 +23,7 @@ module.exports = gql`
   }
 
   type Subscription {
-    newFriendRequest: User
+    newFriendRequest(currentUserId: ID!): User!
   }
 
   type CurrentUser {

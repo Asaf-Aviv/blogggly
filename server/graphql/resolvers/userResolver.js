@@ -1,5 +1,6 @@
+const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
-const { generateToken } = require('../../utils');
+const { generateToken, shouldPublishSubscription } = require('../../utils');
 const pubsub = require('../pubsub');
 const { NEW_FRIEND_REQUEST } = require('../tags');
 
@@ -21,7 +22,6 @@ module.exports = {
   },
   Mutation: {
     relog: async (root, args, { userId, userLoader }) => {
-      console.log('relogging');
       if (!userId) throw new Error('Unauthorized.');
       return userLoader.load(userId);
     },
@@ -74,9 +74,7 @@ module.exports = {
         ),
       ]);
 
-      console.log(sender);
-
-      pubsub.publish(NEW_FRIEND_REQUEST, sender);
+      pubsub.publish(NEW_FRIEND_REQUEST, { user: sender, toUserId: requestedUserId });
 
       return requestedUserId;
     },
@@ -164,8 +162,11 @@ module.exports = {
   },
   Subscription: {
     newFriendRequest: {
-      subscribe: () => pubsub.asyncIterator([NEW_FRIEND_REQUEST]),
-      resolve: payload => payload,
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
+        shouldPublishSubscription,
+      ),
+      resolve: ({ user }) => user,
     },
   },
 };

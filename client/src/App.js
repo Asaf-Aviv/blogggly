@@ -2,6 +2,7 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
 import { useImmer } from 'use-immer';
+import { Subscription } from 'react-apollo';
 import apolloClient from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
@@ -28,23 +29,31 @@ const App = () => {
   const [showLogin, setShowLogin] = useState(true);
 
   const toggleForms = () => {
-    console.log('toggling');
     setShowLogin(!showLogin);
   };
 
   useEffect(() => {
     if (loggedUser) setShowMemberForms(false);
-  }, [showMemberForms]);
+  }, [loggedUser, showMemberForms]);
 
   useLayoutEffect(() => {
     const cachedToken = localStorage.getItem('token');
 
-    if (cachedToken) {
-      console.log('setting token');
-      setToken(cachedToken);
-      relog();
-    }
-  }, []);
+    const relog = async () => {
+      try {
+        const { data: { relog: relogResult } } = await apolloClient.mutate({
+          mutation: queries.RELOG,
+        });
+        console.log(relogResult);
+        setLoggedUser(() => relogResult);
+      } catch (error) {
+        setToken(null);
+        localStorage.removeItem('token');
+      }
+    };
+
+    if (cachedToken) relog();
+  }, [setLoggedUser]);
 
   useEffect(() => {
     if (token) {
@@ -58,23 +67,21 @@ const App = () => {
     setLoggedUser(() => null);
   };
 
-  const relog = async () => {
-    console.log('relogging');
-    try {
-      const { data: { relog: relogResult } } = await apolloClient.mutate({
-        mutation: queries.RELOG,
-      });
-      console.log(relog);
-      setLoggedUser(() => relogResult);
-    } catch (error) {
-      console.log('relog error', error.message);
-      setToken(null);
-      localStorage.removeItem('token');
-    }
-  };
-
   return (
     <>
+      {!!loggedUser && (
+        <Subscription
+          subscription={queries.NEW_FRIEND_REQUEST}
+          variables={{ currentUserId: loggedUser._id }}
+        >
+          {({ loading, error, data }) => {
+            if (loading) console.log(loading);
+            if (error) console.log(error);
+            if (data) console.log(data);
+            return null;
+          }}
+        </Subscription>
+      )}
       <UserContext.Provider
         value={{
           loggedUser,
