@@ -11,8 +11,6 @@ module.exports = {
     },
   },
   ToggleLikeResult: {
-    __resolveType({ post: parentPost }) {
-      return parentPost ? 'Comment' : 'Post';
-    },
+    __resolveType: ({ post: parentPost }) => (parentPost ? 'Comment' : 'Post'),
   },
 };
