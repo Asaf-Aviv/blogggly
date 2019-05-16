@@ -6,7 +6,12 @@ module.exports = {
     'jest': true,
     'browser': true,
   },
+  plugins: [
+    "react-hooks",
+  ],
   rules: {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     'import/no-dynamic-require': 0,
     'import/no-extraneous-dependencies': 0,
     'global-require': 0,
