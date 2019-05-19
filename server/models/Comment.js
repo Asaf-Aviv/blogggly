@@ -4,7 +4,9 @@ const { Schema } = mongoose;
 
 const CommentSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
+  post: {
+    type: Schema.Types.ObjectId, ref: 'Post', required: true, index: true,
+  },
   body: { type: String, required: true },
   likesCount: { type: Number, default: 0 },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -52,7 +54,7 @@ CommentSchema.statics.addComment = async function (commentInput) {
     await user.save(),
   ]);
 
-  return post;
+  return comment;
 };
 
 CommentSchema.statics.toggleLike = async function (id, userId) {
