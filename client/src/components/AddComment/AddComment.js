@@ -9,7 +9,7 @@ import { UserContext, MemberFormsContext } from '../../context';
 
 import './AddComment.sass';
 
-const AddComment = ({ postId }) => {
+const AddComment = ({ postId, sortBy }) => {
   const [commentBody, setCommentBody] = useState('');
 
   const { setLoggedUser, isLogged } = useContext(UserContext);
@@ -24,22 +24,20 @@ const AddComment = ({ postId }) => {
           body: commentBody,
         },
       }}
-      onCompleted={({ addComment: { comments, len = comments.length - 1 } }) => {
+      update={(proxy, { data: { newComment } }) => {
+        const query = {
+          query: queries.POST_COMMENTS,
+          variables: { postId, sortBy },
+        };
+        const data = proxy.readQuery(query);
+        data.comments.push(newComment);
+        proxy.writeQuery({ ...query, data });
+      }}
+      onCompleted={({ newComment }) => {
         setCommentBody('');
-
-        console.log(comments);
-
         setLoggedUser((draft) => {
-          draft.comments.unshift(comments[len]._id);
+          draft.comments.unshift(newComment._id);
         });
-
-        // setLoggedUser({
-        //   ...loggedUser,
-        //   comments: [
-        //     comments[comments.length - 1]._id,
-        //     ...loggedUser.comments,
-        //   ],
-        // });
       }}
       onError={utils.UIErrorNotifier}
     >
@@ -80,6 +78,7 @@ const AddComment = ({ postId }) => {
 
 AddComment.propTypes = {
   postId: string.isRequired,
+  sortBy: string.isRequired,
 };
 
 export default AddComment;
