@@ -17,14 +17,4 @@ ReactDOM.render(
   rootEl,
 );
 
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    const NextApp = require('./App').default;
-    ReactDOM.render(
-      <NextApp />,
-      rootEl,
-    );
-  });
-}
-
 serviceWorker.unregister();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
+import { hot } from 'react-hot-loader/root';
 import { useImmer } from 'use-immer';
 import { Subscription } from 'react-apollo';
 import apolloClient from './ApolloClient';
@@ -127,4 +128,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default hot(App);
