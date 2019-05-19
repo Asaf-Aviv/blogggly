@@ -20,7 +20,7 @@ module.exports = gql`
     _id: ID!
     author: User!
     body: String!
-    comments: [ID!]!
+    comments: [Comment!]!
     commentsCount: Int!
     createdAt: String!
     likes: [ID!]!
