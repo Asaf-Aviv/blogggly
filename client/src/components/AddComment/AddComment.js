@@ -9,7 +9,7 @@ import { UserContext, MemberFormsContext } from '../../context';
 
 import './AddComment.sass';
 
-const AddComment = ({ postId, sortBy }) => {
+const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');
 
   const { setLoggedUser, isLogged } = useContext(UserContext);
@@ -27,7 +27,7 @@ const AddComment = ({ postId, sortBy }) => {
       update={(proxy, { data: { newComment } }) => {
         const query = {
           query: queries.POST_COMMENTS,
-          variables: { postId, sortBy },
+          variables: { postId },
         };
         const data = proxy.readQuery(query);
         data.comments.push(newComment);
@@ -78,7 +78,6 @@ const AddComment = ({ postId, sortBy }) => {
 
 AddComment.propTypes = {
   postId: string.isRequired,
-  sortBy: string.isRequired,
 };
 
 export default AddComment;

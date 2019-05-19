@@ -98,8 +98,8 @@ export const GET_COMMENTS_BY_IDS = gql`
 `;
 
 export const POST_COMMENTS = gql`
-  query postComments($postId: ID!, $sortBy: SortCommentsBy!) {
-    comments: postComments(postId: $postId, sortBy: $sortBy) {
+  query postComments($postId: ID!) {
+    comments: postComments(postId: $postId) {
       _id
       body
       createdAt

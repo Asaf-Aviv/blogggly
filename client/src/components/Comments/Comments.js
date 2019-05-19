@@ -16,11 +16,11 @@ const Comments = ({ postId }) => {
       <header className="comments__header">
         <h2>Comments</h2>
       </header>
-      <AddComment postId={postId} sortBy={sortBy} />
+      <AddComment postId={postId} />
       <SortByPanel setSortBy={setSortBy} />
       <Query
         query={queries.POST_COMMENTS}
-        variables={{ postId, sortBy }}
+        variables={{ postId }}
       >
         {({ loading, data: { comments } }) => {
           if (loading) return null;

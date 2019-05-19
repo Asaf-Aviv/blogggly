@@ -7,6 +7,7 @@ module.exports = {
     getCommentsByIds: async (root, { commentIds }, { commentLoader }) => (
       commentLoader.loadMany(commentIds)
     ),
+    postComments: async (root, { postId }) => Comment.find({ post: postId }),
   },
   Mutation: {
     addComment: (root, { comment }, { userId }) => {
