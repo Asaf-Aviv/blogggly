@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { string } from 'prop-types';
 import { Query } from 'react-apollo';
+import orderBy from 'lodash.orderby';
 import Comment from '../Comment';
 import queries from '../../graphql/queries';
 import AddComment from '../AddComment';
@@ -9,7 +10,7 @@ import SortByPanel from '../SortByPanel';
 import './Comments.sass';
 
 const Comments = ({ postId }) => {
-  const [sortBy, setSortBy] = useState('DATE_DESC');
+  const [sortBy, setSortBy] = useState({ key: 'createdAt', order: 'desc' });
 
   return (
     <section className="comments">
@@ -24,16 +25,17 @@ const Comments = ({ postId }) => {
       >
         {({ loading, data: { comments } }) => {
           if (loading) return null;
+          if (!comments.length) return <div className="comments__empty">Be the first one to comment</div>;
 
-          return comments.length
-            ? (
-              <ul className="comments__list">
-                {comments.map(comment => (
+          return (
+            <ul className="comments__list">
+              {orderBy(comments, sortBy.key, sortBy.order)
+                .map(comment => (
                   <Comment key={comment._id} comment={comment} postId={postId} />
-                ))}
-              </ul>
-            )
-            : <div className="comments__empty">Be the first one to comment</div>;
+                ))
+              }
+            </ul>
+          );
         }}
       </Query>
     </section>

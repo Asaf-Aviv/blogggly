@@ -7,21 +7,21 @@ const SortByPanel = ({ setSortBy }) => (
     <button
       className="sort-by__btn"
       type="button"
-      onClick={() => setSortBy('DATE_ASC')}
+      onClick={() => setSortBy({ key: 'createdAt', order: 'desc' })}
     >
       Newest
     </button>
     <button
       className="sort-by__btn"
       type="button"
-      onClick={() => setSortBy('DATE_DESC')}
+      onClick={() => setSortBy({ key: 'createdAt', order: 'asc' })}
     >
       Oldest
     </button>
     <button
       className="sort-by__btn"
       type="button"
-      onClick={() => setSortBy('LIKES')}
+      onClick={() => setSortBy({ key: 'likesCount', order: 'desc' })}
     >
       Best
     </button>
