@@ -69,7 +69,7 @@ const Post = ({ match: { params: { postId } } }) => {
                 authorId={post.author._id}
                 viewingPostId={postId}
               />
-              <Comments postId={post._id} commentIds={post.comments} />
+              <Comments postId={post._id} />
             </Container>
           );
         }}
