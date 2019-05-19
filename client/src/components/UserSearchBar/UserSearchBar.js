@@ -14,7 +14,7 @@ const UserSearchBar = ({ setUserQuery }) => {
 
   useEffect(() => {
     debouncedCallback(username);
-  }, [username]);
+  }, [username, debouncedCallback]);
 
   return (
     <header className="search-bar">

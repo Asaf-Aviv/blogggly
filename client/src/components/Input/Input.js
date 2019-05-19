@@ -28,7 +28,7 @@ const Input = ({
     if (validateFunc && value.length > 3) {
       debouncedCallback(value);
     }
-  }, [value]);
+  }, [value, debouncedCallback, validateFunc]);
 
   return (
     <div className="input__wrapper">
