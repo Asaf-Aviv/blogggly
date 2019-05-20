@@ -17,6 +17,7 @@ import Post from './components/Post';
 import Inbox from './components/Inbox/Inbox';
 import UserProfile from './components/UserProfile';
 import CurrentUserProfile from './components/CurrentUserProfile';
+import { wsClient } from './ApolloClient/ApolloClient';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
@@ -59,6 +60,7 @@ const App = () => {
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
+      wsClient.close(false, false);
     }
   }, [token]);
 
