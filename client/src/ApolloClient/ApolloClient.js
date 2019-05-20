@@ -5,13 +5,17 @@ import { HttpLink } from 'apollo-link-http';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 
-const Authorization = `Bearer ${localStorage.getItem('token') || ''}`;
+const getToken = () => {
+  const token = localStorage.getItem('token');
+  return token ? `Bearer ${token}` : null;
+};
 
 const authLink = setContext((_, { headers }) => ({
   headers: {
     ...headers,
-    Authorization,
+    Authorization: getToken(),
   },
 }));
 
@@ -19,15 +23,15 @@ const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',
 });
 
-const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:5000/graphql',
-  options: {
-    reconnect: true,
-    connectionParams: {
-      Authorization,
-    },
-  },
+const wsClient = new SubscriptionClient('ws://localhost:5000/graphql', {
+  reconnect: true,
+  lazy: true,
+  connectionParams: () => ({
+    Authorization: getToken(),
+  }),
 });
+
+const wsLink = new WebSocketLink(wsClient);
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
@@ -54,4 +58,4 @@ const apolloClient = new ApolloClient({
   cache,
 });
 
-export default apolloClient;
+export { apolloClient as default, wsClient };
