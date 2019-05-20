@@ -24,14 +24,14 @@ const AddComment = ({ postId }) => {
           body: commentBody,
         },
       }}
-      update={(proxy, { data: { newComment } }) => {
+      update={(cache, { data: { newComment } }) => {
         const query = {
           query: queries.POST_COMMENTS,
           variables: { postId },
         };
-        const data = proxy.readQuery(query);
+        const data = cache.readQuery(query);
         data.comments.push(newComment);
-        proxy.writeQuery({ ...query, data });
+        cache.writeQuery({ ...query, data });
       }}
       onCompleted={({ newComment }) => {
         setCommentBody('');

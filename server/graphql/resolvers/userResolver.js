@@ -1,7 +1,6 @@
 const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const { generateToken, shouldPublishSubscription } = require('../../utils');
-const pubsub = require('../pubsub');
 const { NEW_FRIEND_REQUEST } = require('../tags');
 
 module.exports = {
@@ -46,7 +45,7 @@ module.exports = {
       if (!userId) throw new Error('Unauthorized.');
       return User.toggleFollow(userId, userIdToFollow);
     },
-    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cd60ece73783b225425ecbf' }) => {
+    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       const [senderRequestExist, senderAlreadyFriends] = await Promise.all([
@@ -163,7 +162,7 @@ module.exports = {
   Subscription: {
     newFriendRequest: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
+        (_, __, { pubsub }) => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
         shouldPublishSubscription,
       ),
       resolve: ({ user }) => user,
