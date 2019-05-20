@@ -42,12 +42,19 @@ const apolloServer = new ApolloServer({
       console.log('websocket connected');
       console.log('*'.repeat(20));
 
-      const token = connectionParams.Authorization.replace('Bearer ', '');
+      let currentUserId = null;
 
-      const { userId } = token ? jwt.verify(token, process.env.JWT_SECRET) : {};
+      if (connectionParams.Authorization) {
+        try {
+          const token = connectionParams.Authorization.replace('Bearer ', '');
+          const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+          currentUserId = userId;
+        // eslint-disable-next-line no-empty
+        } catch (e) {}
+      }
 
       return {
-        currentUserId: userId || null,
+        currentUserId,
       };
     },
   },
