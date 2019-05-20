@@ -11,6 +11,10 @@ module.exports = gql`
     deleteComment(commentId: ID, postId: ID): ID!
   }
 
+  type Subscription {
+    newPostComment(postId: ID!, currentUserId: ID): Comment!
+  }
+
   type Comment {
     _id: ID!
     author: User!

@@ -1,6 +1,8 @@
+const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
+const { NEW_POST_COMMENT } = require('../tags');
 
 module.exports = {
   Query: {
@@ -10,9 +12,12 @@ module.exports = {
     postComments: async (root, { postId }) => Comment.find({ post: postId }),
   },
   Mutation: {
-    addComment: (root, { comment }, { userId }) => {
+    addComment: async (root, { comment }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to comment.');
-      return Comment.addComment({ ...comment, author: userId });
+
+      const newPostComment = await Comment.addComment({ ...comment, author: userId });
+      pubsub.publish(NEW_POST_COMMENT, { newPostComment });
+      return newPostComment;
     },
     deleteComment: async (root, { commentId, postId }, { userId }) => {
       const [user, post, comment] = await Promise.all([
@@ -40,6 +45,17 @@ module.exports = {
       ]);
 
       return comment._id;
+    },
+  },
+  Subscription: {
+    newPostComment: {
+      subscribe: withFilter(
+        (_, __, { pubsub }) => pubsub.asyncIterator(NEW_POST_COMMENT),
+        ({ newPostComment }, { currentUserId }) => (
+          newPostComment.author._id.toString() !== currentUserId
+        ),
+      ),
+      resolve: ({ newPostComment }) => newPostComment,
     },
   },
   Comment: {
