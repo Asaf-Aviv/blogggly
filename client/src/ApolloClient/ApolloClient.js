@@ -6,10 +6,12 @@ import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 
+const Authorization = `Bearer ${localStorage.getItem('token') || ''}`;
+
 const authLink = setContext((_, { headers }) => ({
   headers: {
     ...headers,
-    authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+    Authorization,
   },
 }));
 
@@ -21,6 +23,9 @@ const wsLink = new WebSocketLink({
   uri: 'ws://localhost:5000/graphql',
   options: {
     reconnect: true,
+    connectionParams: {
+      Authorization,
+    },
   },
 });
 
