@@ -50,10 +50,12 @@ module.exports = {
   Subscription: {
     newPostComment: {
       subscribe: withFilter(
-        (_, __, { pubsub }) => pubsub.asyncIterator(NEW_POST_COMMENT),
-        ({ newPostComment }, { currentUserId }) => (
-          newPostComment.author._id.toString() !== currentUserId
-        ),
+        (root, args, { pubsub }) => pubsub.asyncIterator(NEW_POST_COMMENT),
+        ({ newPostComment }, args, { currentUserId }) => {
+          console.log(currentUserId);
+
+          return newPostComment.author._id.toString() !== currentUserId;
+        },
       ),
       resolve: ({ newPostComment }) => newPostComment,
     },

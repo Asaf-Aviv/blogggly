@@ -12,7 +12,7 @@ module.exports = gql`
   }
 
   type Subscription {
-    newPostComment(postId: ID!, currentUserId: ID): Comment!
+    newPostComment(postId: ID!): Comment!
   }
 
   type Comment {

@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const { createServer } = require('http');
 const path = require('path');
 const { ApolloServer } = require('apollo-server-express');
@@ -40,12 +41,19 @@ const apolloServer = new ApolloServer({
       console.log('*'.repeat(20));
       console.log('websocket connected');
       console.log('*'.repeat(20));
-      return true;
+
+      const token = connectionParams.Authorization.replace('Bearer ', '');
+
+      const { userId } = token ? jwt.verify(token, process.env.JWT_SECRET) : {};
+
+      return {
+        currentUserId: userId || null,
+      };
     },
   },
   context: ({ req, connection }) => {
     if (connection) {
-      console.log(connection.context);
+      console.log('context', connection.context);
       return {
         ...connection.context,
         ...createLoaders(),

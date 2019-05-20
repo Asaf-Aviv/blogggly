@@ -11,8 +11,8 @@ export const NEW_FRIEND_REQUEST = gql`
 `;
 
 export const NEW_POST_COMMENT = gql`
-  subscription newPostComment($postId: ID!, $currentUserId: ID) {
-    newPostComment(postId: $postId, currentUserId: $currentUserId) {
+  subscription newPostComment($postId: ID!) {
+    newPostComment(postId: $postId) {
       _id
       author {
         _id
