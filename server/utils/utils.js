@@ -5,8 +5,6 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
-exports.shouldPublishSubscription = ({ toUserId }, { currentUserId }) => toUserId === currentUserId;
-
 exports.generateToken = (userId) => {
   const token = jwt.sign(
     { userId },
