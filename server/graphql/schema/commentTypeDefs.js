@@ -9,10 +9,12 @@ module.exports = gql`
   type Mutation {
     addComment(comment: CommentInput): Comment!
     deleteComment(commentId: ID, postId: ID): ID!
+    toggleLikeOnComment(commentId: ID!): Comment!
   }
 
   type Subscription {
     newPostComment(postId: ID!): Comment!
+    commentLikesUpdates(postId: ID!): CommentLikesUpdatesResult!
   }
 
   type Comment {
@@ -23,6 +25,13 @@ module.exports = gql`
     likes: [ID!]!
     likesCount: Int!
     post: Post!
+  }
+
+  type CommentLikesUpdatesResult {
+    postId: ID!
+    userId: ID!
+    commentId: ID!
+    isLike: Boolean!
   }
 
   input CommentInput {

@@ -57,9 +57,9 @@ CommentSchema.statics.addComment = async function (commentInput) {
   return comment;
 };
 
-CommentSchema.statics.toggleLike = async function (id, userId) {
+CommentSchema.statics.toggleLike = async function (commentId, userId) {
   const [comment, user] = await Promise.all([
-    this.findCommentById(id),
+    this.findCommentById(commentId),
     User.findUserById(userId),
   ]);
 
@@ -73,7 +73,7 @@ CommentSchema.statics.toggleLike = async function (id, userId) {
     comment.likesCount -= 1;
 
     user.likes.comments = user.likes.comments
-      .filter(commentId => commentId.toString() !== comment._id.toString());
+      .filter(cId => cId.toString() !== comment._id.toString());
   } else {
     comment.likes.push(userId);
     comment.likesCount += 1;
@@ -86,7 +86,7 @@ CommentSchema.statics.toggleLike = async function (id, userId) {
     user.save(),
   ]);
 
-  return comment;
+  return { comment, isLike: !alreadyLike };
 };
 
 module.exports = mongoose.model('Comment', CommentSchema);

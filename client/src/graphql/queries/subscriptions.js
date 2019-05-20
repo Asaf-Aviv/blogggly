@@ -26,3 +26,22 @@ export const NEW_POST_COMMENT = gql`
     }
   }
 `;
+
+export const POST_LIKES_UPDATES = gql`
+  subscription postLikesUpdates($postId: ID!) {
+    postLikeUpdates(postId: $postId) {
+      isLike
+      userId
+    }
+  }
+`;
+export const COMMENT_LIKES_UPDATES = gql`
+  subscription commentLikesUpdates($postId: ID!) {
+    commentLikesUpdates(postId: $postId) {
+      isLike
+      userId
+      postId
+      commentId
+    }
+  }
+`;

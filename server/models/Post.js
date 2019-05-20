@@ -86,9 +86,9 @@ PostSchema.statics.findPostById = async function (postId) {
   return post;
 };
 
-PostSchema.statics.toggleLike = async function (id, userId) {
+PostSchema.statics.toggleLike = async function (postId, userId) {
   const [post, user] = await Promise.all([
-    this.findPostById(id),
+    this.findPostById(postId),
     User.findUserById(userId),
   ]);
 
@@ -102,12 +102,11 @@ PostSchema.statics.toggleLike = async function (id, userId) {
     post.likesCount -= 1;
 
     user.likes.posts = user.likes.posts
-      .filter(postId => postId.toString() !== post._id.toString());
+      .filter(pId => pId.toString() !== postId);
   } else {
     post.likes.push(userId);
     post.likesCount += 1;
-
-    user.likes.posts.unshift(post._id);
+    user.likes.posts.unshift(postId);
   }
 
   await Promise.all([
@@ -115,7 +114,7 @@ PostSchema.statics.toggleLike = async function (id, userId) {
     user.save(),
   ]);
 
-  return post;
+  return { post, isLike: !alreadyLike };
 };
 
 PostSchema.statics.createPost = async function (postInput) {

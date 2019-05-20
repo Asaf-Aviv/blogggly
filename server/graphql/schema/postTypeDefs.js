@@ -14,6 +14,16 @@ module.exports = gql`
     createPost(postInput: PostInput): Post!
     updatePost(postId: ID, updatedPost: PostInput): Post!
     deletePost(postId: ID): String!
+    toggleLikeOnPost(postId: ID!): Post!
+  }
+
+  type Subscription {
+    postLikesUpdates(postId: ID!): PostLikesUpdatesResult!
+  }
+
+  type PostLikesUpdatesResult {
+    isLike: Boolean!
+    userId: ID!
   }
 
   type Post {
