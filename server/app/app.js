@@ -9,6 +9,7 @@ const isAuth = require('../middleware/isAuth');
 const typeDefs = require('../graphql/schema');
 const resolvers = require('../graphql/resolvers');
 const { createLoaders } = require('../utils');
+const pubsub = require('../graphql/pubsub');
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,7 +18,7 @@ const devMode = process.env.NODE_ENV !== 'production';
 const PORT = process.env.NODE_ENV || 5000;
 
 if (devMode) {
-  mongoose.set('debug', true);
+  // mongoose.set('debug', true);
   app.use(morgan('dev'));
 }
 
@@ -33,24 +34,28 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   subscriptions: {
-    onConnect: (connectionParams, webSocket) => {
+    onConnect: (connectionParams) => {
       console.log('*'.repeat(20));
       console.log(connectionParams);
       console.log('*'.repeat(20));
-      console.log(webSocket);
-      console.log('*'.repeat(20));
       console.log('websocket connected');
       console.log('*'.repeat(20));
+      return true;
     },
   },
   context: ({ req, connection }) => {
     if (connection) {
       console.log(connection.context);
-      return connection.context;
+      return {
+        ...connection.context,
+        ...createLoaders(),
+        pubsub,
+      };
     }
 
     return {
       ...createLoaders(),
+      pubsub,
       isAuth: req.isAuth,
       userId: req.userId,
     };
