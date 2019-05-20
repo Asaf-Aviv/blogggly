@@ -74,22 +74,26 @@ export const TOGGLE_FOLLOW = gql`
   }
 `;
 
-export const TOGGLE_LIKE = gql`
-  mutation toggleLike($id: ID, $isPost: Boolean) {
-    toggleLike(id: $id, isPost: $isPost) {
-      ... on Post {
-        _id
-        likesCount
-        likes
-      }
-      ... on Comment {
-        _id
-        likesCount
-        likes
-      }
+export const TOGGLE_LIKE_ON_POST = gql`
+  mutation toggleLikeOnPost($postId: ID!) {
+    toggleLikeOnPost(postId: $postId) {
+      _id
+      likesCount
+      likes
     }
   }
 `;
+
+export const TOGGLE_LIKE_ON_COMMENT = gql`
+  mutation toggleLikeOnComment($commentId: ID!) {
+    toggleLikeOnComment(commentId: $commentId) {
+      _id
+      likesCount
+      likes
+    }
+  }
+`;
+
 
 export const BOOKMARK_MESSAGE = gql`
   mutation bookmarkMessage($messageId: ID) {

@@ -22,42 +22,21 @@ const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
 
   return (
     <Mutation
-      mutation={queries.TOGGLE_LIKE}
-      variables={{
-        id: commentOrPostId,
-        isPost,
-      }}
+      mutation={isPost ? queries.TOGGLE_LIKE_ON_POST : queries.TOGGLE_LIKE_ON_COMMENT}
+      variables={{ [isPost ? 'postId' : 'commentId']: commentOrPostId }}
       onError={utils.UIErrorNotifier}
-      onCompleted={({ toggleLike }) => {
+      onCompleted={(data) => {
+        console.log(data);
+        const like = data[isPost ? 'toggleLikeOnPost' : 'toggleLikeOnComment'];
         const likeOnWhat = isPost ? 'posts' : 'comments';
 
         setLoggedUser((draft) => {
-          draft.likes[likeOnWhat].includes(toggleLike._id)
+          draft.likes[likeOnWhat].includes(like._id)
             ? draft.likes[likeOnWhat].splice(
-              draft.likes[likeOnWhat].indexOf(toggleLike._id), 1,
+              draft.likes[likeOnWhat].indexOf(like._id), 1,
             )
-            : draft.likes[likeOnWhat].unshift(toggleLike._id);
+            : draft.likes[likeOnWhat].unshift(like._id);
         });
-
-        // loggedUser.likes[likeOnWhat].includes(toggleLike._id)
-        //   ? setLoggedUser({
-        //     ...loggedUser,
-        //     likes: {
-        //       ...loggedUser.likes,
-        //       [likeOnWhat]: loggedUser.likes[likeOnWhat]
-        //         .filter(likeId => likeId !== toggleLike._id),
-        //     },
-        //   })
-        //   : setLoggedUser({
-        //     ...loggedUser,
-        //     likes: {
-        //       ...loggedUser.likes,
-        //       [likeOnWhat]: [
-        //         toggleLike._id,
-        //         ...loggedUser.likes[likeOnWhat],
-        //       ],
-        //     },
-        //   });
       }}
     >
       {toggleLike => (
