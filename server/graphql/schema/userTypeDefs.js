@@ -75,6 +75,17 @@ module.exports = gql`
     dateOfBirth: String
   }
 
+  type Message {
+    _id: ID!
+    body: String!
+    createdAt: String!
+    to: User!
+    from: User!
+    read: Boolean!
+    inBookmarks: Boolean!
+    inTrash: Boolean!
+  }
+
   type UserLikes {
     comments: [String!]!
     posts: [String!]!
