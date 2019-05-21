@@ -32,16 +32,6 @@ const UserProfileComments = ({ commentIds }) => {
       draft.comments = draft.comments.filter(notInQueue);
       draft.likes.comments = draft.likes.comments.filter(notInQueue);
     });
-
-    // setLoggedUser({
-    //   ...loggedUser,
-    //   comments: updatedComments,
-    //   likes: {
-    //     ...loggedUser.likes,
-    //     comments: loggedUser.likes.comments
-    //       .filter(commentId => !cacheDeletedComments.current.includes(commentId)),
-    //   },
-    // });
   }, [setLoggedUser]);
 
   return (

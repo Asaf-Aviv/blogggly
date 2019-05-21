@@ -32,7 +32,6 @@ const FollowButton = ({ following, userId, username }) => {
         setLoggedUser((draft) => {
           draft.following.push(toggleFollow._id);
         });
-        // setLoggedUser(loggedUser => ({ ...loggedUser, ...toggleFollow }));
       }}
     >
       {follow => (

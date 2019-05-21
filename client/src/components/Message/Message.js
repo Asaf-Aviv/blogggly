@@ -31,19 +31,6 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         messagesArray.indexOf(msg => msg._id === updatedMessage._id, 1, updatedMessage),
       );
     });
-
-    // const updatedMessages = loggedUser.inbox[sentOrReceived]
-    //   .map(msg => (msg._id === updatedMessage._id
-    //     ? updatedMessage : msg
-    //   ));
-
-    // setLoggedUser({
-    //   ...loggedUser,
-    //   inbox: {
-    //     ...loggedUser.inbox,
-    //     [sentOrReceived]: updatedMessages,
-    //   },
-    // });
   };
 
   return (
@@ -101,17 +88,6 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
               });
               Alert.success('Message deleted successfully');
               setShowConfirmationModal(false);
-
-              // const updatedMessages = loggedUser.inbox[sentOrReceived]
-              //   .filter(msg => msg._id !== deleteMessageId);
-
-              // setLoggedUser({
-              //   ...loggedUser,
-              //   inbox: {
-              //     ...loggedUser.inbox,
-              //     [sentOrReceived]: updatedMessages,
-              //   },
-              // });
             }}
             onError={utils.UIErrorNotifier}
           >

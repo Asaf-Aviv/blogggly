@@ -107,14 +107,6 @@ const PostEditor = () => {
           setLoggedUser((draft) => {
             draft.posts.unshift(newPost._id);
           });
-
-          // setLoggedUser({
-          //   ...loggedUser,
-          //   posts: [
-          //     newPost._id,
-          //     ...loggedUser.posts,
-          //   ],
-          // });
           setNewPostId(newPost._id);
         }}
       >

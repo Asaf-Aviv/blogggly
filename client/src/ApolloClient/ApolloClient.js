@@ -9,7 +9,7 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 const getToken = () => {
   const token = localStorage.getItem('token');
-  return token ? `Bearer ${token}` : null;
+  return token ? `Bearer ${token}` : '';
 };
 
 const authLink = setContext((_, { headers }) => ({

@@ -22,13 +22,6 @@ const FriendRequestActions = ({
           setLoggedUser((draft) => {
             draft.sentFriendRequests.push(userId);
           });
-          // setLoggedUser(loggedUser => ({
-          //   ...loggedUser,
-          //   sentFriendRequests: [
-          //     ...loggedUser.sentFriendRequests,
-          //     userId,
-          //   ],
-          // }));
         }}
       >
         {sendFriendRequest => render(sendFriendRequest)}
@@ -48,12 +41,6 @@ const FriendRequestActions = ({
               draft.sentFriendRequests.indexOf(request => request === userId), 1,
             );
           });
-
-          // setLoggedUser(loggedUser => ({
-          //   ...loggedUser,
-          //   sentFriendRequests: loggedUser.sentFriendRequests
-          //     .filter(request => request !== userId),
-          // }));
         }}
       >
         {cancelFriendRequest => render(cancelFriendRequest)}
@@ -72,12 +59,6 @@ const FriendRequestActions = ({
               draft.incomingFriendRequests.indexOf(request => request === userId), 1,
             );
           });
-
-          // setLoggedUser(loggedUser => ({
-          //   ...loggedUser,
-          //   incomingFriendRequests: loggedUser.incomingFriendRequests
-          //     .filter(request => request !== userId),
-          // }));
         }}
       >
         {declineFriendRequest => (
@@ -92,13 +73,6 @@ const FriendRequestActions = ({
                   draft.incomingFriendRequests.indexOf(request => request !== userId, 1),
                 );
               });
-
-              // setLoggedUser(loggedUser => ({
-              //   ...loggedUser,
-              //   incomingFriendRequests: loggedUser.incomingFriendRequests
-              //     .filter(request => request !== userId),
-              //   friends: [...loggedUser.friends, userId],
-              // }));
             }}
           >
             {accpetFriendRequest => render(declineFriendRequest, accpetFriendRequest)}
