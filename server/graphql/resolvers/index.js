@@ -1,5 +1,4 @@
 const { mergeResolvers } = require('merge-graphql-schemas');
-const generalResolver = require('./generalResolver');
 const userResolver = require('./userResolver');
 const postResolver = require('./postResolver');
 const commentResolver = require('./commentResolver');
@@ -8,10 +7,9 @@ const reportResolver = require('./reportResolver');
 
 const resolvers = [
   userResolver,
-  generalResolver,
+  messageResolver,
   postResolver,
   commentResolver,
-  messageResolver,
   reportResolver,
 ];
 
