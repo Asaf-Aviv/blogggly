@@ -1,3 +1,4 @@
-import apolloClient from './ApolloClient';
+import apolloClient, { wsClient } from './ApolloClient';
 
-export default apolloClient;
+
+export { apolloClient as default, wsClient };
