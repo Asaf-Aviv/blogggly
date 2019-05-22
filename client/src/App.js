@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, {
+  useState, useEffect, useLayoutEffect, useRef,
+} from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Alert from 'react-s-alert';
 import { hot } from 'react-hot-loader/root';
 import { useImmer } from 'use-immer';
-import { Subscription } from 'react-apollo';
-import apolloClient from './ApolloClient';
+import apolloClient, { wsClient } from './ApolloClient';
 import NavBar from './components/NavBar';
 import Users from './components/Users';
 import Home from './components/Home';
@@ -17,7 +18,7 @@ import Post from './components/Post';
 import Inbox from './components/Inbox/Inbox';
 import UserProfile from './components/UserProfile';
 import CurrentUserProfile from './components/CurrentUserProfile';
-import { wsClient } from './ApolloClient/ApolloClient';
+import { subscribeToCurrentUserUpdates } from './graphql/helpers';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
@@ -30,9 +31,25 @@ const App = () => {
   const [showMemberForms, setShowMemberForms] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
 
+  const currentUserSubscriptionRef = useRef();
+
   const toggleForms = () => {
     setShowLogin(!showLogin);
   };
+
+  useEffect(() => {
+    if (loggedUser && !currentUserSubscriptionRef.current) {
+      currentUserSubscriptionRef.current = subscribeToCurrentUserUpdates(
+        setLoggedUser, loggedUser._id,
+      );
+    }
+    if (!loggedUser && currentUserSubscriptionRef.current) {
+      currentUserSubscriptionRef.current.forEach((subscription) => {
+        subscription.unsubscribe();
+      });
+      currentUserSubscriptionRef.current = null;
+    }
+  }, [loggedUser, setLoggedUser]);
 
   useEffect(() => {
     if (loggedUser) setShowMemberForms(false);
@@ -72,19 +89,6 @@ const App = () => {
 
   return (
     <>
-      {!!loggedUser && (
-        <Subscription
-          subscription={queries.NEW_FRIEND_REQUEST}
-          variables={{ currentUserId: loggedUser._id }}
-        >
-          {({ loading, error, data }) => {
-            if (loading) console.log(loading);
-            if (error) console.log(error);
-            if (data) console.log(data);
-            return null;
-          }}
-        </Subscription>
-      )}
       <UserContext.Provider
         value={{
           loggedUser,
