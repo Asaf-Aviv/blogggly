@@ -53,6 +53,7 @@ const FriendRequestActions = ({
       <Mutation
         mutation={queries.DECLINE_FRIEND_REQUEST}
         variables={{ userId }}
+        onError={utils.UIErrorNotifier}
         onCompleted={() => {
           setLoggedUser((draft) => {
             draft.incomingFriendRequests.splice(
@@ -65,6 +66,7 @@ const FriendRequestActions = ({
           <Mutation
             mutation={queries.ACCEPT_FRIEND_REQUEST}
             variables={{ userId }}
+            onError={utils.UIErrorNotifier}
             onCompleted={() => {
               Alert.success(`You and ${username} are now friends`);
               setLoggedUser((draft) => {
