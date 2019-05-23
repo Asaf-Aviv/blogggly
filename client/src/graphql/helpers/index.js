@@ -14,10 +14,8 @@ export const subscriptionHandler = (query, subscriptionQuery, cacheUpdateFn, err
   });
 };
 
-export const subscribeToCurrentUserUpdates = (setLoggedUser, currentUserId) => {
-  const observer$ = apolloClient.subscribe(
-    { query: queries.NEW_FRIEND_REQUEST, variables: { currentUserId } },
-  );
+export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
+  const observer$ = apolloClient.subscribe({ query: queries.NEW_FRIEND_REQUEST });
 
   const friendRequestSubscription = observer$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
