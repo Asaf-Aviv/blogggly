@@ -8,6 +8,7 @@
     "apollo-link-ws": "^1.0.17",
     "graphql": "^14.3.0",
     "highlight.js": "^9.15.6",
+    "lodash": "^4.17.11",
     "lodash.capitalize": "^4.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.orderby": "^4.6.0",
