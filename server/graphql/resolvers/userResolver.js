@@ -1,7 +1,7 @@
 const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
-const { NEW_FRIEND_REQUEST } = require('../tags');
+const { NEW_FRIEND_REQUEST, FOLLOWERS_UPDATES } = require('../tags');
 
 module.exports = {
   Query: {
@@ -41,9 +41,25 @@ module.exports = {
       if (!userId) throw new Error('Unauthorized.');
       return User.updateInfo(userId, info);
     },
-    toggleFollow: (root, { userId: userIdToFollow }, { userId }) => {
+    toggleFollow: async (root, { userId: userIdToFollow }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
-      return User.toggleFollow(userId, userIdToFollow);
+      const { follower, followee, isFollow } = await User.toggleFollow(userId, userIdToFollow);
+
+      pubsub.publish(
+        FOLLOWERS_UPDATES,
+        {
+          followersUpdates: {
+            follower,
+            isFollow,
+          },
+          toUserId: userIdToFollow,
+        },
+      );
+
+      return {
+        followee,
+        isFollow,
+      };
     },
     sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
@@ -167,6 +183,13 @@ module.exports = {
         (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
+    },
+    followersUpdates: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(FOLLOWERS_UPDATES),
+        (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
+      ),
+      resolve: ({ followersUpdates }) => followersUpdates,
     },
   },
 };

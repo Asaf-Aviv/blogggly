@@ -65,11 +65,14 @@ export const REPORT = gql`
 `;
 
 export const TOGGLE_FOLLOW = gql`
-  mutation toggleFollow($userId: ID) {
+  mutation toggleFollow($userId: ID!) {
     toggleFollow(userId: $userId) {
-      _id
-      following
-      followingCount
+      followee {
+        _id
+        followers
+        followersCount
+      }
+      isFollow
     }
   }
 `;

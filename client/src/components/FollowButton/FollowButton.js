@@ -28,9 +28,12 @@ const FollowButton = ({ following, userId, username }) => {
         utils.UIErrorNotifier(err);
         changeFollowText();
       }}
-      onCompleted={({ toggleFollow }) => {
+      onCompleted={({ toggleFollow: { followee, isFollow } }) => {
         setLoggedUser((draft) => {
-          draft.following.push(toggleFollow._id);
+          const followeeId = followee._id;
+          isFollow
+            ? draft.following.push(followeeId)
+            : draft.following.splice(draft.following.indexOf(followeeId), 1);
         });
       }}
     >

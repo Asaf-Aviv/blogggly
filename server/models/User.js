@@ -162,38 +162,38 @@ UserSchema.statics.sendMessage = async function (from, to, body) {
   return sender.inbox.sent[0];
 };
 
-UserSchema.statics.toggleFollow = async function (currentUserId, userIdTofollow) {
-  const [currentUser, userToFollow] = await Promise.all([
-    this.findUserById(currentUserId),
-    this.findUserById(userIdTofollow),
+UserSchema.statics.toggleFollow = async function (followerId, followeeId) {
+  const [follower, followee] = await Promise.all([
+    this.findUserById(followerId),
+    this.findUserById(followeeId),
   ]);
 
-  const alreadyFollow = currentUser.following
-    .some(followedUser => followedUser._id.toString() === userIdTofollow);
+  const alreadyFollow = follower.following
+    .some(followedUser => followedUser._id.toString() === followeeId);
 
   if (alreadyFollow) {
-    currentUser.following = currentUser.following
-      .filter(followedUser => followedUser._id.toString() !== userIdTofollow);
+    follower.following = follower.following
+      .filter(followedUser => followedUser._id.toString() !== followeeId);
 
-    userToFollow.followers = userToFollow.followers
-      .filter(followingUser => followingUser._id.toString() !== currentUserId);
+    followee.followers = followee.followers
+      .filter(followingUser => followingUser._id.toString() !== followerId);
 
-    currentUser.followingCount -= 1;
-    userToFollow.followersCount -= 1;
+    follower.followingCount -= 1;
+    followee.followersCount -= 1;
   } else {
-    currentUser.following.unshift(userIdTofollow);
-    userToFollow.followers.unshift(currentUserId);
+    follower.following.unshift(followeeId);
+    followee.followers.unshift(followerId);
 
-    currentUser.followingCount += 1;
-    userToFollow.followersCount += 1;
+    follower.followingCount += 1;
+    followee.followersCount += 1;
   }
 
   await Promise.all([
-    currentUser.save(),
-    userToFollow.save(),
+    follower.save(),
+    followee.save(),
   ]);
 
-  return currentUser;
+  return { follower, followee, isFollow: !alreadyFollow };
 };
 
 UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {

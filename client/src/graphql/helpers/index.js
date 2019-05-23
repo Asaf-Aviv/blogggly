@@ -15,9 +15,10 @@ export const subscriptionHandler = (query, subscriptionQuery, cacheUpdateFn, err
 };
 
 export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
-  const observer$ = apolloClient.subscribe({ query: queries.NEW_FRIEND_REQUEST });
+  const friendRequestObserver$ = apolloClient.subscribe({ query: queries.NEW_FRIEND_REQUEST });
+  const followersUpdatesObserver$ = apolloClient.subscribe({ query: queries.FOLLOWERS_UPDATES });
 
-  const friendRequestSubscription = observer$.subscribe({
+  const friendRequestSubscription = friendRequestObserver$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
       console.log(newFriendRequest);
       Alert.success(`${newFriendRequest.username} just sent you a friend request`);
@@ -26,10 +27,25 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
       });
     },
     error: err => console.error(err),
-    complete: () => console.log('complete'),
+  });
+
+  const followersUpdatesSubscription = followersUpdatesObserver$.subscribe({
+    next: ({ data: { followersUpdates: { follower, isFollow } } }) => {
+      if (isFollow) {
+        Alert.success(`${follower.username} is now following you`);
+      }
+
+      setLoggedUser((draft) => {
+        isFollow
+          ? draft.followers.unshift(follower._id)
+          : draft.followers.splice(draft.followers.indexOf(follower._id), 1);
+      });
+    },
+    error: err => console.error(err),
   });
 
   return [
     friendRequestSubscription,
+    followersUpdatesSubscription,
   ];
 };

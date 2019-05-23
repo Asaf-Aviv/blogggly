@@ -4,8 +4,21 @@ export const NEW_FRIEND_REQUEST = gql`
   subscription {
     newFriendRequest {
       _id
-      username
       avatar
+      username
+    }
+  }
+`;
+
+export const FOLLOWERS_UPDATES = gql`
+  subscription {
+    followersUpdates {
+      follower {
+        _id
+        avatar
+        username
+      }
+      isFollow
     }
   }
 `;

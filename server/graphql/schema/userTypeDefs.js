@@ -14,7 +14,7 @@ module.exports = gql`
     login(email: String, password: String): CurrentUser
     signup(userInput: UserInput): CurrentUser
     updateUserInfo(info: UserInfoInput): CurrentUser
-    toggleFollow(userId: ID): CurrentUser
+    toggleFollow(userId: ID!): ToggleFollow!
     sendFriendRequest(userId: ID!): ID
     acceptFriendRequest(userId: ID!): ID
     declineFriendRequest(userId: ID!): Boolean
@@ -24,6 +24,17 @@ module.exports = gql`
 
   type Subscription {
     newFriendRequest: User!
+    followersUpdates: FollowerUpdate!
+  }
+
+  type FollowerUpdate {
+    follower: User!
+    isFollow: Boolean!
+  }
+
+  type ToggleFollow {
+    followee: User!
+    isFollow: Boolean!
   }
 
   type CurrentUser {
