@@ -23,6 +23,16 @@ export const FOLLOWERS_UPDATES = gql`
   }
 `;
 
+export const ACCEPTED_FRIEND_REQUEST = gql`
+  subscription {
+    acceptedFriendRequest {
+      _id
+      avatar
+      username
+    }
+  }
+`;
+
 export const NEW_POST_COMMENT = gql`
   subscription newPostComment($postId: ID!) {
     newPostComment(postId: $postId) {

@@ -40,7 +40,7 @@ const App = () => {
   useEffect(() => {
     if (loggedUser && !currentUserSubscriptionRef.current) {
       currentUserSubscriptionRef.current = subscribeToCurrentUserUpdates(
-        setLoggedUser, loggedUser._id,
+        setLoggedUser,
       );
     }
     if (!loggedUser && currentUserSubscriptionRef.current) {

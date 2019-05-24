@@ -25,6 +25,7 @@ module.exports = gql`
   type Subscription {
     newFriendRequest: User!
     followersUpdates: FollowerUpdate!
+    acceptedFriendRequest: User!
   }
 
   type FollowerUpdate {

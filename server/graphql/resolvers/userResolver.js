@@ -1,7 +1,7 @@
 const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
-const { NEW_FRIEND_REQUEST, FOLLOWERS_UPDATES } = require('../tags');
+const { NEW_FRIEND_REQUEST, FOLLOWERS_UPDATES, ACCEPTED_FRIEND_REQUEST } = require('../tags');
 
 module.exports = {
   Query: {
@@ -93,17 +93,17 @@ module.exports = {
 
       return requestedUserId;
     },
-    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cd60ece73783b225425ecbf' }) => {
+    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      const isRequestExist = await User.findOne(
+      const accepter = await User.findOne(
         { _id: userId, incomingFriendRequests: { $elemMatch: { $eq: userIdToAccept } } },
-        { friends: 1, username: 1 },
+        { friends: 1, username: 1, avatar: 1 },
       );
 
-      if (!isRequestExist) throw new Error('This request does not exist anymore.');
+      if (!accepter) throw new Error('This request does not exist anymore.');
 
-      if (isRequestExist.friends.some(f => f.toString() === userIdToAccept)) {
+      if (accepter.friends.some(f => f.toString() === userIdToAccept)) {
         throw new Error('already friends.');
       }
 
@@ -124,6 +124,10 @@ module.exports = {
         ),
       ]);
 
+      pubsub.publish(
+        ACCEPTED_FRIEND_REQUEST,
+        { user: accepter, toUserId: userIdToAccept },
+      );
       return userIdToAccept;
     },
     cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId }) => {
@@ -143,7 +147,7 @@ module.exports = {
 
       return true;
     },
-    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbd' }) => {
+    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbf' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -159,7 +163,7 @@ module.exports = {
 
       return true;
     },
-    removeFriend: async (root, { userId: userIdToRemove }, { userId }) => {
+    removeFriend: async (root, { userId: userIdToRemove }, { userId = '5cd60ece73783b225425ecbf' }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -180,6 +184,13 @@ module.exports = {
     newFriendRequest: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
+        (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
+      ),
+      resolve: ({ user }) => user,
+    },
+    acceptedFriendRequest: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(ACCEPTED_FRIEND_REQUEST),
         (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
