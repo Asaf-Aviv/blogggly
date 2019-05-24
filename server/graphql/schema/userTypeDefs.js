@@ -27,6 +27,7 @@ module.exports = gql`
     followersUpdates: FollowerUpdate!
     acceptedFriendRequest: User!
     declinedFriendRequest: ID!
+    canceledFriendRequest: ID!
   }
 
   type FollowerUpdate {

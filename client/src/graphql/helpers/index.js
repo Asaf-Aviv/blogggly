@@ -27,6 +27,9 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   const declinedFriendRequestObserver$ = apolloClient.subscribe(
     { query: queries.DECLINED_FRIEND_REQUEST },
   );
+  const canceledFriendRequestObserver$ = apolloClient.subscribe(
+    { query: queries.CANCELED_FRIEND_REQUEST },
+  );
 
   const friendRequestSubscription = friendRequestObserver$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
@@ -82,10 +85,24 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     error: err => console.error(err),
   });
 
+  const canceledFriendRequestSubscription = canceledFriendRequestObserver$.subscribe({
+    next: ({ data: { canceledFriendRequest } }) => {
+      console.log(canceledFriendRequest);
+
+      setLoggedUser((loggedUser) => {
+        loggedUser.incomingFriendRequests.splice(
+          loggedUser.incomingFriendRequests.indexOf(canceledFriendRequest), 1,
+        );
+      });
+    },
+    error: err => console.error(err),
+  });
+
   return [
     friendRequestSubscription,
     followersUpdatesSubscription,
     acceptedFriendRequestSubscription,
     declinedFriendRequestSubscription,
+    canceledFriendRequestSubscription,
   ];
 };

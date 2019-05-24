@@ -133,7 +133,7 @@ module.exports = {
       );
       return userIdToAccept;
     },
-    cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId }) => {
+    cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId, pubsub }) => {
       console.log(userId);
       if (!userId) throw new Error('Unauthorized.');
 
@@ -147,6 +147,11 @@ module.exports = {
           { $pull: { incomingFriendRequests: userId } },
         ),
       ]);
+
+      pubsub.publish(
+        tags.CANCELED_FRIEND_REQUEST,
+        { toUserId: userIdToCancel, cancelerId: userId },
+      );
 
       return true;
     },
@@ -212,6 +217,13 @@ module.exports = {
         console.log(payload);
         return payload;
       },
+    },
+    canceledFriendRequest: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.CANCELED_FRIEND_REQUEST),
+        ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
+      ),
+      resolve: ({ cancelerId }) => cancelerId,
     },
     followersUpdates: {
       subscribe: withFilter(

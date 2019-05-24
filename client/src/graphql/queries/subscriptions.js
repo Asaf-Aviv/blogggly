@@ -39,6 +39,12 @@ export const DECLINED_FRIEND_REQUEST = gql`
   }
 `;
 
+export const CANCELED_FRIEND_REQUEST = gql`
+  subscription {
+    canceledFriendRequest
+  }
+`;
+
 export const NEW_POST_COMMENT = gql`
   subscription newPostComment($postId: ID!) {
     newPostComment(postId: $postId) {
