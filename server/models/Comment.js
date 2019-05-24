@@ -86,7 +86,7 @@ CommentSchema.statics.toggleLike = async function (commentId, userId) {
     user.save(),
   ]);
 
-  return { comment, isLike: !alreadyLike };
+  return { user, comment, isLike: !alreadyLike };
 };
 
 module.exports = mongoose.model('Comment', CommentSchema);
