@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
-import { Query, withApollo } from 'react-apollo';
+import { Query, withApollo, Subscription } from 'react-apollo';
 import orderBy from 'lodash.orderby';
 import Comment from '../Comment';
 import queries from '../../graphql/queries';
@@ -17,9 +17,9 @@ const Comments = ({ postId }) => {
   useEffect(() => {
     const variables = { postId };
 
-    const cacheUpdateFn = (result, query) => {
+    const cacheUpdateFn = (newComment, query) => {
       const data = apolloClient.readQuery(query);
-      data.comments.push(result);
+      data.comments.push(newComment);
       apolloClient.writeQuery({ ...query, data });
     };
 
@@ -30,6 +30,17 @@ const Comments = ({ postId }) => {
     );
 
     return () => newCommentsSubscription.unsubscribe();
+  }, [postId]);
+
+  useEffect(() => {
+    // const variables = { postId };
+
+    // const commentLikesUpdatesSubscription = subscriptionHandler(
+    //   { query: queries.POST_COMMENTS, variables },
+    //   { query: queries.COMMENT_LIKES_UPDATES, variables },
+    // );
+
+    // return () => commentLikesUpdatesSubscription.unsubscribe();
   }, [postId]);
 
   return (
@@ -48,13 +59,20 @@ const Comments = ({ postId }) => {
           if (!comments.length) return <div className="comments__empty">Be the first one to comment</div>;
 
           return (
-            <ul className="comments__list">
-              {orderBy(comments, sortBy.key, sortBy.order)
-                .map(comment => (
-                  <Comment key={comment._id} comment={comment} postId={postId} />
-                ))
-            }
-            </ul>
+            <Subscription
+              subscription={queries.COMMENT_LIKES_UPDATES}
+              variables={{ postId }}
+            >
+              {() => (
+                <ul className="comments__list">
+                  {orderBy(comments, sortBy.key, sortBy.order)
+                    .map(comment => (
+                      <Comment key={comment._id} comment={comment} postId={postId} />
+                    ))
+                  }
+                </ul>
+              )}
+            </Subscription>
           );
         }}
       </Query>

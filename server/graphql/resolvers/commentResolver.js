@@ -23,12 +23,8 @@ module.exports = {
       const { user, comment, isLike } = await Comment.toggleLike(commentId, userId);
 
       pubsub.publish(COMMENT_LIKES_UPDATES, {
-        commentLikesUpdates: {
-          userId,
-          isLike,
-          commentId,
-          postId: comment.post.toString(),
-        },
+        comment,
+        likerId: userId,
       });
 
       if (isLike) {
@@ -72,24 +68,21 @@ module.exports = {
     newPostComment: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(NEW_POST_COMMENT),
-        ({ newPostComment }, variables, { currentUserId }) => {
-          console.log(currentUserId);
-
-          return newPostComment.author._id.toString() !== currentUserId;
-        },
+        ({ newPostComment }, variables, { currentUserId }) => (
+          newPostComment.author._id.toString() !== currentUserId
+        ),
       ),
       resolve: ({ newPostComment }) => newPostComment,
     },
     commentLikesUpdates: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(COMMENT_LIKES_UPDATES),
-        ({ commentLikesUpdates }, { postId }, { currentUserId }) => {
-          console.log(commentLikesUpdates);
-          console.log(currentUserId);
-          return commentLikesUpdates.postId === postId
-            && commentLikesUpdates.userId !== currentUserId;
-        },
+        ({ comment, likerId }, { postId }, { currentUserId }) => (
+          comment.post.toString() === postId
+            && likerId !== currentUserId
+        ),
       ),
+      resolve: ({ comment }) => comment,
     },
     theyLikeMyComment: {
       subscribe: withFilter(

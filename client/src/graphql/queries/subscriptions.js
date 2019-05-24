@@ -45,23 +45,6 @@ export const CANCELED_FRIEND_REQUEST = gql`
   }
 `;
 
-export const NEW_POST_COMMENT = gql`
-  subscription newPostComment($postId: ID!) {
-    newPostComment(postId: $postId) {
-      _id
-      author {
-        _id
-        avatar
-        username
-      }
-      body
-      createdAt
-      likes
-      likesCount
-    }
-  }
-`;
-
 export const THEY_LIKE_MY_COMMENT = gql`
   subscription {
     theyLikeMyComment {
@@ -82,9 +65,26 @@ export const THEY_LIKE_MY_POST = gql`
   }
 `;
 
+export const NEW_POST_COMMENT = gql`
+  subscription newPostComment($postId: ID!) {
+    newPostComment(postId: $postId) {
+      _id
+      author {
+        _id
+        avatar
+        username
+      }
+      body
+      createdAt
+      likes
+      likesCount
+    }
+  }
+`;
+
 export const POST_LIKES_UPDATES = gql`
   subscription postLikesUpdates($postId: ID!) {
-    postLikeUpdates(postId: $postId) {
+    postLikesUpdates(postId: $postId) {
       isLike
       userId
     }
@@ -94,10 +94,9 @@ export const POST_LIKES_UPDATES = gql`
 export const COMMENT_LIKES_UPDATES = gql`
   subscription commentLikesUpdates($postId: ID!) {
     commentLikesUpdates(postId: $postId) {
-      isLike
-      userId
-      postId
-      commentId
+      _id
+      likes
+      likesCount
     }
   }
 `;
