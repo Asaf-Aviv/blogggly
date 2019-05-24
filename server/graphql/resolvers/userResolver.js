@@ -134,7 +134,6 @@ module.exports = {
       return userIdToAccept;
     },
     cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId, pubsub }) => {
-      console.log(userId);
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -213,10 +212,6 @@ module.exports = {
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.DECLINED_FRIEND_REQUEST),
         (payload, variables, { currentUserId }) => payload === currentUserId,
       ),
-      resolve: (payload) => {
-        console.log(payload);
-        return payload;
-      },
     },
     canceledFriendRequest: {
       subscribe: withFilter(

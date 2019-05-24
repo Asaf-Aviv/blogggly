@@ -3,6 +3,7 @@ import { Query } from 'react-apollo';
 import queries from '../../graphql/queries';
 import NavSearchInput from '../NavSearchInput';
 import NavSearchResults from '../NavSearchResults';
+import utils from '../../utils';
 
 const NavSearchBar = () => {
   const [postQuery, setPostQuery] = useState('.');
@@ -20,7 +21,7 @@ const NavSearchBar = () => {
         <Query
           query={queries.SEARCH_POSTS}
           variables={{ postQuery }}
-          onError={console.log}
+          onError={utils.UIErrorNotifier}
         >
           {({ loading, error, data: { posts } = {} }) => {
             if (loading || error) return null;

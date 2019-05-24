@@ -7,7 +7,7 @@ export const subscriptionHandler = (query, subscriptionQuery, cacheUpdateFn, err
 
   return observer$.subscribe({
     next: ({ data, result = data[Object.keys(data)[0]] }) => {
-      cacheUpdateFn(result, query);
+      if (cacheUpdateFn) cacheUpdateFn(result, query);
     },
     error,
     complete,
@@ -39,7 +39,6 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
 
   const friendRequestSubscription = friendRequestObserver$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
-      console.log(newFriendRequest);
       Alert.success(`${newFriendRequest.username} just sent you a friend request`);
       setLoggedUser((loggedUser) => {
         loggedUser.incomingFriendRequests.unshift(newFriendRequest._id);
@@ -65,7 +64,6 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
 
   const acceptedFriendRequestSubscription = acceptedFriendRequestObserver$.subscribe({
     next: ({ data: { acceptedFriendRequest: newFriend } }) => {
-      console.log(newFriend);
       Alert.success(`${newFriend.username} just accepted your friend request!`);
 
       setLoggedUser((loggedUser) => {
@@ -80,8 +78,6 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
 
   const declinedFriendRequestSubscription = declinedFriendRequestObserver$.subscribe({
     next: ({ data: { declinedFriendRequest } }) => {
-      console.log(declinedFriendRequest);
-
       setLoggedUser((loggedUser) => {
         loggedUser.sentFriendRequests.splice(
           loggedUser.sentFriendRequests.indexOf(declinedFriendRequest), 1,
@@ -93,8 +89,6 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
 
   const canceledFriendRequestSubscription = canceledFriendRequestObserver$.subscribe({
     next: ({ data: { canceledFriendRequest } }) => {
-      console.log(canceledFriendRequest);
-
       setLoggedUser((loggedUser) => {
         loggedUser.incomingFriendRequests.splice(
           loggedUser.incomingFriendRequests.indexOf(canceledFriendRequest), 1,

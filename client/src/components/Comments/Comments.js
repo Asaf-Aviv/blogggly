@@ -32,17 +32,6 @@ const Comments = ({ postId }) => {
     return () => newCommentsSubscription.unsubscribe();
   }, [postId]);
 
-  useEffect(() => {
-    // const variables = { postId };
-
-    // const commentLikesUpdatesSubscription = subscriptionHandler(
-    //   { query: queries.POST_COMMENTS, variables },
-    //   { query: queries.COMMENT_LIKES_UPDATES, variables },
-    // );
-
-    // return () => commentLikesUpdatesSubscription.unsubscribe();
-  }, [postId]);
-
   return (
     <section className="comments">
       <header className="comments__header">

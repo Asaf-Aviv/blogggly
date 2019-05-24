@@ -26,7 +26,6 @@ const LikeButton = ({ commentOrPostId, isPost, loggedUserAlreadyLike }) => {
       variables={{ [isPost ? 'postId' : 'commentId']: commentOrPostId }}
       onError={utils.UIErrorNotifier}
       onCompleted={(data) => {
-        console.log(data);
         const like = data[isPost ? 'toggleLikeOnPost' : 'toggleLikeOnComment'];
         const likeOnWhat = isPost ? 'posts' : 'comments';
 
