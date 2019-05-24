@@ -33,6 +33,9 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   const theyLikeMyPostObserver$ = apolloClient.subscribe(
     { query: queries.THEY_LIKE_MY_POST },
   );
+  const theyLikeMyCommentObserver$ = apolloClient.subscribe(
+    { query: queries.THEY_LIKE_MY_COMMENT },
+  );
 
   const friendRequestSubscription = friendRequestObserver$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
@@ -108,6 +111,13 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     error: err => console.error(err),
   });
 
+  const theyLikeMyCommentSubscription = theyLikeMyCommentObserver$.subscribe({
+    next: ({ data: { theyLikeMyComment } }) => {
+      Alert.success(`${theyLikeMyComment.username} just liked your comment`);
+    },
+    error: err => console.error(err),
+  });
+
   return [
     friendRequestSubscription,
     followersUpdatesSubscription,
@@ -115,5 +125,6 @@ export const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     declinedFriendRequestSubscription,
     canceledFriendRequestSubscription,
     theyLikeMyPostSubscription,
+    theyLikeMyCommentSubscription,
   ];
 };

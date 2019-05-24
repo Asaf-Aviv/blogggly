@@ -14,7 +14,8 @@ module.exports = gql`
 
   type Subscription {
     newPostComment(postId: ID!): Comment!
-    commentLikesUpdates(postId: ID!): CommentLikesUpdatesResult!
+    commentLikesUpdates(postId: ID!): CommentLikesUpdates!
+    theyLikeMyComment: User!
   }
 
   type Comment {
@@ -27,7 +28,7 @@ module.exports = gql`
     post: Post!
   }
 
-  type CommentLikesUpdatesResult {
+  type CommentLikesUpdates {
     postId: ID!
     userId: ID!
     commentId: ID!

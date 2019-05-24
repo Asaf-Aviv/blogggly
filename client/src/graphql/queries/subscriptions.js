@@ -62,6 +62,16 @@ export const NEW_POST_COMMENT = gql`
   }
 `;
 
+export const THEY_LIKE_MY_COMMENT = gql`
+  subscription {
+    theyLikeMyComment {
+      _id
+      avatar
+      username
+    }
+  }
+`;
+
 export const THEY_LIKE_MY_POST = gql`
   subscription {
     theyLikeMyPost {

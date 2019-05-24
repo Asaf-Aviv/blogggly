@@ -2,7 +2,7 @@ const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
-const { NEW_POST_COMMENT, COMMENT_LIKES_UPDATES } = require('../tags');
+const { NEW_POST_COMMENT, COMMENT_LIKES_UPDATES, THEY_LIKE_MY_COMMENT } = require('../tags');
 
 module.exports = {
   Query: {
@@ -20,7 +20,8 @@ module.exports = {
       return newPostComment;
     },
     toggleLikeOnComment: async (root, { commentId }, { userId, pubsub }) => {
-      const { comment, isLike } = await Comment.toggleLike(commentId, userId);
+      const { user, comment, isLike } = await Comment.toggleLike(commentId, userId);
+
       pubsub.publish(COMMENT_LIKES_UPDATES, {
         commentLikesUpdates: {
           userId,
@@ -29,6 +30,14 @@ module.exports = {
           postId: comment.post.toString(),
         },
       });
+
+      if (isLike) {
+        pubsub.publish(
+          THEY_LIKE_MY_COMMENT,
+          { toUserId: comment.author._id.toString(), user },
+        );
+      }
+
       return comment;
     },
     deleteComment: async (root, { commentId, postId }, { userId }) => {
@@ -81,6 +90,16 @@ module.exports = {
             && commentLikesUpdates.userId !== currentUserId;
         },
       ),
+    },
+    theyLikeMyComment: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(THEY_LIKE_MY_COMMENT),
+        ({ toUserId, user }, variables, { currentUserId }) => (
+          toUserId === currentUserId
+            && user._id.toString() !== currentUserId
+        ),
+      ),
+      resolve: ({ user }) => user,
     },
   },
   Comment: {
