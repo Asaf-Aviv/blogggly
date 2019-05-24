@@ -18,7 +18,7 @@ import Post from './components/Post';
 import Inbox from './components/Inbox/Inbox';
 import UserProfile from './components/UserProfile';
 import CurrentUserProfile from './components/CurrentUserProfile';
-import { subscribeToCurrentUserUpdates } from './graphql/helpers';
+import subscribeToCurrentUserUpdates from './graphql/helpers/subscribeToCurrentUserUpdates';
 
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css';
