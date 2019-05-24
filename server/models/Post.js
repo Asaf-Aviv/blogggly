@@ -114,7 +114,7 @@ PostSchema.statics.toggleLike = async function (postId, userId) {
     user.save(),
   ]);
 
-  return { post, isLike: !alreadyLike };
+  return { user, post, isLike: !alreadyLike };
 };
 
 PostSchema.statics.createPost = async function (postInput) {
