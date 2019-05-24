@@ -7,7 +7,6 @@ import queries from '../../graphql/queries';
 import AddComment from '../AddComment';
 import SortByPanel from '../SortByPanel';
 import apolloClient from '../../ApolloClient';
-import { subscriptionHandler } from '../../graphql/helpers';
 
 import './Comments.sass';
 
@@ -17,17 +16,16 @@ const Comments = ({ postId }) => {
   useEffect(() => {
     const variables = { postId };
 
-    const cacheUpdateFn = (newComment, query) => {
-      const data = apolloClient.readQuery(query);
-      data.comments.push(newComment);
-      apolloClient.writeQuery({ ...query, data });
-    };
-
-    const newCommentsSubscription = subscriptionHandler(
-      { query: queries.POST_COMMENTS, variables },
-      { query: queries.NEW_POST_COMMENT, variables },
-      cacheUpdateFn,
-    );
+    const newCommentsSubscription = apolloClient
+      .subscribe({ query: queries.NEW_POST_COMMENT, variables })
+      .subscribe({
+        next: ({ data: { newPostComment } }) => {
+          const data = apolloClient.readQuery({ query: queries.POST_COMMENTS, variables });
+          data.comments.push(newPostComment);
+          apolloClient.writeQuery({ query: queries.POST_COMMENTS, variables, data });
+        },
+        error: err => console.error(err),
+      });
 
     return () => newCommentsSubscription.unsubscribe();
   }, [postId]);
