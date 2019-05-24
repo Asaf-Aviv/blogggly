@@ -1,7 +1,7 @@
 const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
-const { POST_LIKES_UPDATES } = require('../tags');
+const { POST_LIKES_UPDATES, THEY_LIKE_MY_POST } = require('../tags');
 
 module.exports = {
   Query: {
@@ -26,8 +26,20 @@ module.exports = {
       return Post.createPost({ author: userId, ...postInput });
     },
     toggleLikeOnPost: async (root, { postId }, { userId, pubsub }) => {
-      const { post, isLike } = await Post.toggleLike(postId, userId);
-      pubsub.publish(POST_LIKES_UPDATES, { postLikesUpdates: { userId, isLike, postId } });
+      const { post, isLike, user } = await Post.toggleLike(postId, userId);
+
+      pubsub.publish(
+        POST_LIKES_UPDATES,
+        { postLikesUpdates: { userId, isLike, postId } },
+      );
+
+      if (isLike) {
+        pubsub.publish(
+          THEY_LIKE_MY_POST,
+          { toUserId: post.author._id.toString(), user },
+        );
+      }
+
       return post;
     },
     updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),
@@ -42,15 +54,23 @@ module.exports = {
     },
   },
   Subscription: {
+    theyLikeMyPost: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(THEY_LIKE_MY_POST),
+        ({ user, toUserId }, variables, { currentUserId }) => (
+          toUserId === currentUserId
+            && user._id.toString() !== currentUserId
+        ),
+      ),
+      resolve: ({ user }) => user,
+    },
     postLikesUpdates: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(POST_LIKES_UPDATES),
-        ({ postLikesUpdates }, { postId }, { currentUserId }) => {
-          console.log(postLikesUpdates);
-          console.log(currentUserId);
-          return postLikesUpdates.postId === postId
-            && postLikesUpdates.userId !== currentUserId;
-        },
+        ({ postLikesUpdates }, { postId }, { currentUserId }) => (
+          postLikesUpdates.postId === postId
+            && postLikesUpdates.userId !== currentUserId
+        ),
       ),
     },
   },

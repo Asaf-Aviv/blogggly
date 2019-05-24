@@ -6,5 +6,6 @@ module.exports = {
   FOLLOWERS_UPDATES: 'followersUpdates',
   NEW_POST_COMMENT: 'newPostComment',
   POST_LIKES_UPDATES: 'postLikesUpdates',
+  THEY_LIKE_MY_POST: 'theyLikeMyPost',
   COMMENT_LIKES_UPDATES: 'commentLikesUpdates',
 };
