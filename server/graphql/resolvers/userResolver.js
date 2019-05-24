@@ -1,7 +1,7 @@
 const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
-const { NEW_FRIEND_REQUEST, FOLLOWERS_UPDATES, ACCEPTED_FRIEND_REQUEST } = require('../tags');
+const tags = require('../tags');
 
 module.exports = {
   Query: {
@@ -46,7 +46,7 @@ module.exports = {
       const { follower, followee, isFollow } = await User.toggleFollow(userId, userIdToFollow);
 
       pubsub.publish(
-        FOLLOWERS_UPDATES,
+        tags.FOLLOWERS_UPDATES,
         {
           followersUpdates: {
             follower,
@@ -89,7 +89,10 @@ module.exports = {
         ),
       ]);
 
-      pubsub.publish(NEW_FRIEND_REQUEST, { user: sender, toUserId: requestedUserId });
+      pubsub.publish(
+        tags.NEW_FRIEND_REQUEST,
+        { user: sender, toUserId: requestedUserId },
+      );
 
       return requestedUserId;
     },
@@ -125,7 +128,7 @@ module.exports = {
       ]);
 
       pubsub.publish(
-        ACCEPTED_FRIEND_REQUEST,
+        tags.ACCEPTED_FRIEND_REQUEST,
         { user: accepter, toUserId: userIdToAccept },
       );
       return userIdToAccept;
@@ -147,7 +150,7 @@ module.exports = {
 
       return true;
     },
-    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbf' }) => {
+    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -160,6 +163,11 @@ module.exports = {
           { $pull: { sentFriendRequests: userId } },
         ),
       ]);
+
+      pubsub.publish(
+        tags.DECLINED_FRIEND_REQUEST,
+        userIdToDecline,
+      );
 
       return true;
     },
@@ -183,21 +191,31 @@ module.exports = {
   Subscription: {
     newFriendRequest: {
       subscribe: withFilter(
-        (root, args, { pubsub }) => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.NEW_FRIEND_REQUEST),
         (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
     },
     acceptedFriendRequest: {
       subscribe: withFilter(
-        (root, args, { pubsub }) => pubsub.asyncIterator(ACCEPTED_FRIEND_REQUEST),
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.ACCEPTED_FRIEND_REQUEST),
         (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
     },
+    declinedFriendRequest: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.DECLINED_FRIEND_REQUEST),
+        (payload, variables, { currentUserId }) => payload === currentUserId,
+      ),
+      resolve: (payload) => {
+        console.log(payload);
+        return payload;
+      },
+    },
     followersUpdates: {
       subscribe: withFilter(
-        (root, args, { pubsub }) => pubsub.asyncIterator(FOLLOWERS_UPDATES),
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.FOLLOWERS_UPDATES),
         (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ followersUpdates }) => followersUpdates,
