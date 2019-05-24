@@ -184,21 +184,21 @@ module.exports = {
     newFriendRequest: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(NEW_FRIEND_REQUEST),
-        (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
+        (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
     },
     acceptedFriendRequest: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(ACCEPTED_FRIEND_REQUEST),
-        (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
+        (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ user }) => user,
     },
     followersUpdates: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(FOLLOWERS_UPDATES),
-        (payload, args, { currentUserId }) => payload.toUserId === currentUserId,
+        (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
       resolve: ({ followersUpdates }) => followersUpdates,
     },

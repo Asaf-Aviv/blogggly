@@ -19,7 +19,7 @@ const devMode = process.env.NODE_ENV !== 'production';
 const PORT = process.env.NODE_ENV || 5000;
 
 if (devMode) {
-  // mongoose.set('debug', true);
+  mongoose.set('debug', true);
   app.use(morgan('dev'));
 }
 

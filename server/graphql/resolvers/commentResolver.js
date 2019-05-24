@@ -63,7 +63,7 @@ module.exports = {
     newPostComment: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(NEW_POST_COMMENT),
-        ({ newPostComment }, args, { currentUserId }) => {
+        ({ newPostComment }, variables, { currentUserId }) => {
           console.log(currentUserId);
 
           return newPostComment.author._id.toString() !== currentUserId;
