@@ -30,7 +30,7 @@ module.exports = {
 
       pubsub.publish(
         POST_LIKES_UPDATES,
-        { postLikesUpdates: { userId, isLike, postId } },
+        { post, likerId: userId },
       );
 
       if (isLike) {
@@ -67,11 +67,12 @@ module.exports = {
     postLikesUpdates: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(POST_LIKES_UPDATES),
-        ({ postLikesUpdates }, { postId }, { currentUserId }) => (
-          postLikesUpdates.postId === postId
-            && postLikesUpdates.userId !== currentUserId
+        ({ post, likerId }, { postId }, { currentUserId }) => (
+          post._id.toString() === postId
+            && likerId !== currentUserId
         ),
       ),
+      resolve: ({ post }) => post,
     },
   },
   Post: {

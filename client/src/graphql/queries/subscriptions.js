@@ -85,8 +85,9 @@ export const NEW_POST_COMMENT = gql`
 export const POST_LIKES_UPDATES = gql`
   subscription postLikesUpdates($postId: ID!) {
     postLikesUpdates(postId: $postId) {
-      isLike
-      userId
+      _id
+      likes
+      likesCount
     }
   }
 `;

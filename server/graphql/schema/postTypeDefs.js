@@ -18,13 +18,8 @@ module.exports = gql`
   }
 
   type Subscription {
-    postLikesUpdates(postId: ID!): PostLikesUpdates!
+    postLikesUpdates(postId: ID!): Post!
     theyLikeMyPost: User!
-  }
-
-  type PostLikesUpdates {
-    isLike: Boolean!
-    userId: ID!
   }
 
   type Post {

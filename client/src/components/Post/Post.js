@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Query } from 'react-apollo';
+import { Query, Subscription } from 'react-apollo';
 import { shape, string } from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
@@ -32,45 +32,52 @@ const Post = ({ match: { params: { postId } } }) => {
           if (error) return <Redirect to="/" />;
 
           return (
-            <Container>
-              <article className="post">
-                <header className="post__header">
-                  <h1 className="post__title">{post.title}</h1>
-                  <div className="post__tags">
-                    <Tags tags={post.tags} />
-                  </div>
-                </header>
-                <AuthorDetails {...post.author}>
-                  {post.author._id !== (loggedUser && loggedUser._id) && (
-                  <FollowButton
-                    following={!!loggedUser && loggedUser.following.includes(post.author._id)}
-                    userId={post.author._id}
-                    username={post.author.username}
+            <Subscription
+              subscription={queries.POST_LIKES_UPDATES}
+              variables={{ postId }}
+            >
+              {() => (
+                <Container>
+                  <article className="post">
+                    <header className="post__header">
+                      <h1 className="post__title">{post.title}</h1>
+                      <div className="post__tags">
+                        <Tags tags={post.tags} />
+                      </div>
+                    </header>
+                    <AuthorDetails {...post.author}>
+                      {post.author._id !== (loggedUser && loggedUser._id) && (
+                        <FollowButton
+                          following={!!loggedUser && loggedUser.following.includes(post.author._id)}
+                          userId={post.author._id}
+                          username={post.author.username}
+                        />
+                      )}
+                      <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
+                    </AuthorDetails>
+                    <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
+                    <div className="post__actions">
+                      <Likes
+                        postId={postId}
+                        likesCount={post.likesCount}
+                        id={postId}
+                        likes={post.likes}
+                        isPost
+                      />
+                      {isLogged && loggedUser._id === post.author._id && (
+                      <DeletePostButton postId={postId} />
+                      )}
+                    </div>
+                  </article>
+                  <MoreFromAuthor
+                    authorName={post.author.username}
+                    authorId={post.author._id}
+                    viewingPostId={postId}
                   />
-                  )}
-                  <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
-                </AuthorDetails>
-                <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
-                <div className="post__actions">
-                  <Likes
-                    postId={postId}
-                    likesCount={post.likesCount}
-                    id={postId}
-                    likes={post.likes}
-                    isPost
-                  />
-                  {isLogged && loggedUser._id === post.author._id && (
-                    <DeletePostButton postId={postId} />
-                  )}
-                </div>
-              </article>
-              <MoreFromAuthor
-                authorName={post.author.username}
-                authorId={post.author._id}
-                viewingPostId={postId}
-              />
-              <Comments postId={post._id} />
-            </Container>
+                  <Comments postId={post._id} />
+                </Container>
+              )}
+            </Subscription>
           );
         }}
       </Query>
