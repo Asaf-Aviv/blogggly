@@ -14,8 +14,6 @@ import ReportModal from '../ReportModal';
 
 import './Message.sass';
 
-let deleteFunc;
-
 const Message = ({ message, fromOrTo, loggedUserId }) => {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
@@ -81,10 +79,11 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
             variables={{ messageId: message._id }}
             onCompleted={({ deletedMessageId }) => {
               const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
+              console.log('cleaning', deletedMessageId);
               setLoggedUser((draft) => {
                 const messagesArray = draft.inbox[sentOrReceived];
                 messagesArray.splice(
-                  messagesArray.findIndex(msg => msg._id !== deletedMessageId), 1,
+                  messagesArray.findIndex(msg => msg._id === deletedMessageId), 1,
                 );
               });
               Alert.success('Message deleted successfully');
@@ -93,20 +92,24 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
             onError={utils.UIErrorNotifier}
           >
             {deleteMessage => (
-              <button
-                className="message__btn"
-                type="button"
-                onClick={() => {
-                  if (message.inTrash) {
-                    deleteFunc = deleteMessage;
-                    setShowConfirmationModal(true);
-                    return;
-                  }
-                  deleteMessage();
-                }}
-              >
-                <i className="fas fa-trash" />
-              </button>
+              <>
+                <button
+                  className="message__btn"
+                  type="button"
+                  onClick={() => setShowConfirmationModal(true)}
+                >
+                  <i className="fas fa-trash" />
+                </button>
+                {showConfirmationModal && (
+                  <ConfirmationModal
+                    onConfirm={deleteMessage}
+                    onCancel={() => setShowConfirmationModal(false)}
+                    onConfirmText="Delete"
+                    confirmationQuestion="Are you sure you want to delete this message?"
+                    theme="danger"
+                  />
+                )}
+              </>
             )}
           </Mutation>
         )}
@@ -138,15 +141,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
       {showMessageModal && (
         <MessageModal message={message} closeModal={() => setShowMessageModal(false)} />
       )}
-      {showConfirmationModal && (
-        <ConfirmationModal
-          onConfirm={deleteFunc}
-          onCancel={() => setShowConfirmationModal(false)}
-          onConfirmText="Delete"
-          confirmationQuestion="Are you sure you want to delete this message?"
-          theme="danger"
-        />
-      )}
+
     </li>
   );
 };
