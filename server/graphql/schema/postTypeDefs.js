@@ -5,7 +5,6 @@ module.exports = gql`
     post(postId: ID!): Post!
     getPostsByIds(postIds: [ID!]!): [Post!]!
     postsByTag(tag: String!): [Post!]!
-    userPosts(userId: ID!): [Post!]!
     moreFromAuthor(authorId: ID!, viewingPostId: ID!): [Post!]!
     searchPosts(postQuery: String!): [Post!]!
   }
