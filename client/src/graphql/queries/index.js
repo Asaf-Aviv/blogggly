@@ -3,7 +3,7 @@ import * as mutations from '../mutations';
 import * as subscriptions from '../subscriptions';
 
 export default {
-  ...queries,
-  ...mutations,
-  ...subscriptions,
+  ...queries.default,
+  ...mutations.default,
+  ...subscriptions.default,
 };
