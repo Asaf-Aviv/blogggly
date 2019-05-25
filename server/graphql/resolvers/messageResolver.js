@@ -49,10 +49,7 @@ module.exports = {
     },
   },
   Message: {
-    // FIXME: userLoader return from data as to and vice versa
-    // from: ({ from }, args, { userLoader }) => userLoader.load(from.toString()),
-    // to: ({ to }, args, { userLoader }) => userLoader.load(to.toString()),
-    from: async ({ from }) => User.findById(from),
-    to: async ({ to }) => User.findById(to),
+    from: ({ from }, args, { userLoader }) => userLoader.load(from.toString()),
+    to: ({ to }, args, { userLoader }) => userLoader.load(to.toString()),
   },
 };
