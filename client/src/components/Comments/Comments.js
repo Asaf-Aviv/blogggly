@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
 import { Query, withApollo, Subscription } from 'react-apollo';
 import orderBy from 'lodash.orderby';
+import { cloneDeep } from 'lodash';
 import Comment from '../Comment';
 import queries from '../../graphql/queries';
 import AddComment from '../AddComment';
@@ -20,14 +21,37 @@ const Comments = ({ postId }) => {
       .subscribe({ query: queries.NEW_POST_COMMENT, variables })
       .subscribe({
         next: ({ data: { newPostComment } }) => {
-          const data = apolloClient.readQuery({ query: queries.POST_COMMENTS, variables });
+          const query = { query: queries.POST_COMMENTS, variables };
+          const data = cloneDeep(apolloClient.readQuery(query));
           data.comments.push(newPostComment);
-          apolloClient.writeQuery({ query: queries.POST_COMMENTS, variables, data });
+          apolloClient.writeQuery({ ...query, data });
         },
         error: err => console.error(err),
       });
 
     return () => newCommentsSubscription.unsubscribe();
+  }, [postId]);
+
+  useEffect(() => {
+    const variables = { postId };
+
+    const deletedCommentSubscription = apolloClient
+      .subscribe({ query: queries.DELETED_POST_COMMENT, variables })
+      .subscribe({
+        next: ({ data: { deletedPostComment: deletedCommentId } }) => {
+          console.log(deletedCommentId);
+          const query = { query: queries.POST_COMMENTS, variables };
+
+          const data = cloneDeep(apolloClient.readQuery(query));
+          data.comments.splice(
+            data.comments.findIndex(comment => comment._id === deletedCommentId), 1,
+          );
+          apolloClient.writeQuery({ ...query, data });
+        },
+        error: err => console.error(err),
+      });
+
+    return () => deletedCommentSubscription.unsubscribe();
   }, [postId]);
 
   return (

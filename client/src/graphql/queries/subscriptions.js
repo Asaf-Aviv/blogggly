@@ -101,3 +101,9 @@ export const COMMENT_LIKES_UPDATES = gql`
     }
   }
 `;
+
+export const DELETED_POST_COMMENT = gql`
+  subscription deletedPostComment($postId: ID!) {
+    deletedPostComment(postId: $postId)
+  }
+`;

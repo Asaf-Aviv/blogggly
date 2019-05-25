@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Query {
-    getCommentsByIds(commentIds: [ID]): [Comment!]!
+    getCommentsByIds(commentIds: [ID!]!): [Comment!]!
     postComments(postId: ID!): [Comment!]!
   }
   
@@ -16,6 +16,7 @@ module.exports = gql`
     newPostComment(postId: ID!): Comment!
     commentLikesUpdates(postId: ID!): Comment!
     theyLikeMyComment: User!
+    deletedPostComment(postId: ID!): ID!
   }
 
   type Comment {
