@@ -28,7 +28,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     setLoggedUser((draft) => {
       const messagesArray = draft.inbox[sentOrReceived];
       messagesArray.splice(
-        messagesArray.fineIndex(msg => msg._id === updatedMessage._id, 1, updatedMessage),
+        messagesArray.findIndex(msg => msg._id === updatedMessage._id), 1, updatedMessage,
       );
     });
   };
@@ -45,6 +45,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           mutation={queries.BOOKMARK_MESSAGE}
           variables={{ messageId: message._id }}
           onCompleted={({ bookmarkMessage }) => {
+            console.log(bookmarkMessage);
             const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
             updateLoggedUserInbox(sentOrReceived, bookmarkMessage);
           }}
