@@ -38,7 +38,7 @@ const FriendRequestActions = ({
         onCompleted={() => {
           setLoggedUser((draft) => {
             draft.sentFriendRequests.splice(
-              draft.sentFriendRequests.indexOf(request => request === userId), 1,
+              draft.sentFriendRequests.indexOf(userId), 1,
             );
           });
         }}
@@ -57,7 +57,7 @@ const FriendRequestActions = ({
         onCompleted={() => {
           setLoggedUser((draft) => {
             draft.incomingFriendRequests.splice(
-              draft.incomingFriendRequests.indexOf(request => request === userId), 1,
+              draft.incomingFriendRequests.indexOf(userId), 1,
             );
           });
         }}
@@ -72,7 +72,7 @@ const FriendRequestActions = ({
               setLoggedUser((draft) => {
                 draft.friends.push(userId);
                 draft.incomingFriendRequests.splice(
-                  draft.incomingFriendRequests.indexOf(request => request !== userId, 1),
+                  draft.incomingFriendRequests.indexOf(userId, 1),
                 );
               });
             }}

@@ -28,7 +28,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     setLoggedUser((draft) => {
       const messagesArray = draft.inbox[sentOrReceived];
       messagesArray.splice(
-        messagesArray.indexOf(msg => msg._id === updatedMessage._id, 1, updatedMessage),
+        messagesArray.fineIndex(msg => msg._id === updatedMessage._id, 1, updatedMessage),
       );
     });
   };
