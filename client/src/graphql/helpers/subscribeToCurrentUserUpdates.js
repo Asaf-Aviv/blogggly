@@ -18,6 +18,9 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   const canceledFriendRequestObserver$ = apolloClient.subscribe(
     { query: queries.CANCELED_FRIEND_REQUEST },
   );
+  const deletedFriendObserver$ = apolloClient.subscribe(
+    { query: queries.DELETE_FRIEND },
+  );
   const theyLikeMyPostObserver$ = apolloClient.subscribe(
     { query: queries.THEY_LIKE_MY_POST },
   );
@@ -86,6 +89,17 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     error: err => console.error(err),
   });
 
+  const deletedFriendSubscription = deletedFriendObserver$.subscribe({
+    next: ({ data: { deletedFriendId } }) => {
+      setLoggedUser((loggedUser) => {
+        loggedUser.friends.splice(
+          loggedUser.friends.indexOf(deletedFriendId), 1,
+        );
+      });
+    },
+    error: err => console.error(err),
+  });
+
   const theyLikeMyPostSubscription = theyLikeMyPostObserver$.subscribe({
     next: ({ data: { theyLikeMyPost } }) => {
       Alert.success(`${theyLikeMyPost.username} just liked your post`);
@@ -106,6 +120,7 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     acceptedFriendRequestSubscription,
     declinedFriendRequestSubscription,
     canceledFriendRequestSubscription,
+    deletedFriendSubscription,
     theyLikeMyPostSubscription,
     theyLikeMyCommentSubscription,
   ];

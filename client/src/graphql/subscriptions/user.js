@@ -32,6 +32,12 @@ export const CANCELED_FRIEND_REQUEST = gql`
   }
 `;
 
+export const DELETE_FRIEND = gql`
+  subscription {
+    deletedFriendId: deleteFriend
+  }
+`;
+
 export const FOLLOWERS_UPDATES = gql`
   subscription {
     followersUpdates {

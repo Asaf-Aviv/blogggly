@@ -60,7 +60,7 @@ module.exports = {
         isFollow,
       };
     },
-    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
+    sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       const [senderRequestExist, senderAlreadyFriends] = await Promise.all([
@@ -95,7 +95,7 @@ module.exports = {
 
       return requestedUserId;
     },
-    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
+    acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       const accepter = await User.findOne(
@@ -153,7 +153,7 @@ module.exports = {
 
       return true;
     },
-    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5cd60ece73783b225425ecbf', pubsub }) => {
+    declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -174,7 +174,7 @@ module.exports = {
 
       return true;
     },
-    removeFriend: async (root, { userId: userIdToRemove }, { userId = '5cd60ece73783b225425ecbf' }) => {
+    removeFriend: async (root, { userId: userIdToRemove }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
       await Promise.all([
@@ -187,6 +187,12 @@ module.exports = {
           { $pull: { friends: userId } },
         ),
       ]);
+
+      console.log('publishing');
+      pubsub.publish(
+        tags.DELETE_FRIEND,
+        { deleterId: userId, toUserId: userIdToRemove },
+      );
 
       return true;
     },
@@ -218,6 +224,13 @@ module.exports = {
         ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
       ),
       resolve: ({ cancelerId }) => cancelerId,
+    },
+    deleteFriend: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.DELETE_FRIEND),
+        ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
+      ),
+      resolve: ({ deleterId }) => deleterId,
     },
     followersUpdates: {
       subscribe: withFilter(
