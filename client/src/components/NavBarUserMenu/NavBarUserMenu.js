@@ -46,7 +46,7 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
       </button>
       {isOpen && (
         <div ref={dropdown} className="dropdown__container">
-          <ul className="dropdown faster animated fadeIn" onClick={() => setIsOpen(false)}>
+          <ul className="dropdown" onClick={() => setIsOpen(false)}>
             <li className="dropdown__item">
               <NavLink activeClassName="dropdown__link--active" to="/create" className="dropdown__link">
                 <i className="dropdown__icon fas fa-plus" />
