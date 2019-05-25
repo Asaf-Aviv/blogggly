@@ -12,10 +12,10 @@ module.exports = {
     postComments: async (root, { postId }) => Comment.find({ post: postId }),
   },
   Mutation: {
-    addComment: async (root, { postId, body }, { userId, pubsub }) => {
+    newComment: async (root, { postId, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to comment.');
 
-      const newPostComment = await Comment.addComment(
+      const newPostComment = await Comment.newComment(
         { post: postId, body, author: userId },
       );
       pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment });

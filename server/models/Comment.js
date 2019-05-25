@@ -35,7 +35,7 @@ CommentSchema.statics.findCommentsForPost = async function (postId) {
   return commentIds;
 };
 
-CommentSchema.statics.addComment = async function (commentInput) {
+CommentSchema.statics.newComment = async function (commentInput) {
   const [post, user] = await Promise.all([
     Post.findPostById(commentInput.post),
     User.findUserById(commentInput.author),

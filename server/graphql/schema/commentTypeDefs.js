@@ -7,7 +7,7 @@ module.exports = gql`
   }
   
   type Mutation {
-    addComment(postId: ID!, body: String!): Comment!
+    newComment(postId: ID!, body: String!): Comment!
     deleteComment(commentId: ID!, postId: ID!): ID!
     toggleLikeOnComment(commentId: ID!): Comment!
   }

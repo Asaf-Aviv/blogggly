@@ -36,7 +36,7 @@ const AddComment = ({ postId }) => {
       }}
       onError={utils.UIErrorNotifier}
     >
-      {(addComment, { loading }) => (
+      {(newComment, { loading }) => (
         <form
           className="add-comment"
           onSubmit={(e) => {
@@ -47,7 +47,7 @@ const AddComment = ({ postId }) => {
               setShowMemberForms(true);
               return;
             }
-            addComment();
+            newComment();
           }}
         >
           <textarea
