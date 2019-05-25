@@ -2,18 +2,18 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Query {
-    post(postId: ID): Post!
-    getPostsByIds(postIds: [ID]): [Post!]!
-    postsByTag(tag: String): [Post!]!
-    userPosts(id: ID): [Post!]!
-    moreFromAuthor(authorId: ID, viewingPostId: ID): [Post!]!
+    post(postId: ID!): Post!
+    getPostsByIds(postIds: [ID!]!): [Post!]!
+    postsByTag(tag: String!): [Post!]!
+    userPosts(userId: ID!): [Post!]!
+    moreFromAuthor(authorId: ID!, viewingPostId: ID!): [Post!]!
     searchPosts(postQuery: String!): [Post!]!
   }
 
   type Mutation {
-    createPost(postInput: PostInput): Post!
-    updatePost(postId: ID, updatedPost: PostInput): Post!
-    deletePost(postId: ID): String!
+    createPost(postInput: PostInput!): Post!
+    updatePost(postId: ID!, updatedPost: PostInput!): Post!
+    deletePost(postId: ID!): String!
     toggleLikeOnPost(postId: ID!): Post!
   }
 

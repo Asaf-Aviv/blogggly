@@ -5,7 +5,6 @@ const tags = require('../tags');
 
 module.exports = {
   Query: {
-    user: (root, { id }, { userLoader }) => userLoader.load(id),
     users: async (root, args, { userLoader }) => {
       const users = await User.find({}, { inbox: 0 });
       users.map(user => userLoader.prime(user._id, user));

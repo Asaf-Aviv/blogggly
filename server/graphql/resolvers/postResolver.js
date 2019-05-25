@@ -9,7 +9,7 @@ module.exports = {
       postLoader.load(postId)
     ),
     postsByTag: async (root, { tag }) => Post.find({ tags: { $in: [tag] } }),
-    userPosts: (root, { id }) => Post.findPostsForUser(id),
+    userPosts: (root, { userId }) => Post.findPostsForUser(userId),
     getPostsByIds: (root, { postIds }, { postLoader }) => (
       postLoader.loadMany(postIds)
     ),

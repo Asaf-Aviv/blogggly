@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Mutation {
-    report(report: ReportInput): Boolean!
+    report(report: ReportInput!): Boolean!
   }
 
   type Report {

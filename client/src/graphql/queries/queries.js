@@ -34,7 +34,7 @@ export const SEARCH_POSTS = gql`
 `;
 
 export const GET_POSTS_BY_IDS = gql`
-  query getPostsByIds($postIds: [ID]) {
+  query getPostsByIds($postIds: [ID!]!) {
     posts: getPostsByIds(postIds: $postIds) {
       _id
       title
@@ -69,9 +69,8 @@ export const COMMENTS = gql`
 
 export const GET_COMMENTS_BY_IDS = gql`
   query getCommentsByIds(
-    $commentIds: [ID],
+    $commentIds: [ID!]!,
     $withPostInfo: Boolean = false,
-    $withAuthorInfo: Boolean = false
   ) {
     comments: getCommentsByIds(commentIds: $commentIds) {
       _id
@@ -87,11 +86,6 @@ export const GET_COMMENTS_BY_IDS = gql`
           username
           avatar
         }
-      }
-      author @include (if: $withAuthorInfo) {
-        _id
-        username
-        avatar
       }
     }
   }
@@ -115,7 +109,7 @@ export const POST_COMMENTS = gql`
 `;
 
 export const GET_SHORT_USERS_SUMMARY_BY_IDS = gql`
-  query getUsersByIds($userIds: [ID]) {
+  query getUsersByIds($userIds: [ID!]!) {
     users: getUsersByIds(userIds: $userIds) {
       _id
       username
@@ -144,7 +138,7 @@ export const GET_USERS_BY_IDS = gql`
 `;
 
 export const GET_USER_BY_USERNAME = gql`
-  query getUserByUsername($username: String) {
+  query getUserByUsername($username: String!) {
     user: getUserByUsername(username: $username) {
       _id
       username
@@ -188,7 +182,7 @@ export const GET_USER_LIKES = gql`
 `;
 
 export const GET_POSTS_BY_TAG = gql`
-  query postsByTag($tag: String) {
+  query postsByTag($tag: String!) {
     posts: postsByTag(tag: $tag) {
       _id
       title
@@ -206,7 +200,7 @@ export const GET_POSTS_BY_TAG = gql`
 `;
 
 export const USER_POSTS = gql`
-  query userPosts($id: ID) {
+  query userPosts($id: ID!) {
     posts: userPosts(id: $id) {
       _id
       title
@@ -217,7 +211,7 @@ export const USER_POSTS = gql`
 `;
 
 export const MORE_FROM_AUTHOR = gql`
-  query moreFromAuthor($authorId: ID, $viewingPostId: ID) {
+  query moreFromAuthor($authorId: ID!, $viewingPostId: ID!) {
     moreFromAuthor(authorId: $authorId, viewingPostId: $viewingPostId) {
       _id
       title
@@ -229,7 +223,7 @@ export const MORE_FROM_AUTHOR = gql`
 `;
 
 export const POST = gql`
-  query post($postId: ID) {
+  query post($postId: ID!) {
     post(postId: $postId) {
       _id
       title

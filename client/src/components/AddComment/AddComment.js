@@ -18,12 +18,7 @@ const AddComment = ({ postId }) => {
   return (
     <Mutation
       mutation={queries.ADD_COMMENT}
-      variables={{
-        comment: {
-          post: postId,
-          body: commentBody,
-        },
-      }}
+      variables={{ postId, body: commentBody }}
       update={(cache, { data: { newComment } }) => {
         const query = {
           query: queries.POST_COMMENTS,

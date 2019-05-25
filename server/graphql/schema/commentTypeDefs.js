@@ -7,8 +7,8 @@ module.exports = gql`
   }
   
   type Mutation {
-    addComment(comment: CommentInput): Comment!
-    deleteComment(commentId: ID, postId: ID): ID!
+    addComment(postId: ID!, body: String!): Comment!
+    deleteComment(commentId: ID!, postId: ID!): ID!
     toggleLikeOnComment(commentId: ID!): Comment!
   }
 
@@ -27,10 +27,5 @@ module.exports = gql`
     likes: [ID!]!
     likesCount: Int!
     post: Post!
-  }
-
-  input CommentInput {
-    body: String!
-    post: ID!
   }
 `;

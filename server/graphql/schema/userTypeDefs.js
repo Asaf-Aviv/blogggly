@@ -2,24 +2,23 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Query {
-    user(id: ID): User
     users: [User!]!
-    getUserByUsername(username: String): User!
-    getUsersByIds(userIds: [ID]): [User!]!
+    getUserByUsername(username: String!): User!
+    getUsersByIds(userIds: [ID!]!): [User!]!
     searchUsers(userQuery: String!): [User!]!
   }
 
   type Mutation {
-    relog: CurrentUser
-    login(email: String, password: String): CurrentUser
-    signup(userInput: UserInput): CurrentUser
-    updateUserInfo(info: UserInfoInput): CurrentUser
+    relog: CurrentUser!
+    login(email: String!, password: String!): CurrentUser!
+    signup(userInput: UserInput!): CurrentUser!
+    updateUserInfo(info: UserInfoInput!): CurrentUser!
     toggleFollow(userId: ID!): ToggleFollow!
-    sendFriendRequest(userId: ID!): ID
-    acceptFriendRequest(userId: ID!): ID
-    declineFriendRequest(userId: ID!): Boolean
-    cancelFriendRequest(userId: ID!): Boolean
-    removeFriend(userId: ID!): Boolean
+    sendFriendRequest(userId: ID!): ID!
+    acceptFriendRequest(userId: ID!): ID!
+    declineFriendRequest(userId: ID!): Boolean!
+    cancelFriendRequest(userId: ID!): Boolean!
+    removeFriend(userId: ID!): Boolean!
   }
 
   type Subscription {

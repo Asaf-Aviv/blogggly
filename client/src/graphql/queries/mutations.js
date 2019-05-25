@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const ADD_COMMENT = gql`
-  mutation addComment($comment: CommentInput) {
-    newComment: addComment(comment: $comment) {
+  mutation addComment($postId: ID!, $body: String!) {
+    newComment: addComment(postId: $postId, body: $body) {
       _id
       author {
         _id
@@ -18,7 +18,7 @@ export const ADD_COMMENT = gql`
 `;
 
 export const CREATE_POST = gql`
-  mutation createPost($postInput: PostInput) {
+  mutation createPost($postInput: PostInput!) {
     createPost(postInput: $postInput) {
       _id
       title
@@ -28,7 +28,7 @@ export const CREATE_POST = gql`
 `;
 
 export const SEND_MESSAGE = gql`
-  mutation sendMessage($to: ID, $body: String) {
+  mutation sendMessage($to: ID!, $body: String!) {
     sendMessage(to: $to, body: $body) {
       _id
       body
@@ -59,7 +59,7 @@ export const SEND_FRIEND_REQUEST = gql`
 `;
 
 export const REPORT = gql`
-  mutation report($report: ReportInput) {
+  mutation report($report: ReportInput!) {
     report(report: $report)
   }
 `;
@@ -99,7 +99,7 @@ export const TOGGLE_LIKE_ON_COMMENT = gql`
 
 
 export const BOOKMARK_MESSAGE = gql`
-  mutation bookmarkMessage($messageId: ID) {
+  mutation bookmarkMessage($messageId: ID!) {
     bookmarkMessage(messageId: $messageId) {
       _id
       read
@@ -124,19 +124,19 @@ export const BOOKMARK_MESSAGE = gql`
 `;
 
 export const DELETE_MESSAGE = gql`
-  mutation deleteMessage($messageId: ID) {
-    deleteMessageId: deleteMessage(messageId: $messageId)
+  mutation deleteMessage($messageId: ID!) {
+    deletedMessageId: deleteMessage(messageId: $messageId)
   }
 `;
 
 export const DELETE_POST = gql`
-  mutation deletePost($postId: ID) {
+  mutation deletePost($postId: ID!) {
     deletePost(postId: $postId)
   }
 `;
 
 export const DELETE_COMMENT = gql`
-  mutation deleteComment($commentId: ID, $postId: ID) {
+  mutation deleteComment($commentId: ID!, $postId: ID!) {
     deleteComment(commentId: $commentId, postId: $postId)
   }
 `;
@@ -166,7 +166,7 @@ export const CANCEL_FRIEND_REQUEST = gql`
 `;
 
 export const UPDATE_USER_INFO = gql`
-  mutation updateUserInfo($info: UserInfoInput) {
+  mutation updateUserInfo($info: UserInfoInput!) {
     updateUserInfo(info: $info) {
       _id
       info {
@@ -181,7 +181,7 @@ export const UPDATE_USER_INFO = gql`
 `;
 
 export const MOVE_MESSAGE_TO_TRASH = gql`
-  mutation moveMessageToTrash($messageId: ID) {
+  mutation moveMessageToTrash($messageId: ID!) {
     moveMessageToTrash(messageId: $messageId) {
       _id
       read
@@ -331,7 +331,7 @@ export const LOGIN = gql`
 `;
 
 export const SIGNUP = gql`
-  mutation signup($userInput: UserInput) {
+  mutation signup($userInput: UserInput!) {
     signup(userInput: $userInput) {
       token
       _id

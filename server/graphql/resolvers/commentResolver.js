@@ -12,10 +12,12 @@ module.exports = {
     postComments: async (root, { postId }) => Comment.find({ post: postId }),
   },
   Mutation: {
-    addComment: async (root, { comment }, { userId, pubsub }) => {
+    addComment: async (root, { postId, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to comment.');
 
-      const newPostComment = await Comment.addComment({ ...comment, author: userId });
+      const newPostComment = await Comment.addComment(
+        { post: postId, body, author: userId },
+      );
       pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment });
       return newPostComment;
     },
@@ -37,7 +39,13 @@ module.exports = {
       return comment;
     },
     deleteComment: async (root, { commentId, postId }, { userId, pubsub }) => {
-      const [user, post, comment] = await Promise.all([
+      const comment = await Comment.findCommentById(commentId);
+
+      if (comment.author.toString() !== userId) {
+        throw new Error('Unauthorized');
+      }
+
+      const [user, post] = await Promise.all([
         User.findUserById(userId),
         Post.findPostById(postId),
         Comment.findCommentById(commentId),
