@@ -6,7 +6,7 @@ import NavSearchResults from '../NavSearchResults';
 import utils from '../../utils';
 
 const NavSearchBar = () => {
-  const [postQuery, setPostQuery] = useState('.');
+  const [postQuery, setPostQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
 
   const setShowResultsHandler = nextState => () => setShowResults(nextState);

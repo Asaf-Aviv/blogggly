@@ -5,7 +5,7 @@ import { func } from 'prop-types';
 import './UserSearchBar.sass';
 
 const UserSearchBar = ({ setUserQuery }) => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('.');
 
   const [debouncedCallback] = useDebouncedCallback(
     () => setUserQuery(username),

@@ -78,12 +78,12 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           <Mutation
             mutation={queries.DELETE_MESSAGE}
             variables={{ messageId: message._id }}
-            onCompleted={({ deleteMessageId }) => {
+            onCompleted={({ deletedMessageId }) => {
               const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
               setLoggedUser((draft) => {
                 const messagesArray = draft.inbox[sentOrReceived];
                 messagesArray.splice(
-                  messagesArray.indexOf(msg => msg._id !== deleteMessageId), 1,
+                  messagesArray.findIndex(msg => msg._id !== deletedMessageId), 1,
                 );
               });
               Alert.success('Message deleted successfully');
