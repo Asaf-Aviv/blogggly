@@ -5,62 +5,36 @@ const tags = require('../tags');
 module.exports = {
   Mutation: {
     sendMessage: async (root, { to, body }, { userId, pubsub }) => {
-      if (!userId) throw new Error('Unauthorized, Please Login to send a message.');
-      const message = await User.sendMessage(userId, to, body);
+      if (!userId) throw new Error('Unauthorized.');
+      const newMessage = await User.sendMessage(userId, to, body);
 
       pubsub.publish(
         tags.NEW_MESSAGE,
-        { newMessage: message },
+        { newMessage },
       );
 
-      return message;
+      return newMessage;
     },
-    bookmarkMessage: async (root, { messageId }, { userId, userLoader }) => {
-      const user = await userLoader.load(userId);
-
-      const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
-        || user.inbox.sent.find(m => m._id.toString() === messageId);
-
-      message.inBookmarks = !message.inBookmarks;
-      message.inTrash = false;
-
-      await user.save();
-      return message;
+    bookmarkMessage: async (root, { messageId, inInbox }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.bookmarkMessage(messageId, inInbox, userId);
     },
-    moveMessageToTrash: async (root, { messageId }, { userId, userLoader }) => {
-      const user = await userLoader.load(userId);
-
-      const message = user.inbox.inbox.find(m => m._id.toString() === messageId)
-        || user.inbox.sent.find(m => m._id.toString() === messageId);
-
-      message.inTrash = !message.inTrash;
-      message.inBookmarks = false;
-
-      await user.save();
-      return message;
+    moveMessageToTrash: (root, { messageId, inInbox }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.moveMessageToTrash(messageId, inInbox, userId);
     },
-    deleteMessage: async (root, { messageId }, { userId, userLoader }) => {
-      const user = await userLoader.load(userId);
-
-      let message = user.inbox.inbox
-        .splice(user.inbox.inbox
-          .findIndex(m => m._id.toString() === messageId), 1);
-
-      if (!message.length) {
-        message = user.inbox.sent
-          .splice(user.inbox.sent
-            .findIndex(m => m._id.toString() === messageId), 1);
-      }
-
-      await user.save();
-      return message[0]._id;
+    deleteMessage: (root, { messageId, inInbox }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.deleteMessage(messageId, inInbox, userId);
     },
   },
   Subscription: {
     newMessage: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.NEW_MESSAGE),
-        ({ to }, variables, { currentUserId }) => true /* to._id === currentUserId */,
+        ({ newMessage }, variables, { currentUserId }) => (
+          newMessage.to._id.toString() === currentUserId
+        ),
       ),
     },
   },
