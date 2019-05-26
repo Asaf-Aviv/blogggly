@@ -41,7 +41,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
       <div className="message__actions">
         <Mutation
           mutation={queries.BOOKMARK_MESSAGE}
-          variables={{ messageId: message._id }}
+          variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
           onCompleted={({ bookmarkMessage }) => {
             console.log(bookmarkMessage);
             const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
@@ -57,7 +57,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         </Mutation>
         <Mutation
           mutation={queries.MOVE_MESSAGE_TO_TRASH}
-          variables={{ messageId: message._id }}
+          variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
           onCompleted={({ moveMessageToTrash }) => {
             const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
             updateLoggedUserInbox(sentOrReceived, moveMessageToTrash);
@@ -76,7 +76,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         {message.inTrash && (
           <Mutation
             mutation={queries.DELETE_MESSAGE}
-            variables={{ messageId: message._id }}
+            variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
             onCompleted={({ deletedMessageId }) => {
               const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
               console.log('cleaning', deletedMessageId);
@@ -141,7 +141,6 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
       {showMessageModal && (
         <MessageModal message={message} closeModal={() => setShowMessageModal(false)} />
       )}
-
     </li>
   );
 };

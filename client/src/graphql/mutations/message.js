@@ -26,8 +26,8 @@ export const SEND_MESSAGE = gql`
 `;
 
 export const BOOKMARK_MESSAGE = gql`
-  mutation bookmarkMessage($messageId: ID!) {
-    bookmarkMessage(messageId: $messageId) {
+  mutation bookmarkMessage($messageId: ID!, $inInbox: Boolean!) {
+    bookmarkMessage(messageId: $messageId, inInbox: $inInbox) {
       _id
       read
       createdAt
@@ -51,8 +51,8 @@ export const BOOKMARK_MESSAGE = gql`
 `;
 
 export const MOVE_MESSAGE_TO_TRASH = gql`
-  mutation moveMessageToTrash($messageId: ID!) {
-    moveMessageToTrash(messageId: $messageId) {
+  mutation moveMessageToTrash($messageId: ID!, $inInbox: Boolean!) {
+    moveMessageToTrash(messageId: $messageId, inInbox: $inInbox) {
       _id
       read
       createdAt
@@ -76,7 +76,7 @@ export const MOVE_MESSAGE_TO_TRASH = gql`
 `;
 
 export const DELETE_MESSAGE = gql`
-  mutation deleteMessage($messageId: ID!) {
-    deletedMessageId: deleteMessage(messageId: $messageId)
+  mutation deleteMessage($messageId: ID!, $inInbox: Boolean!) {
+    deletedMessageId: deleteMessage(messageId: $messageId, inInbox: $inInbox)
   }
 `;
