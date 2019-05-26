@@ -31,6 +31,9 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     });
   };
 
+  const inInbox = (fromOrTo === 'from');
+  const sentOrReceived = inInbox;
+
   return (
     <li key={message._id} className="message__container">
       <div className="message__wrapper" onClick={() => setShowMessageModal(true)}>
@@ -41,11 +44,10 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
       <div className="message__actions">
         <Mutation
           mutation={queries.BOOKMARK_MESSAGE}
-          variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
+          variables={{ messageId: message._id, inInbox }}
           onCompleted={({ bookmarkMessage }) => {
             console.log(bookmarkMessage);
-            const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
-            updateLoggedUserInbox(sentOrReceived, bookmarkMessage);
+            updateLoggedUserInbox(inInbox, bookmarkMessage);
           }}
           onError={utils.UIErrorNotifier}
         >
@@ -57,9 +59,8 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         </Mutation>
         <Mutation
           mutation={queries.MOVE_MESSAGE_TO_TRASH}
-          variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
+          variables={{ messageId: message._id, inInbox }}
           onCompleted={({ moveMessageToTrash }) => {
-            const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
             updateLoggedUserInbox(sentOrReceived, moveMessageToTrash);
           }}
           onError={utils.UIErrorNotifier}
@@ -76,9 +77,8 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         {message.inTrash && (
           <Mutation
             mutation={queries.DELETE_MESSAGE}
-            variables={{ messageId: message._id, inInbox: fromOrTo === 'from' }}
+            variables={{ messageId: message._id, inInbox }}
             onCompleted={({ deletedMessageId }) => {
-              const sentOrReceived = fromOrTo === 'to' ? 'sent' : 'inbox';
               console.log('cleaning', deletedMessageId);
               setLoggedUser((draft) => {
                 const messagesArray = draft.inbox[sentOrReceived];
