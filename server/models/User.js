@@ -202,6 +202,68 @@ UserSchema.statics.moreFromAuthor = async function (userId, viewingPostId) {
   return Post.find({ _id: { $in: postIds } });
 };
 
+UserSchema.statics.findMessage = async function (messageId, inInbox, userId) {
+  const inboxOrSent = inInbox ? 'inbox' : 'sent';
+  const messagesArray = inInbox ? 'inbox.inbox' : 'inbox.sent';
+
+  const { inbox } = await this.findOne(
+    { _id: userId, [`${messagesArray}._id`]: messageId },
+    { [`${messagesArray}.$`]: 1 },
+  );
+
+  return inbox[inboxOrSent][0];
+};
+
+UserSchema.statics.bookmarkMessage = async function (messageId, inInbox, userId) {
+  const messagesArray = inInbox ? 'inbox.inbox' : 'inbox.sent';
+  const message = await this.findMessage(messageId, inInbox, userId);
+
+  message.inBookmarks = !message.inBookmarks;
+  message.inTrash = false;
+
+  await this.updateOne(
+    { _id: userId, [`${messagesArray}._id`]: messageId },
+    {
+      $set: {
+        [`${messagesArray}.$.inBookmarks`]: message.inBookmarks,
+        [`${messagesArray}.$.inTrash`]: false,
+      },
+    },
+  );
+
+  return message;
+};
+
+UserSchema.statics.moveMessageToTrash = async function (messageId, inInbox, userId) {
+  const messagesArray = inInbox ? 'inbox.inbox' : 'inbox.sent';
+  const message = await this.findMessage(messageId, inInbox, userId);
+
+  message.inTrash = !message.inTrash;
+
+  await this.updateOne(
+    { _id: userId, [`${messagesArray}._id`]: messageId },
+    {
+      $set: {
+        [`${messagesArray}.$.inTrash`]: message.inTrash,
+        [`${messagesArray}.$.inBookmarks`]: false,
+      },
+    },
+  );
+
+  return message;
+};
+
+UserSchema.statics.deleteMessage = async function (messageId, inInbox, userId) {
+  const messagesArray = inInbox ? 'inbox.inbox' : 'inbox.sent';
+
+  await this.findByIdAndUpdate(
+    userId,
+    { $pull: { [messagesArray]: { _id: messageId } } },
+  );
+
+  return messageId;
+};
+
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });
 
 module.exports = mongoose.model('User', UserSchema);
