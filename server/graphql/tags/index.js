@@ -5,6 +5,7 @@ module.exports = {
   CANCELED_FRIEND_REQUEST: 'canceledFriendRequest',
   FOLLOWERS_UPDATES: 'followersUpdates',
   NEW_POST_COMMENT: 'newPostComment',
+  NEW_MESSAGE: 'newMessage',
   DELETE_FRIEND: 'deleteFriend',
   DELETED_POST_COMMENT: 'deletedPostComment',
   POST_LIKES_UPDATES: 'postLikesUpdates',

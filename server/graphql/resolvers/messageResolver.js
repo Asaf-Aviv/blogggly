@@ -1,10 +1,18 @@
+const { withFilter } = require('graphql-subscriptions');
 const User = require('../../models/User');
+const tags = require('../tags');
 
 module.exports = {
   Mutation: {
-    sendMessage: async (root, { to, body }, { userId }) => {
+    sendMessage: async (root, { to, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized, Please Login to send a message.');
       const message = await User.sendMessage(userId, to, body);
+
+      pubsub.publish(
+        tags.NEW_MESSAGE,
+        { newMessage: message },
+      );
+
       return message;
     },
     bookmarkMessage: async (root, { messageId }, { userId, userLoader }) => {
@@ -46,6 +54,14 @@ module.exports = {
 
       await user.save();
       return message[0]._id;
+    },
+  },
+  Subscription: {
+    newMessage: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.NEW_MESSAGE),
+        ({ to }, variables, { currentUserId }) => true /* to._id === currentUserId */,
+      ),
     },
   },
   Message: {

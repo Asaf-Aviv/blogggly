@@ -27,10 +27,13 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   const theyLikeMyCommentObserver$ = apolloClient.subscribe(
     { query: queries.THEY_LIKE_MY_COMMENT },
   );
+  const newMessageObserver$ = apolloClient.subscribe(
+    { query: queries.NEW_MESSAGE },
+  );
 
   const friendRequestSubscription = friendRequestObserver$.subscribe({
     next: ({ data: { newFriendRequest } }) => {
-      Alert.success(`${newFriendRequest.username} just sent you a friend request`);
+      Alert.success(`${newFriendRequest.username} just sent you a friend request!`);
       setLoggedUser((loggedUser) => {
         loggedUser.incomingFriendRequests.unshift(newFriendRequest._id);
       });
@@ -41,7 +44,7 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   const followersUpdatesSubscription = followersUpdatesObserver$.subscribe({
     next: ({ data: { followersUpdates: { follower, isFollow } } }) => {
       if (isFollow) {
-        Alert.success(`${follower.username} is now following you`);
+        Alert.success(`${follower.username} is now following you!`);
       }
 
       setLoggedUser((loggedUser) => {
@@ -102,14 +105,24 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
 
   const theyLikeMyPostSubscription = theyLikeMyPostObserver$.subscribe({
     next: ({ data: { theyLikeMyPost } }) => {
-      Alert.success(`${theyLikeMyPost.username} just liked your post`);
+      Alert.success(`${theyLikeMyPost.username} just liked your post!`);
     },
     error: err => console.error(err),
   });
 
   const theyLikeMyCommentSubscription = theyLikeMyCommentObserver$.subscribe({
     next: ({ data: { theyLikeMyComment } }) => {
-      Alert.success(`${theyLikeMyComment.username} just liked your comment`);
+      Alert.success(`${theyLikeMyComment.username} just liked your comment!`);
+    },
+    error: err => console.error(err),
+  });
+
+  const newMessageSubscription = newMessageObserver$.subscribe({
+    next: ({ data: { newMessage } }) => {
+      Alert.success(`${newMessage.from.username} just sent you a message!`);
+      setLoggedUser((loggedUser) => {
+        loggedUser.inbox.inbox.unshift(newMessage);
+      });
     },
     error: err => console.error(err),
   });
@@ -123,6 +136,7 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
     deletedFriendSubscription,
     theyLikeMyPostSubscription,
     theyLikeMyCommentSubscription,
+    newMessageSubscription,
   ];
 };
 

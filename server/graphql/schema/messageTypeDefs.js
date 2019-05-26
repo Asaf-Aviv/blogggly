@@ -8,6 +8,10 @@ module.exports = gql`
     deleteMessage(messageId: ID!): ID!
   }
 
+  type Subscription {
+    newMessage: Message!
+  }
+
   type Message {
     _id: ID!
     body: String!
