@@ -7,7 +7,7 @@ const { promisify } = require('util');
 
 const unlink = promisify(fs.unlink);
 
-module.exports.handleFileUpload = async (req, res, err) => {
+module.exports = async (req, res, err) => {
   if (err) {
     console.log(err.message);
     err instanceof multer.MulterError || err.message === 'Only images are allowed.'
