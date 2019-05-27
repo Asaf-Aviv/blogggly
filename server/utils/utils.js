@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const DataLoader = require('dataloader');
 const multer = require('multer');
+const uuidv1 = require('uuid/v1');
 const { sample } = require('lodash');
 const User = require('../models/User');
 const Post = require('../models/Post');
@@ -8,7 +9,7 @@ const Comment = require('../models/Comment');
 
 const storage = multer.diskStorage({
   destination: 'server/uploads/',
-  filename: (req, file, cb) => cb(null, `${req.userId}-${file.fieldname}.png`),
+  filename: (req, file, cb) => cb(null, `${uuidv1().replace(/-/g, '')}.png`),
 });
 
 
