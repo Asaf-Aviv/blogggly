@@ -8,7 +8,7 @@ const UserAvatar = ({
 }) => (
   <div className="avatar__container">
     <figure className="avatar__figure">
-      <img className={`avatar ${classes}`} width={width} src={avatar} alt={username} />
+      <img className={`avatar ${classes}`} width={width} src={`/uploads/${avatar}`} alt={username} />
     </figure>
   </div>
 );
