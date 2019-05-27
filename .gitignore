@@ -2,5 +2,6 @@ node_modules
 client/node_modules
 
 .env
+server/uploads
 zzz.js
 Scrapbook-1.mongo
