@@ -4,6 +4,7 @@ const readChunk = require('read-chunk');
 const path = require('path');
 const multer = require('multer');
 const { promisify } = require('util');
+const User = require('../models/User');
 
 const unlink = promisify(fs.unlink);
 
@@ -35,6 +36,11 @@ module.exports = async (req, res, err) => {
     res.status(500).json('Something went wrong');
     return;
   }
+
+  await User.updateOne(
+    { _id: req.userId },
+    { $set: { avatar: req.file.filename } },
+  );
 
   res.json('Image uploaded successfully');
 };
