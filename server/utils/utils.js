@@ -1,9 +1,32 @@
 const jwt = require('jsonwebtoken');
 const DataLoader = require('dataloader');
+const multer = require('multer');
 const { sample } = require('lodash');
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
+
+const storage = multer.diskStorage({
+  destination: 'server/uploads/',
+  filename: (req, file, cb) => cb(null, `${req.userId}-${file.fieldname}.png`),
+});
+
+
+const fileFilter = (req, file, cb) => {
+  if (!file.mimetype.match(/image\/.*/)) {
+    cb(new Error('Only images are allowed.'));
+    return;
+  }
+  cb(null, true);
+};
+
+module.exports.multerUploader = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 3 * 1024 * 1024,
+  },
+});
 
 exports.generateToken = (userId) => {
   const token = jwt.sign(
@@ -92,7 +115,7 @@ exports.createFakeData = async () => {
   // eslint-disable
   // for (const post of posts) {// eslint-disable-line
   //   for (const user of users) {// eslint-disable-line
-  //     await Comment.addComment({ // eslint-disable-line
+  //     await Comment.newComment({ // eslint-disable-line
   //       author: user._id,
   //       post: post._id,
   //       body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, cum.',
