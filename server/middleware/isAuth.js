@@ -5,14 +5,14 @@ module.exports = (req, res, next) => {
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
-    req.isAuth = false;
+    req.userId = null;
     return next();
   }
 
   const token = authHeader.replace('Bearer ', '');
 
   if (!token) {
-    req.isAuth = false;
+    req.userId = null;
     return next();
   }
 
@@ -21,16 +21,15 @@ module.exports = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
-    req.isAuth = false;
+    req.userId = null;
     return next();
   }
 
   if (!decodedToken) {
-    req.isAuth = false;
+    req.userId = null;
     return next();
   }
 
-  req.isAuth = true;
   req.userId = decodedToken.userId;
   return next();
 };
