@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const PostSchema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   tags: {
     type: Array,
     required: true,

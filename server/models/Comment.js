@@ -3,9 +3,16 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const CommentSchema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   post: {
-    type: Schema.Types.ObjectId, ref: 'Post', required: true, index: true,
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+    required: true,
+    index: true,
   },
   body: { type: String, required: true },
   likesCount: { type: Number, default: 0 },
