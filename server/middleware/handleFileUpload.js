@@ -10,15 +10,15 @@ const unlink = promisify(fs.unlink);
 
 module.exports = async (req, res, err) => {
   if (err) {
-    console.log(err.message);
+    console.error(err.message);
     err instanceof multer.MulterError || err.message === 'Only images are allowed.'
-      ? res.status(406).json(err.message)
-      : res.status(500).json('Something went wrong');
+      ? res.status(406).json({ error: err })
+      : res.status(500).json({ error: { message: 'Something went wrong' } });
     return;
   }
 
   if (!req.file) {
-    res.status(404).json('Image not found');
+    res.status(404).json({ error: { message: 'Image not found' } });
   }
 
   try {
@@ -27,20 +27,28 @@ module.exports = async (req, res, err) => {
     const buffer = await readChunk(filePath, 0, fileType.minimumBytes);
     const fileTypeResult = fileType(buffer);
     if (!fileTypeResult || !fileType(buffer).mime.match(/image\/.*/)) {
-      await unlink(filePath);
-      res.status(406).json('Only images are allowed.');
+      res.status(406).json({ error: { message: 'Only images are allowed.' } });
+      unlink(filePath);
       return;
     }
   } catch (e) {
-    console.log(e.message);
-    res.status(500).json('Something went wrong');
+    console.error(err.message);
+    res.status(500).json({ error: { message: 'Something went wrong' } });
     return;
   }
 
-  await User.updateOne(
-    { _id: req.userId },
+  const user = await User.findByIdAndUpdate(
+    req.userId,
     { $set: { avatar: req.file.filename } },
+    { select: 'avatar' },
   );
 
-  res.json('Image uploaded successfully');
+  try {
+    unlink(path.resolve(__dirname, `../uploads/avatar/${user.avatar}`));
+    // eslint-disable-next-line no-empty
+  } catch (e) {
+    console.error(e);
+  }
+
+  res.json({ avatar: req.file.filename });
 };
