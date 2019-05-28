@@ -4,6 +4,7 @@ const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const { sampleSize } = require('lodash');
 const MessageSchema = require('./Message');
+const NotificationSchema = require('./Notification');
 
 const { Schema } = mongoose;
 
@@ -66,6 +67,7 @@ const UserSchema = new Schema({
   followingCount: { type: Number, default: 0 },
   followers: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
+  notifications: [NotificationSchema],
   inbox: {
     sent: [MessageSchema],
     inbox: [MessageSchema],
