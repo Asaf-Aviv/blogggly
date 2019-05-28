@@ -5,6 +5,7 @@ import { shape, string } from 'prop-types';
 import Alert from 'react-s-alert';
 import DatePicker from 'react-datepicker';
 import Label from '../Label';
+import UploadAvatar from '../UploadAvatar';
 import Input from '../Input';
 import queries from '../../graphql/queries';
 
@@ -46,6 +47,7 @@ const UserProfileInformation = ({ userInfo }) => {
     >
       {updateUserInfo => (
         <div className="user-info">
+          <UploadAvatar />
           <form onSubmit={(e) => {
             e.preventDefault();
             updateUserInfo();

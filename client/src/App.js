@@ -125,7 +125,7 @@ const App = () => {
       </UserContext.Provider>
       <Alert
         effect="jelly"
-        position="top-right"
+        position="top-left"
         offset={60}
         stack={{ limit: 5 }}
         timeout={5000}

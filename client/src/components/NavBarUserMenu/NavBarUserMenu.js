@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   string, arrayOf, shape, func,
 } from 'prop-types';
+import UserAvatar from '../UserAvatar/UserAvatar';
 
 import './NavBarUserMenu.sass';
 
@@ -38,10 +39,10 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
           if (e.key === 'Enter') setIsOpen(!isOpen);
         }}
       >
-        <img
-          className="user-menu__avatar"
-          src={loggedUser.avatar}
-          alt={loggedUser.username}
+        <UserAvatar
+          classes="user-menu__avatar"
+          username={loggedUser.username}
+          avatar={loggedUser.avatar}
         />
       </button>
       {isOpen && (

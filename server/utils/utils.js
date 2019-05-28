@@ -8,10 +8,9 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
 const storage = multer.diskStorage({
-  destination: 'server/uploads/',
+  destination: 'server/uploads/avatar/',
   filename: (req, file, cb) => cb(null, `${uuidv1().replace(/-/g, '')}.png`),
 });
-
 
 const fileFilter = (req, file, cb) => {
   if (!file.mimetype.match(/image\/.*/)) {

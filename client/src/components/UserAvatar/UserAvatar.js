@@ -8,7 +8,16 @@ const UserAvatar = ({
 }) => (
   <div className="avatar__container">
     <figure className="avatar__figure">
-      <img className={`avatar ${classes}`} width={width} src={`/uploads/${avatar}`} alt={username} />
+      <img
+        className={`avatar ${classes}`}
+        width={width}
+        height={width}
+        src={`/uploads/avatar/${avatar}`}
+        alt={username}
+        onError={(e) => {
+          e.target.src = '/uploads/avatar/default.svg';
+        }}
+      />
     </figure>
   </div>
 );
