@@ -1,6 +1,4 @@
 const { withFilter } = require('graphql-subscriptions');
-const User = require('../../models/User');
-const Post = require('../../models/Post');
 const Comment = require('../../models/Comment');
 const tags = require('../tags');
 
@@ -13,7 +11,7 @@ module.exports = {
   },
   Mutation: {
     newComment: async (root, { postId, body }, { userId, pubsub }) => {
-      if (!userId) throw new Error('Unauthorized, Please Login to comment.');
+      if (!userId) throw new Error('Unauthorized');
 
       const newPostComment = await Comment.newComment(
         { post: postId, body, author: userId },
@@ -39,42 +37,14 @@ module.exports = {
       return comment;
     },
     deleteComment: async (root, { commentId, postId }, { userId, pubsub }) => {
-      const comment = await Comment.findCommentById(commentId);
-
-      if (comment.author.toString() !== userId) {
-        throw new Error('Unauthorized');
-      }
-
-      const [user, post] = await Promise.all([
-        User.findUserById(userId),
-        Post.findPostById(postId),
-        Comment.findCommentById(commentId),
-      ]);
-
-      user.comments = user.comments
-        .filter(cId => cId.toString() !== commentId);
-
-      post.comments = post.comments
-        .filter(commentRefId => commentRefId.toString() !== commentId);
-
-      post.commentsCount -= 1;
-
-      await Promise.all([
-        user.save(),
-        post.save(),
-        Comment.findByIdAndRemove(commentId),
-        ...comment.likes.map(likeUserId => User.findByIdAndUpdate(
-          likeUserId,
-          { $pull: { 'likes.comments': commentId } },
-        )),
-      ]);
+      const deletedCommentId = await Comment.deleteComment(commentId, postId, userId);
 
       pubsub.publish(
         tags.DELETED_POST_COMMENT,
         { commentId, commentPostId: postId, deletedCommentAuthorId: userId },
       );
 
-      return comment._id;
+      return deletedCommentId;
     },
   },
   Subscription: {
