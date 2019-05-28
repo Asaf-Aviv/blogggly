@@ -57,6 +57,49 @@ CommentSchema.statics.newComment = async function (commentInput) {
   return comment;
 };
 
+CommentSchema.statics.findCommentById = async function (commentId) {
+  const comment = await this.findById(commentId);
+  if (!comment) {
+    throw new Error('Comment not found');
+  }
+  return comment;
+};
+
+CommentSchema.statics.deleteComment = async function (commentId, postId, userId) {
+  const comment = await this.findCommentById(commentId);
+
+  if (comment.author.toString() !== userId) {
+    throw new Error('Only the author can delete this comment');
+  }
+
+  try {
+    await Promise.all([
+      User.updateOne(
+        { _id: userId },
+        { $pull: { comments: commentId } },
+      ),
+      Post.updateOne(
+        { _id: postId },
+        {
+          $pull: { comments: commentId },
+          $inc: { commentsCount: -1 },
+        },
+      ),
+      this.findByIdAndDelete(commentId),
+      ...comment.likes.map(likeUserId => User.findByIdAndUpdate(
+        likeUserId,
+        { $pull: { 'likes.comments': commentId } },
+      )),
+    ]);
+  } catch (err) {
+    console.error(err);
+    throw new Error('Something went wrong');
+  }
+
+  return commentId;
+};
+
+
 CommentSchema.statics.toggleLike = async function (commentId, userId) {
   const [comment, user] = await Promise.all([
     this.findCommentById(commentId),
