@@ -1,43 +1,21 @@
-import React, {
-  useEffect, useRef, useContext, useState,
-} from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
+import { func, bool } from 'prop-types';
 import { UserContext } from '../../context';
 import UserAvatar from '../UserAvatar';
 import EmptySentence from '../EmptySentence';
+import Button from '../Button';
 import FriendRequestActions from '../FriendRequestActions';
 import queries from '../../graphql/queries';
 
 import './FriendRequestNotifications.sass';
 
-const FriendRequestNotifications = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
   const { loggedUser } = useContext(UserContext);
 
-  const notificationBoxRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('click', handleOutsideClick);
-    }
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, [isOpen]);
-
-  const handleOutsideClick = (e) => {
-    if (notificationBoxRef.current.contains(e.target)) return;
-    setIsOpen(false);
-  };
-
-  const isOpenToggler = () => setIsOpen(!isOpen);
-
   return (
-    <div
-      ref={notificationBoxRef}
-      className="friend-request-notifications"
-      onClick={isOpenToggler}
-    >
+    <>
       <i className="fas fa-user-plus" />
       {loggedUser.incomingFriendRequests.length > 0 && (
         <span className="notifications__badge">{loggedUser.incomingFriendRequests.length}</span>
@@ -73,20 +51,8 @@ const FriendRequestNotifications = () => {
                             username={user.username}
                             render={(declineFriendRequest, accpetFriendRequest) => (
                               <div>
-                                <button
-                                  className="btn btn--sm btn--default"
-                                  type="button"
-                                  onClick={declineFriendRequest}
-                                >
-                                Decline
-                                </button>
-                                <button
-                                  className="btn btn--sm btn--success"
-                                  type="button"
-                                  onClick={accpetFriendRequest}
-                                >
-                                Accpet
-                                </button>
+                                <Button classes="btn btn--sm btn--default" text="Decline" onClick={declineFriendRequest} />
+                                <Button classes="btn btn--sm btn--success" text="Accpet" onClick={accpetFriendRequest} />
                               </div>
                             )}
                           />
@@ -100,9 +66,13 @@ const FriendRequestNotifications = () => {
             : <EmptySentence />}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
+FriendRequestNotifications.propTypes = {
+  isOpen: bool.isRequired,
+  isOpenToggler: func.isRequired,
+};
 
 export default FriendRequestNotifications;
