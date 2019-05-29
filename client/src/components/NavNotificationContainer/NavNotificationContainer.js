@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { string, func } from 'prop-types';
+import React, { useState, useRef, cloneElement } from 'react';
+import { string, node } from 'prop-types';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-const NavNotificationContainer = ({ iconClass, render }) => {
+const NavNotificationContainer = ({ iconClass, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const notificationBoxRef = useRef(null);
 
@@ -16,14 +16,14 @@ const NavNotificationContainer = ({ iconClass, render }) => {
       className={iconClass}
       onClick={isOpenToggler}
     >
-      {render(isOpen, isOpenToggler)}
+      {cloneElement(children, { isOpen, isOpenToggler })}
     </div>
   );
 };
 
 NavNotificationContainer.propTypes = {
   iconClass: string.isRequired,
-  render: func.isRequired,
+  children: node.isRequired,
 };
 
 export default NavNotificationContainer;

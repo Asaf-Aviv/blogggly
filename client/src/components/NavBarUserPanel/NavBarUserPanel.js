@@ -10,12 +10,9 @@ const NavBarUserPanel = ({ logout }) => {
 
   return (
     <div className="navbar-user-panel">
-      <NavNotificationContainer
-        iconClass="friend-request-notifications"
-        render={(isOpen, isOpenToggler) => (
-          <FriendRequestNotifications isOpen={isOpen} isOpenToggler={isOpenToggler} />
-        )}
-      />
+      <NavNotificationContainer iconClass="friend-request-notifications">
+        <FriendRequestNotifications />
+      </NavNotificationContainer>
       <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
     </div>
   );

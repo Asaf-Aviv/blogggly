@@ -71,8 +71,15 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
 };
 
 FriendRequestNotifications.propTypes = {
-  isOpen: bool.isRequired,
-  isOpenToggler: func.isRequired,
+  isOpen: bool,
+  isOpenToggler: func,
+};
+
+// define default props to avoid cloneElement proptypes
+// error because elements are checked at the creation time
+FriendRequestNotifications.defaultProps = {
+  isOpen: false,
+  isOpenToggler: () => {},
 };
 
 export default FriendRequestNotifications;
