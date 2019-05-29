@@ -24,6 +24,7 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     'react/no-array-index-key': 0,
     'react/no-danger': 0,
+    'react/button-has-type': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
