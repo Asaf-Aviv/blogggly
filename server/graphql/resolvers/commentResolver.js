@@ -13,11 +13,14 @@ module.exports = {
     newComment: async (root, { postId, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized');
 
-      const newPostComment = await Comment.newComment(
+      const { newComment, commentAuthor, postAuthorId } = await Comment.newComment(
         { post: postId, body, author: userId },
       );
-      pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment });
-      return newPostComment;
+
+      pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment: newComment });
+      pubsub.publish(tags.THEY_COMMENT_ON_MY_POST, { toUserId: postAuthorId, commentAuthor });
+
+      return newComment;
     },
     toggleLikeOnComment: async (root, { commentId }, { userId, pubsub }) => {
       const { user, comment, isLike } = await Comment.toggleLike(commentId, userId);
@@ -41,7 +44,7 @@ module.exports = {
 
       pubsub.publish(
         tags.DELETED_POST_COMMENT,
-        { commentId, commentPostId: postId, deletedCommentAuthorId: userId },
+        { commentId, commentPostId: postId },
       );
 
       return deletedCommentId;
@@ -70,12 +73,16 @@ module.exports = {
     deletedPostComment: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.DELETED_POST_COMMENT),
-        ({ commentPostId, deletedCommentAuthorId }, { postId }, { currentUserId }) => (
-          commentPostId === postId
-            && deletedCommentAuthorId.toString() !== currentUserId
-        ),
+        ({ commentPostId }, { postId }) => commentPostId === postId,
       ),
       resolve: ({ commentId }) => commentId,
+    },
+    theyCommentOnMyPost: {
+      subscribe: withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator(tags.THEY_COMMENT_ON_MY_POST),
+        ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
+      ),
+      resolve: ({ commentAuthor }) => commentAuthor,
     },
     theyLikeMyComment: {
       subscribe: withFilter(

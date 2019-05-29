@@ -32,3 +32,13 @@ export const COMMENT_LIKES_UPDATES = gql`
     }
   }
 `;
+
+export const THEY_COMMENT_ON_MY_POST = gql`
+  subscription {
+    theyCommentOnMyPost {
+      _id
+      avatar
+      username
+    }
+  }
+`;

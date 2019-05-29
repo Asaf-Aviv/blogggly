@@ -8,6 +8,7 @@ module.exports = {
   NEW_MESSAGE: 'newMessage',
   DELETE_FRIEND: 'deleteFriend',
   DELETED_POST_COMMENT: 'deletedPostComment',
+  THEY_COMMENT_ON_MY_POST: 'theyCommentOnMyPost',
   POST_LIKES_UPDATES: 'postLikesUpdates',
   THEY_LIKE_MY_POST: 'theyLikeMyPost',
   THEY_LIKE_MY_COMMENT: 'theyLikeMyComment',
