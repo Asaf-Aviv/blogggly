@@ -2,9 +2,8 @@ const { gql } = require('apollo-server-express');
 
 module.exports = gql`
   type Query {
-    users: [User!]!
-    getUserByUsername(username: String!): User!
-    getUsersByIds(userIds: [ID!]!): [User!]!
+    getUserByUsername(username: String!): User
+    getUsersByIds(userIds: [ID!]!): [User]!
     searchUsers(userQuery: String!): [User!]!
   }
 
