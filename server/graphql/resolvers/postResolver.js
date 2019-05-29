@@ -42,15 +42,7 @@ module.exports = {
       return post;
     },
     updatePost: (root, { postId, updatedPost }) => Post.updatePost(postId, updatedPost),
-    deletePost: async (root, { postId }, { userId }) => {
-      const post = await Post.findById(postId);
-
-      if (post.author.toString() !== userId) {
-        throw new Error('Unauthorized');
-      }
-
-      return Post.deletePost(postId);
-    },
+    deletePost: (root, { postId }, { userId }) => Post.deletePost(postId, userId),
   },
   Subscription: {
     theyLikeMyPost: {

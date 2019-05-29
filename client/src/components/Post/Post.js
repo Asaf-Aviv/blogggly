@@ -65,7 +65,7 @@ const Post = ({ match: { params: { postId } } }) => {
                         isPost
                       />
                       {isLogged && loggedUser._id === post.author._id && (
-                      <DeletePostButton postId={postId} />
+                        <DeletePostButton postId={postId} />
                       )}
                     </div>
                   </article>

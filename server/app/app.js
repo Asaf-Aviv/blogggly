@@ -17,7 +17,6 @@ const httpServer = createServer(app);
 const PORT = process.env.NODE_ENV || 5000;
 const devMode = process.env.NODE_ENV !== 'production';
 
-
 if (devMode) {
   mongoose.set('debug', true);
   app.use(morgan('dev'));
@@ -40,7 +39,14 @@ app.post('/upload', checkAuth, (req, res) => {
   multerUploader.single('avatar')(req, res, err => handleFileUpload(req, res, err));
 });
 
-apolloServer.applyMiddleware({ app });
+apolloServer.applyMiddleware({
+  app,
+  // onHealthCheck: () => new Promise((resolve, reject) => {
+  //   console.log('health check');
+  //   resolve();
+  //   reject();
+  // }),
+});
 apolloServer.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(PORT, () => {

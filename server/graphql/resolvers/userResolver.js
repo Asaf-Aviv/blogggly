@@ -5,17 +5,12 @@ const tags = require('../tags');
 
 module.exports = {
   Query: {
-    users: async (root, args, { userLoader }) => {
-      const users = await User.find({}, { inbox: 0 });
-      users.map(user => userLoader.prime(user._id, user));
-      return users;
-    },
     getUsersByIds: async (root, { userIds }, { userLoader }) => (
       userLoader.loadMany(userIds)
     ),
     getUserByUsername: async (root, { username }) => User.findOne({ username }),
-    searchUsers: async (root, { userQuery }) => (
-      User.find({ username: new RegExp(userQuery, 'i') })
+    searchUsers: async (root, { userQuery }, { userId }) => (
+      User.find({ _id: { $ne: userId }, username: new RegExp(userQuery, 'i') })
     ),
   },
   Mutation: {

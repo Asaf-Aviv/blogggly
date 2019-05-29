@@ -43,25 +43,25 @@ CommentSchema.statics.findCommentsForPost = async function (postId) {
 };
 
 CommentSchema.statics.newComment = async function (commentInput) {
-  const [post, user] = await Promise.all([
+  const [post, commentAuthor] = await Promise.all([
     Post.findPostById(commentInput.post),
     User.findUserById(commentInput.author),
   ]);
 
-  const comment = new this(commentInput);
+  const newComment = new this(commentInput);
 
-  post.comments.push(comment._id);
-  user.comments.unshift(comment._id);
+  post.comments.push(newComment._id);
+  commentAuthor.comments.unshift(newComment._id);
 
   post.commentsCount += 1;
 
   await Promise.all([
-    await comment.save(),
+    await newComment.save(),
     await post.save(),
-    await user.save(),
+    await commentAuthor.save(),
   ]);
 
-  return comment;
+  return { newComment, commentAuthor, postAuthorId: post.author.toString() };
 };
 
 CommentSchema.statics.findCommentById = async function (commentId) {
