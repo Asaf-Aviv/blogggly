@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
-import { Query, Subscription } from 'react-apollo';
-import orderBy from 'lodash.orderby';
-import Comment from '../Comment';
-import queries from '../../graphql/queries';
 import AddComment from '../AddComment';
 import SortByPanel from '../SortByPanel';
+import CommentsList from '../CommentsList';
 import { subscribeToNewComments, subscribeToDeletedComments } from '../../graphql/helpers/subscriptionHelpers';
 
 import './Comments.sass';
@@ -29,31 +26,7 @@ const Comments = ({ postId }) => {
       </header>
       <AddComment postId={postId} />
       <SortByPanel setSortBy={setSortBy} />
-      <Query
-        query={queries.POST_COMMENTS}
-        variables={{ postId }}
-      >
-        {({ loading, data: { comments } }) => {
-          if (loading) return null;
-          if (!comments.length) return <div className="comments__empty">Be the first one to comment</div>;
-
-          return (
-            <Subscription
-              subscription={queries.COMMENT_LIKES_UPDATES}
-              variables={{ postId }}
-            >
-              {() => (
-                <ul className="comments__list">
-                  {orderBy(comments, sortBy.key, sortBy.order)
-                    .map(comment => (
-                      <Comment key={comment._id} comment={comment} postId={postId} />
-                    ))}
-                </ul>
-              )}
-            </Subscription>
-          );
-        }}
-      </Query>
+      <CommentsList postId={postId} sortBy={sortBy} />
     </section>
   );
 };
