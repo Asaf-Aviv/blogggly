@@ -164,7 +164,7 @@ module.exports = {
 
       pubsub.publish(
         tags.DECLINED_FRIEND_REQUEST,
-        userIdToDecline,
+        { declinedUserId: userIdToDecline },
       );
 
       return true;
@@ -210,8 +210,9 @@ module.exports = {
     declinedFriendRequest: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.DECLINED_FRIEND_REQUEST),
-        (payload, variables, { currentUserId }) => payload === currentUserId,
+        ({ declinedUserId }, variables, { currentUserId }) => declinedUserId === currentUserId,
       ),
+      resolve: ({ declinedUserId }) => declinedUserId,
     },
     canceledFriendRequest: {
       subscribe: withFilter(
