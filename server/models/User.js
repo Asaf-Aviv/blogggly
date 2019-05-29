@@ -38,7 +38,7 @@ const UserSchema = new Schema({
     //   'Password must contain atleast eight characters, one letter and one number',
     // ],
   },
-  avatar: { type: String, default: '/uploads/avatar/man.svg' },
+  avatar: { type: String, default: 'default.svg' },
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   likes: {
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
