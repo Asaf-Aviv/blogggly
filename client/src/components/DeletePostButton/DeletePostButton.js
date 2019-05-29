@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import Alert from 'react-s-alert';
 import { string, func } from 'prop-types';
 import queries from '../../graphql/queries';
+import { UserContext } from '../../context';
 import ConfirmationModal from '../ConfirmationModal';
 
 const DeletePostButton = ({ postId, onCompletedCb }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const { setLoggedUser } = useContext(UserContext);
 
   const changeModalState = nextState => () => (
     setShowConfirmationModal(nextState || !showConfirmationModal)
@@ -17,6 +20,11 @@ const DeletePostButton = ({ postId, onCompletedCb }) => {
       mutation={queries.DELETE_POST}
       variables={{ postId }}
       onCompleted={({ deletePost: deletedPostId }) => {
+        setLoggedUser((loggedUser) => {
+          loggedUser.posts.splice(
+            loggedUser.posts.indexOf(deletedPostId), 1,
+          );
+        });
         Alert.success('Post deleted successfully.');
         setShowConfirmationModal(false);
         if (onCompletedCb) {
