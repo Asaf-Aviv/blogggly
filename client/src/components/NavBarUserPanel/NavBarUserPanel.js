@@ -3,13 +3,19 @@ import { func } from 'prop-types';
 import { UserContext } from '../../context';
 import NavBarUserMenu from '../NavBarUserMenu';
 import FriendRequestNotifications from '../FriendRequestNotifications';
+import NavNotificationContainer from '../NavNotificationContainer';
 
 const NavBarUserPanel = ({ logout }) => {
   const { loggedUser } = useContext(UserContext);
 
   return (
     <div className="navbar-user-panel">
-      <FriendRequestNotifications />
+      <NavNotificationContainer
+        iconClass="friend-request-notifications"
+        render={(isOpen, isOpenToggler) => (
+          <FriendRequestNotifications isOpen={isOpen} isOpenToggler={isOpenToggler} />
+        )}
+      />
       <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
     </div>
   );
