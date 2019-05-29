@@ -47,12 +47,17 @@ const UserProfileComments = ({ commentIds }) => {
           <div className="user-profile__comments-container">
             <ul>
               {data.comments.map(comment => (
-                <UserProfileComment
-                  key={comment._id}
-                  comment={comment}
-                  isDeleted={deletedCommentsIds.includes(comment._id)}
-                  addToDeletionQueue={addToDeletionQueue}
-                />
+                comment
+                  ? (
+                    <UserProfileComment
+                      key={comment._id}
+                      comment={comment}
+                      isDeleted={deletedCommentsIds.includes(comment._id)}
+                      addToDeletionQueue={addToDeletionQueue}
+                      shouldUpdateModal
+                    />
+                  )
+                  : null
               ))}
             </ul>
           </div>

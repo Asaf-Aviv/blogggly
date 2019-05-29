@@ -108,9 +108,15 @@ const UserProfileLikes = ({ likes }) => {
               />
             </div>
             {showCategory === 'posts'
-              ? posts.map(post => <UserProfilePostLike key={post._id} post={post} />)
+              ? posts.map(post => (
+                post
+                  ? <UserProfilePostLike key={post._id} post={post} />
+                  : null
+              ))
               : comments.map(comment => (
-                <UserProfileCommentLike key={comment._id} comment={comment} />
+                comment
+                  ? <UserProfileCommentLike key={comment._id} comment={comment} />
+                  : null
               ))
           }
           </div>

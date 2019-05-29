@@ -19,7 +19,9 @@ const UserProfilePosts = ({ postIds }) => (
       return (
         <div className="user-profile__posts">
           {posts.map(post => (
-            <ShowcaseCard key={post._id} post={post} isAuthor />
+            post
+              ? <ShowcaseCard key={post._id} post={post} isAuthor />
+              : null
           ))}
         </div>
       );
