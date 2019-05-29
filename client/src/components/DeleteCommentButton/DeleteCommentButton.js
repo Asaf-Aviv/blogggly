@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import Alert from 'react-s-alert';
 import ConfirmationModal from '../ConfirmationModal';
 import queries from '../../graphql/queries';
 
-const DeleteCommentButton = ({ commentId, postId, onCompletedCb }) => {
+const DeleteCommentButton = ({
+  commentId, postId, shouldUpdateModal, onCompletedCb,
+}) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const changeModalState = nextState => () => (
@@ -18,7 +20,9 @@ const DeleteCommentButton = ({ commentId, postId, onCompletedCb }) => {
       variables={{ commentId, postId }}
       onCompleted={({ deleteComment: deletedCommentId }) => {
         Alert.success('Comment deleted successfully.');
-        setShowConfirmationModal(false);
+        if (shouldUpdateModal) {
+          setShowConfirmationModal(false);
+        }
         if (onCompletedCb) {
           onCompletedCb(deletedCommentId);
         }
@@ -51,10 +55,12 @@ DeleteCommentButton.propTypes = {
   commentId: string.isRequired,
   postId: string.isRequired,
   onCompletedCb: func,
+  shouldUpdateModal: bool,
 };
 
 DeleteCommentButton.defaultProps = {
   onCompletedCb: null,
+  shouldUpdateModal: false,
 };
 
 export default DeleteCommentButton;
