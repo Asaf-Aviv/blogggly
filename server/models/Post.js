@@ -25,37 +25,50 @@ const PostSchema = new Schema({
   commentsCount: { type: Number, default: 0 },
 }, { timestamps: true });
 
-PostSchema.statics.deletePost = async function (postId) {
+PostSchema.statics.deletePost = async function (postId, userId) {
   const post = await this.findById(postId);
+
+  if (post.author.toString() !== userId) {
+    console.log('not post author');
+    throw new Error('Unauthorized');
+  }
+
   const commentIds = post.comments;
 
-  await Promise.all([
-    this.findByIdAndDelete(postId),
-    User.findByIdAndUpdate(
-      post.author,
-      { $pull: { posts: postId } },
-    ),
-    User.updateMany(
-      { _id: { $in: post.likes } },
-      { $pull: { 'likes.posts': postId } },
-    ),
-    commentIds.map(async (commentId) => {
-      const comment = await Comment.findById(commentId);
+  try {
+    await Promise.all([
+      this.findByIdAndDelete(postId),
+      User.updateOne(
+        { _id: post.author },
+        { $pull: { posts: postId } },
+      ),
+      User.updateMany(
+        { _id: { $in: post.likes } },
+        { $pull: { 'likes.posts': postId } },
+      ),
+      ...commentIds.map(async (commentId) => {
+        const comment = await Comment.findById(commentId);
+        return Promise.all([
+          Comment.findByIdAndDelete(commentId),
+          User.updateOne(
+            { _id: comment.author },
+            { $pull: { comments: commentId } },
+          ),
+          User.updateMany(
+            { _id: { $in: comment.likes } },
+            { $pull: { 'likes.comments': commentId } },
+          ),
+        ]);
+      }),
+    ]);
+  } catch (e) {
+    console.error(e);
+    throw new Error('Something went wrong');
+  }
 
-      return Promise.all([
-        User.findByIdAndUpdate(
-          comment.author._id,
-          { $pull: { comments: commentId } },
-        ),
-        User.updateMany(
-          { _id: { $in: comment.likes } },
-          { $pull: { 'likes.comments': commentId } },
-        ),
-      ]);
-    }),
-  ]);
+  console.log('finished');
 
-  return post._id;
+  return postId;
 };
 
 PostSchema.statics.findPostsByIds = async function (postIds) {
@@ -136,3 +149,4 @@ module.exports = mongoose.model('Post', PostSchema);
 
 // prevent circular dependencies by requiring after export
 const User = require('./User');
+const Comment = require('./Comment');
