@@ -10,7 +10,7 @@ redisClient.on('error', (err) => {
 });
 
 setInterval(() => {
-  redisClient.hgetallAsync('connectedUsers').then(val => console.log(val));
+  redisClient.hgetallAsync('connectedUsers').then(console.log);
 }, 5000);
 
 module.exports = redisClient;

@@ -81,6 +81,7 @@ CommentSchema.statics.deleteComment = async function (commentId, postId, userId)
 
   try {
     await Promise.all([
+      this.findByIdAndDelete(commentId),
       User.updateOne(
         { _id: userId },
         { $pull: { comments: commentId } },
@@ -92,7 +93,6 @@ CommentSchema.statics.deleteComment = async function (commentId, postId, userId)
           $inc: { commentsCount: -1 },
         },
       ),
-      this.findByIdAndDelete(commentId),
       ...comment.likes.map(likeUserId => User.findByIdAndUpdate(
         likeUserId,
         { $pull: { 'likes.comments': commentId } },
