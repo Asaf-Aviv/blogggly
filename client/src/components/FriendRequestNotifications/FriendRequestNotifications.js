@@ -4,68 +4,67 @@ import { Query } from 'react-apollo';
 import { func, bool } from 'prop-types';
 import { UserContext } from '../../context';
 import UserAvatar from '../UserAvatar';
-import EmptySentence from '../EmptySentence';
+import Badge from '../Badge';
+import NotificationsContainer from '../NotificationsContainer';
 import Button from '../Button';
 import FriendRequestActions from '../FriendRequestActions';
 import queries from '../../graphql/queries';
+import utils from '../../utils';
 
 import './FriendRequestNotifications.sass';
 
 const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser: { incomingFriendRequests } } = useContext(UserContext);
+  const numOfNotifications = incomingFriendRequests.length;
+
+  if (!isOpen) return <Badge num={numOfNotifications} />;
 
   return (
     <>
-      <i className="fas fa-user-plus" />
-      {loggedUser.incomingFriendRequests.length > 0 && (
-        <span className="notifications__badge">{loggedUser.incomingFriendRequests.length}</span>
-      )}
-      {isOpen && (
-        <div className="notifications" onClick={e => e.stopPropagation()}>
-          {loggedUser.incomingFriendRequests.length > 0
-            ? (
-              <Query
-                query={queries.GET_SHORT_USERS_SUMMARY_BY_IDS}
-                variables={{ userIds: loggedUser.incomingFriendRequests, shortSummary: true }}
-              >
-                {({ loading, data: { users } }) => {
-                  if (loading) return null;
+      <Badge num={numOfNotifications} />
+      <NotificationsContainer>
+        {numOfNotifications > 0 && (
+          <Query
+            query={queries.GET_SHORT_USERS_SUMMARY_BY_IDS}
+            variables={{ userIds: incomingFriendRequests }}
+            onError={utils.UIErrorNotifierm}
+          >
+            {({ loading, data: { users } }) => {
+              if (loading) return null;
 
-                  return (
-                    <ul className="notifications__list">
-                      {users.map(user => (
-                        <li key={user._id} className="friend-request">
-                          <div className="friend-request__user-details">
-                            <UserAvatar avatar={user.avatar} username={user.username} width={30} />
-                            <Link
-                              onClick={isOpenToggler}
-                              className="friend-request__link"
-                              to={`/user/${user.username}`}
-                            >
-                              {user.username}
-                            </Link>
+              return (
+                <ul className="notifications__list">
+                  {users.map(user => (
+                    <li key={user._id} className="friend-request">
+                      <div className="friend-request__user-details">
+                        <UserAvatar avatar={user.avatar} username={user.username} width={30} />
+                        <Link
+                          onClick={isOpenToggler}
+                          className="friend-request__link"
+                          to={`/user/${user.username}`}
+                        >
+                          {user.username}
+                        </Link>
+                      </div>
+                      <FriendRequestActions
+                        incoming
+                        userId={user._id}
+                        username={user.username}
+                        render={(declineFriendRequest, accpetFriendRequest) => (
+                          <div>
+                            <Button classes="btn btn--sm btn--default" text="Decline" onClick={declineFriendRequest} />
+                            <Button classes="btn btn--sm btn--success" text="Accpet" onClick={accpetFriendRequest} />
                           </div>
-                          <FriendRequestActions
-                            incoming
-                            userId={user._id}
-                            username={user.username}
-                            render={(declineFriendRequest, accpetFriendRequest) => (
-                              <div>
-                                <Button classes="btn btn--sm btn--default" text="Decline" onClick={declineFriendRequest} />
-                                <Button classes="btn btn--sm btn--success" text="Accpet" onClick={accpetFriendRequest} />
-                              </div>
-                            )}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }}
-              </Query>
-            )
-            : <EmptySentence />}
-        </div>
-      )}
+                        )}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              );
+            }}
+          </Query>
+        )}
+      </NotificationsContainer>
     </>
   );
 };

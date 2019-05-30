@@ -2,17 +2,23 @@ import React, { useContext } from 'react';
 import { func } from 'prop-types';
 import { UserContext } from '../../context';
 import NavBarUserMenu from '../NavBarUserMenu';
+import Notifications from '../Notifications';
 import FriendRequestNotifications from '../FriendRequestNotifications';
-import NavNotificationContainer from '../NavNotificationContainer';
+import NavNotification from '../NavNotifications';
+
+import './NavBarUserPanel.sass';
 
 const NavBarUserPanel = ({ logout }) => {
   const { loggedUser } = useContext(UserContext);
 
   return (
     <div className="navbar-user-panel">
-      <NavNotificationContainer iconClass="friend-request-notifications">
+      <NavNotification iconClass="fas fa-bell">
+        <Notifications />
+      </NavNotification>
+      <NavNotification iconClass="fas fa-user-plus">
         <FriendRequestNotifications />
-      </NavNotificationContainer>
+      </NavNotification>
       <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
     </div>
   );
