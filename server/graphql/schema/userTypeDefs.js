@@ -53,6 +53,7 @@ module.exports = gql`
     sentFriendRequests: [ID!]!
     incomingFriendRequests: [ID!]!
     friends: [ID!]!
+    notifications: [Notification!]!
     inbox: Inbox!
     info: UserInfo!
     likes: UserLikes!
@@ -86,6 +87,12 @@ module.exports = gql`
     gender: String!
     country: String!
     dateOfBirth: String
+  }
+
+  type Notification {
+    _id: ID!
+    body: String!
+    from: User
   }
 
   type Message {
