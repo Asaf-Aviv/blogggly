@@ -13,6 +13,15 @@ export const RELOG = gql`
       followers
       following
       friends
+      notifications {
+        _id
+        body
+        from {
+          _id
+          avatar
+          username
+        }
+      }
       incomingFriendRequests
       sentFriendRequests
       followersCount
@@ -73,6 +82,15 @@ export const LOGIN = gql`
       createdAt
       comments
       friends
+      notifications {
+        _id
+        body
+        from {
+          _id
+          avatar
+          username
+        }
+      }
       incomingFriendRequests
       sentFriendRequests
       followers
@@ -135,6 +153,15 @@ export const SIGNUP = gql`
       createdAt
       comments
       friends
+      notifications {
+        _id
+        body
+        from {
+          _id
+          avatar
+          username
+        }
+      }
       incomingFriendRequests
       sentFriendRequests
       followers
