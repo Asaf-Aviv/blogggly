@@ -1,69 +1,15 @@
-.friend-request-notifications
-  position: relative
-  display: flex
-  cursor: pointer
-  align-items: center
-  margin: 0 0.5rem
-  width: 50px
-  .fa-user-plus
-    margin: auto
-    font-size: 1.25rem
-    color: #FFF
-
-.notifications
-  position: absolute
-  padding: 1rem
-  cursor: default
-  margin-top: 10px
-  top: 100%
-  width: 400px
-  right: 0
-  background: #FFF
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
-  border-radius: 5px
-  &::after
-    content: ''
-    position: absolute
-    width: 0
-    height: 0
-    border-left: 10px solid transparent
-    border-right: 10px solid transparent
-    border-bottom: 10px solid #FFF
-    top: -10px
-    right: 19.5px
-  &__badge
-    position: absolute
-    background: #1cbf8a
-    padding: 0 0.2rem
-    min-width: 25px
-    height: 22px
-    border-radius: 3px
-    top: -10px
-    left: 60%
-    display: flex
-    justify-content: center
-    font-weight: 600
-    align-items: center
-    font-size: 16px
-  &__empty
-    text-align: center
-    font-size: 16px
-    color: var(--main-text-color)
-.friend-request
-  display: flex
-  align-items: center
-  justify-content: space-between
-  &:not(:first-child)
-    margin-top: 1rem
-  &__user-details
+.notifications__container
+  .friend-request
     display: flex
     align-items: center
-  &__link
-    margin-left: 0.5rem
-    font-weight: 600
-  .btn--default
-    margin-right: 0.5rem
-      
-.navbar-user-panel
-  display: flex
-  margin-left: auto
+    justify-content: space-between
+    &:not(:first-child)
+      margin-top: 1rem
+    &__user-details
+      display: flex
+      align-items: center
+    &__link
+      margin-left: 0.5rem
+      font-weight: 600
+    .btn--default
+      margin-right: 0.5rem
