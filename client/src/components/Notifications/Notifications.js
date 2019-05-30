@@ -4,6 +4,8 @@ import NotificationsContainer from '../NotificationsContainer';
 import Badge from '../Badge';
 import { UserContext } from '../../context';
 
+import './Notifications.sass';
+
 const Notifications = ({ isOpen, isOpenToggler }) => {
   const { loggedUser: { notifications } } = useContext(UserContext);
   const numOfNotifications = notifications.length;
@@ -13,7 +15,7 @@ const Notifications = ({ isOpen, isOpenToggler }) => {
   return (
     <>
       <Badge num={numOfNotifications} />
-      <NotificationsContainer />
+      <NotificationsContainer classes="notitications" />
     </>
   );
 };

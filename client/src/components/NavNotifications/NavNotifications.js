@@ -18,7 +18,7 @@ const NavNotifications = ({ iconClass, children }) => {
       ref={notificationBoxRef}
       onClick={isOpenToggler}
     >
-      <i className={`${iconClass} notifications__icon `} />
+      <i className={`${iconClass} fa-fw notifications__icon `} />
       {cloneElement(children, { isOpen, isOpenToggler })}
     </div>
   );
