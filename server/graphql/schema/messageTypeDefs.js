@@ -9,7 +9,12 @@ module.exports = gql`
   }
 
   type Subscription {
-    newMessage: Message!
+    newMessage: NewMessage!
+  }
+
+  type NewMessage {
+    message: Message!
+    notification: Notification!
   }
 
   type Message {
