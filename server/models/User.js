@@ -124,7 +124,7 @@ UserSchema.statics.createUser = async function (userInput) {
 };
 
 UserSchema.statics.login = async function (email, password) {
-  const user = await this.findByEmail(email).select('+password');
+  const user = await this.findByEmail(email).select('password username');
 
   if (!user) {
     throw new Error('User does not exists.');
@@ -133,6 +133,8 @@ UserSchema.statics.login = async function (email, password) {
   if (!await this.comparePasswords(password, user.password)) {
     throw new Error('Incorrect password.');
   }
+
+  delete user.password;
 
   return user;
 };
