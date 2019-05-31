@@ -48,6 +48,7 @@ const App = () => {
         subscription.unsubscribe();
       });
       currentUserSubscriptionRef.current = null;
+      wsClient.close(false, false);
     }
   }, [loggedUser, setLoggedUser]);
 
@@ -83,8 +84,8 @@ const App = () => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    setToken(null);
     setLoggedUser(() => null);
+    setToken(null);
   };
 
   return (
