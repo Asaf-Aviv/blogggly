@@ -129,10 +129,11 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   });
 
   const newMessageSubscription = newMessageObserver$.subscribe({
-    next: ({ data: { newMessage } }) => {
-      Alert.success(`${newMessage.from.username} just sent you a message!`);
+    next: ({ data: { newMessage: { message, notification } } }) => {
+      Alert.success(`${message.from.username} just sent you a message!`);
       setLoggedUser((loggedUser) => {
-        loggedUser.inbox.inbox.unshift(newMessage);
+        loggedUser.notifications.unshift(notification);
+        loggedUser.inbox.inbox.unshift(message);
       });
     },
     error: err => console.error(err),
