@@ -123,6 +123,26 @@ UserSchema.statics.createUser = async function (userInput) {
   return user.save();
 };
 
+UserSchema.statics.addNotification = async function (notification, notifyUserId) {
+  const { notifications } = await this.findByIdAndUpdate(
+    notifyUserId,
+    { $push: { notifications: { $each: [notification], $position: 0 } } },
+    { new: true, select: 'notifications' },
+  );
+
+  return notifications[0];
+};
+
+UserSchema.statics.readAllNotifications = async function (notificationIds, userId) {
+  console.log(notificationIds);
+  await this.updateOne(
+    { _id: userId, 'notifications._id': { $in: notificationIds } },
+    { $set: { 'notifications.$[].isRead': true } },
+  );
+
+  return true;
+};
+
 UserSchema.statics.login = async function (email, password) {
   const user = await this.findByEmail(email).select('password username');
 
