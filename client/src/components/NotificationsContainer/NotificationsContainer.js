@@ -1,5 +1,7 @@
 import React from 'react';
-import { node, string } from 'prop-types';
+import {
+  node, string, oneOfType, arrayOf,
+} from 'prop-types';
 import EmptySentence from '../EmptySentence';
 
 import './NotificationsContainer.sass';
@@ -12,7 +14,7 @@ const NotificationsContainer = ({ classes, children }) => (
 
 NotificationsContainer.propTypes = {
   classes: string,
-  children: node,
+  children: oneOfType([node, arrayOf(node)]),
 };
 
 NotificationsContainer.defaultProps = {
