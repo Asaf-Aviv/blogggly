@@ -19,16 +19,16 @@ module.exports = {
       return userLoader.load(userId);
     },
     login: async (root, { email, password }, { userLoader }) => {
-      const currentUser = await User.login(email, password);
-      const token = generateToken(currentUser._id);
+      const { _id, username } = await User.login(email, password);
+      const token = generateToken(_id, username);
 
-      const user = (await userLoader.load(currentUser._id)).toObject();
+      const user = (await userLoader.load(_id)).toObject();
 
       return { ...user, token };
     },
     signup: async (root, { userInput }) => {
       const currentUser = await User.createUser(userInput);
-      const token = generateToken(currentUser._id);
+      const token = generateToken(currentUser._id, currentUser.username);
       return { ...currentUser._doc, token };
     },
     updateUserInfo: (root, { info }, { userId }) => {
@@ -235,5 +235,8 @@ module.exports = {
       ),
       resolve: ({ followersUpdates }) => followersUpdates,
     },
+  },
+  Notification: {
+    from: ({ from }, args, { userLoader }) => userLoader.load(from),
   },
 };
