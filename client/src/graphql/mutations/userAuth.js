@@ -16,6 +16,8 @@ export const RELOG = gql`
       notifications {
         _id
         body
+        isRead
+        createdAt
         from {
           _id
           avatar
@@ -85,6 +87,8 @@ export const LOGIN = gql`
       notifications {
         _id
         body
+        isRead
+        createdAt
         from {
           _id
           avatar
@@ -156,6 +160,8 @@ export const SIGNUP = gql`
       notifications {
         _id
         body
+        isRead
+        createdAt
         from {
           _id
           avatar

@@ -92,6 +92,8 @@ module.exports = gql`
   type Notification {
     _id: ID!
     body: String!
+    isRead: Boolean!
+    createdAt: String!
     from: User
   }
 
