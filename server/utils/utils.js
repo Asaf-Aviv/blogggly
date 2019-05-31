@@ -28,9 +28,9 @@ module.exports.multerUploader = multer({
   },
 });
 
-exports.generateToken = (userId) => {
+exports.generateToken = (userId, username) => {
   const token = jwt.sign(
-    { userId },
+    { userId, username },
     process.env.JWT_SECRET,
     { expiresIn: '1y' },
   );
