@@ -53,6 +53,7 @@ module.exports = new ApolloServer({
     return {
       ...createLoaders(),
       pubsub,
+      redisClient,
       userId: req.userId,
     };
   },
