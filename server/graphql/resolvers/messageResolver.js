@@ -4,16 +4,28 @@ const tags = require('../tags');
 
 module.exports = {
   Mutation: {
-    sendMessage: async (root, { to, body }, { userId, pubsub }) => {
+    sendMessage: async (root, { to, body }, { userId, pubsub, redisClient }) => {
       if (!userId) throw new Error('Unauthorized.');
-      const newMessage = await User.sendMessage(userId, to, body);
+      const [message, notification] = await Promise.all([
+        User.sendMessage(userId, to, body),
+        User.addNotification({ from: userId, body: 'sent you a message!' }, to),
+      ]);
 
       pubsub.publish(
         tags.NEW_MESSAGE,
-        { newMessage },
+        {
+          newMessage: {
+            message,
+            notification,
+          },
+        },
       );
 
-      return newMessage;
+      if (!await redisClient.hexistsAsync('connectedUsers', to)) {
+        console.log('not logged in');
+      }
+
+      return message;
     },
     bookmarkMessage: async (root, { messageId, inInbox }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');
@@ -33,7 +45,7 @@ module.exports = {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.NEW_MESSAGE),
         ({ newMessage }, variables, { currentUserId }) => (
-          newMessage.to._id.toString() === currentUserId
+          newMessage.message.to._id.toString() === currentUserId
         ),
       ),
     },
