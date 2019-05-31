@@ -74,21 +74,34 @@ export const THEY_LIKE_MY_POST = gql`
 export const NEW_MESSAGE = gql`
   subscription {
     newMessage {
-      _id
-      body
-      createdAt
-      read
-      inBookmarks
-      inTrash
-      to {
+      message {
         _id
-        avatar
-        username
+        body
+        createdAt
+        read
+        inBookmarks
+        inTrash
+        to {
+          _id
+          avatar
+          username
+        }
+        from {
+          _id
+          avatar
+          username
+        }
       }
-      from {
+      notification {
         _id
-        avatar
-        username
+        body
+        from {
+          _id
+          username
+          avatar
+        }
+        createdAt
+        isRead
       }
     }
   }
