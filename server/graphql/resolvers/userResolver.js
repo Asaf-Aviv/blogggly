@@ -31,6 +31,10 @@ module.exports = {
       const token = generateToken(currentUser._id, currentUser.username);
       return { ...currentUser._doc, token };
     },
+    readAllNotifications: async (root, { unreadNotificationsIds }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.readAllNotifications(unreadNotificationsIds, userId);
+    },
     updateUserInfo: (root, { info }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');
       return User.updateInfo(userId, info);
@@ -237,6 +241,6 @@ module.exports = {
     },
   },
   Notification: {
-    from: ({ from }, args, { userLoader }) => userLoader.load(from),
+    from: ({ from }, args, { userLoader }) => userLoader.load(from.toString()),
   },
 };

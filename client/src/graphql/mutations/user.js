@@ -58,6 +58,12 @@ export const TOGGLE_FOLLOW = gql`
   }
 `;
 
+export const READ_ALL_NOTIFICATIONS = gql`
+  mutation readAllNotifications($unreadNotificationsIds: [ID!]!) {
+    readAllNotifications(unreadNotificationsIds: $unreadNotificationsIds)
+  }
+`;
+
 export const REPORT = gql`
   mutation report($report: ReportInput!) {
     report(report: $report)
