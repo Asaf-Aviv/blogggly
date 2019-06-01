@@ -61,11 +61,11 @@ CommentSchema.statics.newComment = async function (commentInput) {
     await commentAuthor.save(),
   ]);
 
-  return { newComment, commentAuthor, postAuthorId: post.author.toString() };
+  return newComment;
 };
 
-CommentSchema.statics.findCommentById = async function (commentId) {
-  const comment = await this.findById(commentId);
+CommentSchema.statics.findCommentById = async function (commentId, options = {}) {
+  const comment = await this.findById(commentId, options);
   if (!comment) {
     throw new Error('Comment not found');
   }
@@ -136,7 +136,7 @@ CommentSchema.statics.toggleLike = async function (commentId, userId) {
     user.save(),
   ]);
 
-  return { user, comment, isLike: !alreadyLike };
+  return { comment, isLike: !alreadyLike };
 };
 
 module.exports = mongoose.model('Comment', CommentSchema);

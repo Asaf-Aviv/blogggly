@@ -88,8 +88,8 @@ PostSchema.statics.updatePost = async function (postId, updatedPost) {
   return post.save();
 };
 
-PostSchema.statics.findPostById = async function (postId) {
-  const post = await this.findById(postId);
+PostSchema.statics.findPostById = async function (postId, options = {}) {
+  const post = await this.findById(postId, options);
 
   if (!post) {
     throw new Error('Post not found.');
@@ -126,7 +126,7 @@ PostSchema.statics.toggleLike = async function (postId, userId) {
     user.save(),
   ]);
 
-  return { user, post, isLike: !alreadyLike };
+  return { post, isLike: !alreadyLike };
 };
 
 PostSchema.statics.createPost = async function (postInput) {
