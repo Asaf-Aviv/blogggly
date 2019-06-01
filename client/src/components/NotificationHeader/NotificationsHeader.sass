@@ -1,0 +1,22 @@
+.notifications
+  &.notifications__container
+    padding: 0
+  &__header
+    display: flex
+    padding: 0.5rem
+  &__actions
+    display: flex
+    margin-left: auto
+  &__action-btn
+    display: inline-block
+    margin-left: 0.5rem
+    font-size: 0.83em
+    background: none
+    border: none
+    font-weight: 600
+    color: #716bcc
+    &:disabled
+      cursor: not-allowed
+      color: #454271
+    &:hover:not(:disabled)
+      text-decoration: underline
