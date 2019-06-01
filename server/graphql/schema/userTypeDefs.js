@@ -22,17 +22,29 @@ module.exports = gql`
   }
 
   type Subscription {
-    newFriendRequest: User!
+    newFriendRequest: NewFriendRequest!
     followersUpdates: FollowerUpdate!
-    acceptedFriendRequest: User!
+    acceptedFriendRequest: AcceptedFriendRequest!
     declinedFriendRequest: ID!
     canceledFriendRequest: ID!
     deleteFriend: ID!
   }
 
+
+  type NewFriendRequest {
+    user: User!
+    notification: Notification!
+  }
+
+  type AcceptedFriendRequest {
+    user: User!
+    notification: Notification!
+  }
+
   type FollowerUpdate {
     follower: User!
     isFollow: Boolean!
+    notification: Notification
   }
 
   type ToggleFollow {
