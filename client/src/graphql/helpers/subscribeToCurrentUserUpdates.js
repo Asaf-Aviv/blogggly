@@ -35,38 +35,43 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   );
 
   const friendRequestSubscription = friendRequestObserver$.subscribe({
-    next: ({ data: { newFriendRequest } }) => {
-      Alert.success(`${newFriendRequest.username} just sent you a friend request!`);
+    next: ({ data: { newFriendRequest: { user, notification } } }) => {
+      Alert.success(`${user.username} just sent you a friend request!`);
       setLoggedUser((loggedUser) => {
-        loggedUser.incomingFriendRequests.unshift(newFriendRequest._id);
+        loggedUser.incomingFriendRequests.unshift(user._id);
+        loggedUser.notifications.unshift(notification);
       });
     },
     error: err => console.error(err),
   });
 
   const followersUpdatesSubscription = followersUpdatesObserver$.subscribe({
-    next: ({ data: { followersUpdates: { follower, isFollow } } }) => {
+    next: ({ data: { followersUpdates: { follower, isFollow, notification } } }) => {
       if (isFollow) {
         Alert.success(`${follower.username} is now following you!`);
       }
 
       setLoggedUser((loggedUser) => {
-        isFollow
-          ? loggedUser.followers.unshift(follower._id)
-          : loggedUser.followers.splice(loggedUser.followers.indexOf(follower._id), 1);
+        if (isFollow) {
+          loggedUser.followers.unshift(follower._id);
+          loggedUser.notifications.unshift(notification);
+        } else {
+          loggedUser.followers.splice(loggedUser.followers.indexOf(follower._id), 1);
+        }
       });
     },
     error: err => console.error(err),
   });
 
   const acceptedFriendRequestSubscription = acceptedFriendRequestObserver$.subscribe({
-    next: ({ data: { acceptedFriendRequest: newFriend } }) => {
-      Alert.success(`${newFriend.username} just accepted your friend request!`);
+    next: ({ data: { acceptedFriendRequest: { user, notification } } }) => {
+      Alert.success(`${user.username} just accepted your friend request!`);
 
       setLoggedUser((loggedUser) => {
-        loggedUser.friends.push(newFriend._id);
+        loggedUser.friends.push(user._id);
+        loggedUser.notifications.unshift(notification);
         loggedUser.sentFriendRequests.splice(
-          loggedUser.sentFriendRequests.indexOf(newFriend._id), 1,
+          loggedUser.sentFriendRequests.indexOf(user._id), 1,
         );
       });
     },
@@ -107,23 +112,31 @@ const subscribeToCurrentUserUpdates = (setLoggedUser) => {
   });
 
   const theyCommentOnMyPostSubscription = theyCommentOnMyPostObserver$.subscribe({
-    next: ({ data: { theyCommentOnMyPost } }) => {
-      console.log(theyCommentOnMyPost);
-      Alert.success(`${theyCommentOnMyPost.username} just comment on your post!`);
+    next: ({ data: { theyCommentOnMyPost: { commentAuthor, notification } } }) => {
+      Alert.success(`${commentAuthor.username} just comment on your post!`);
+      setLoggedUser((loggedUser) => {
+        loggedUser.notifications.unshift(notification);
+      });
     },
     error: err => console.error(err),
   });
 
   const theyLikeMyPostSubscription = theyLikeMyPostObserver$.subscribe({
-    next: ({ data: { theyLikeMyPost } }) => {
-      Alert.success(`${theyLikeMyPost.username} just liked your post!`);
+    next: ({ data: { theyLikeMyPost: { user, notification } } }) => {
+      Alert.success(`${user.username} just liked your post!`);
+      setLoggedUser((loggedUser) => {
+        loggedUser.notifications.unshift(notification);
+      });
     },
     error: err => console.error(err),
   });
 
   const theyLikeMyCommentSubscription = theyLikeMyCommentObserver$.subscribe({
-    next: ({ data: { theyLikeMyComment } }) => {
-      Alert.success(`${theyLikeMyComment.username} just liked your comment!`);
+    next: ({ data: { theyLikeMyComment: { user, notification } } }) => {
+      Alert.success(`${user.username} just liked your comment!`);
+      setLoggedUser((loggedUser) => {
+        loggedUser.notifications.unshift(notification);
+      });
     },
     error: err => console.error(err),
   });

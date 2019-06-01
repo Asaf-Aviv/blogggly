@@ -43,14 +43,21 @@ module.exports = {
       if (!userId) throw new Error('Unauthorized.');
       const { follower, followee, isFollow } = await User.toggleFollow(userId, userIdToFollow);
 
+      let notification = null;
+
+      if (isFollow) {
+        notification = await User.addNotification({ from: userId, body: 'followed you!' }, userIdToFollow);
+      }
+
       pubsub.publish(
         tags.FOLLOWERS_UPDATES,
         {
+          toUserId: userIdToFollow,
           followersUpdates: {
             follower,
             isFollow,
+            notification,
           },
-          toUserId: userIdToFollow,
         },
       );
 
@@ -76,7 +83,7 @@ module.exports = {
       if (senderRequestExist) throw new Error('Request already sent.');
       if (senderAlreadyFriends) throw new Error('Already friends.');
 
-      const [sender] = await Promise.all([
+      const [,, notification] = await Promise.all([
         User.findByIdAndUpdate(
           userId,
           { $push: { sentFriendRequests: requestedUserId } },
@@ -85,11 +92,18 @@ module.exports = {
           requestedUserId,
           { $push: { incomingFriendRequests: userId } },
         ),
+        User.addNotification({ from: userId, body: 'sent  you a friend request!' }, requestedUserId),
       ]);
 
       pubsub.publish(
         tags.NEW_FRIEND_REQUEST,
-        { user: sender, toUserId: requestedUserId },
+        {
+          toUserId: requestedUserId,
+          newFriendRequest: {
+            user: userId,
+            notification,
+          },
+        },
       );
 
       return requestedUserId;
@@ -108,7 +122,8 @@ module.exports = {
         throw new Error('already friends.');
       }
 
-      await Promise.all([
+      const [notification] = await Promise.all([
+        User.addNotification({ from: userId, body: 'accepted your friend request!' }, userIdToAccept),
         User.findByIdAndUpdate(
           userIdToAccept,
           {
@@ -127,8 +142,15 @@ module.exports = {
 
       pubsub.publish(
         tags.ACCEPTED_FRIEND_REQUEST,
-        { user: accepter, toUserId: userIdToAccept },
+        {
+          toUserId: userIdToAccept,
+          acceptedFriendRequest: {
+            user: userId,
+            notification,
+          },
+        },
       );
+
       return userIdToAccept;
     },
     cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId, pubsub }) => {
@@ -202,14 +224,12 @@ module.exports = {
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.NEW_FRIEND_REQUEST),
         (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
-      resolve: ({ user }) => user,
     },
     acceptedFriendRequest: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.ACCEPTED_FRIEND_REQUEST),
         (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
       ),
-      resolve: ({ user }) => user,
     },
     declinedFriendRequest: {
       subscribe: withFilter(
@@ -235,12 +255,18 @@ module.exports = {
     followersUpdates: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.FOLLOWERS_UPDATES),
-        (payload, variables, { currentUserId }) => payload.toUserId === currentUserId,
+        ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
       ),
-      resolve: ({ followersUpdates }) => followersUpdates,
+      // resolve: ({ followersUpdates }) => followersUpdates,
     },
   },
   Notification: {
     from: ({ from }, args, { userLoader }) => userLoader.load(from.toString()),
+  },
+  NewFriendRequest: {
+    user: ({ user }, args, { userLoader }) => userLoader.load(user),
+  },
+  AcceptedFriendRequest: {
+    user: ({ user }, args, { userLoader }) => userLoader.load(user),
   },
 };

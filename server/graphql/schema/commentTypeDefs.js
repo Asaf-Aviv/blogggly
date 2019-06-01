@@ -15,9 +15,19 @@ module.exports = gql`
   type Subscription {
     newPostComment(postId: ID!): Comment!
     commentLikesUpdates(postId: ID!): Comment!
-    theyCommentOnMyPost: User!
-    theyLikeMyComment: User!
+    theyCommentOnMyPost: TheyCommentOnMyPost!
+    theyLikeMyComment: TheyLikeMyComment!
     deletedPostComment(postId: ID!): ID!
+  }
+
+  type TheyCommentOnMyPost {
+    commentAuthor: User!
+    notification: Notification!
+  }
+
+  type TheyLikeMyComment {
+    user: User!
+    notification: Notification!
   }
 
   type Comment {

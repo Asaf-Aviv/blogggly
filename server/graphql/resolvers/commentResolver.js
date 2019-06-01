@@ -1,5 +1,7 @@
 const { withFilter } = require('graphql-subscriptions');
 const Comment = require('../../models/Comment');
+const Post = require('../../models/Post');
+const User = require('../../models/User');
 const tags = require('../tags');
 
 module.exports = {
@@ -12,18 +14,27 @@ module.exports = {
   Mutation: {
     newComment: async (root, { postId, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized');
+      const { author } = await Post.findPostById(postId, { author: 1 });
 
-      const { newComment, commentAuthor, postAuthorId } = await Comment.newComment(
-        { post: postId, body, author: userId },
-      );
+      const [newComment, notification] = await Promise.all([
+        Comment.newComment({ post: postId, body, author: userId }),
+        User.addNotification({ from: userId, body: 'commented on your post' }, author),
+      ]);
 
       pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment: newComment });
-      pubsub.publish(tags.THEY_COMMENT_ON_MY_POST, { toUserId: postAuthorId, commentAuthor });
+      pubsub.publish(tags.THEY_COMMENT_ON_MY_POST, {
+        toUserId: author.toString(),
+        theyCommentOnMyPost: {
+          commentAuthor: userId,
+          notification,
+        },
+      });
 
       return newComment;
     },
     toggleLikeOnComment: async (root, { commentId }, { userId, pubsub }) => {
-      const { user, comment, isLike } = await Comment.toggleLike(commentId, userId);
+      if (!userId) throw new Error('Unauthorized');
+      const { comment, isLike } = await Comment.toggleLike(commentId, userId);
 
       pubsub.publish(tags.COMMENT_LIKES_UPDATES, {
         comment,
@@ -31,9 +42,21 @@ module.exports = {
       });
 
       if (isLike) {
+        const commentAuthorId = comment.author._id.toString();
+        const notification = await User.addNotification(
+          { from: userId, body: 'liked your comment!' },
+          commentAuthorId,
+        );
+
         pubsub.publish(
           tags.THEY_LIKE_MY_COMMENT,
-          { toUserId: comment.author._id.toString(), user },
+          {
+            toUserId: commentAuthorId,
+            theyLikeMyComment: {
+              user: userId,
+              notification,
+            },
+          },
         );
       }
 
@@ -80,26 +103,34 @@ module.exports = {
     theyCommentOnMyPost: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.THEY_COMMENT_ON_MY_POST),
-        ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
+        ({ toUserId, theyCommentOnMyPost }, variables, { currentUserId }) => (
+          toUserId === currentUserId
+            && theyCommentOnMyPost.commentAuthor !== currentUserId
+        ),
       ),
-      resolve: ({ commentAuthor }) => commentAuthor,
     },
     theyLikeMyComment: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.THEY_LIKE_MY_COMMENT),
-        ({ toUserId, user }, variables, { currentUserId }) => (
+        ({ toUserId, theyLikeMyComment }, variables, { currentUserId }) => (
           toUserId === currentUserId
-            && user._id.toString() !== currentUserId
+            && theyLikeMyComment.user !== currentUserId
         ),
       ),
-      resolve: ({ user }) => user,
     },
   },
   Comment: {
-    author: ({ author }, args, { userLoader }) => {
-      console.log(author);
-      return userLoader.load(author.toString());
-    },
+    author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
     post: ({ post }, args, { postLoader }) => postLoader.load(post.toString()),
+  },
+  TheyCommentOnMyPost: {
+    commentAuthor: ({ commentAuthor }, args, { userLoader }) => (
+      userLoader.load(commentAuthor.toString())
+    ),
+  },
+  TheyLikeMyComment: {
+    user: ({ user }, args, { userLoader }) => (
+      userLoader.load(user.toString())
+    ),
   },
 };

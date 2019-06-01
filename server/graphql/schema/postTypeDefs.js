@@ -18,7 +18,12 @@ module.exports = gql`
 
   type Subscription {
     postLikesUpdates(postId: ID!): Post!
-    theyLikeMyPost: User!
+    theyLikeMyPost: TheyLikeMyPost!
+  }
+
+  type TheyLikeMyPost {
+    user: User
+    notification: Notification
   }
 
   type Post {

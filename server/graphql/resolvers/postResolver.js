@@ -25,7 +25,7 @@ module.exports = {
       return Post.createPost({ author: userId, ...postInput });
     },
     toggleLikeOnPost: async (root, { postId }, { userId, pubsub }) => {
-      const { post, isLike, user } = await Post.toggleLike(postId, userId);
+      const { post, isLike } = await Post.toggleLike(postId, userId);
 
       pubsub.publish(
         POST_LIKES_UPDATES,
@@ -33,9 +33,20 @@ module.exports = {
       );
 
       if (isLike) {
+        const postAuthorId = post.author.toString();
+        const notification = await User.addNotification(
+          { from: userId, body: 'liked your post!' },
+          postAuthorId,
+        );
         pubsub.publish(
           THEY_LIKE_MY_POST,
-          { toUserId: post.author._id.toString(), user },
+          {
+            toUserId: postAuthorId,
+            theyLikeMyPost: {
+              user: userId,
+              notification,
+            },
+          },
         );
       }
 
@@ -48,12 +59,11 @@ module.exports = {
     theyLikeMyPost: {
       subscribe: withFilter(
         (root, args, { pubsub }) => pubsub.asyncIterator(THEY_LIKE_MY_POST),
-        ({ user, toUserId }, variables, { currentUserId }) => (
+        ({ toUserId, theyLikeMyPost }, variables, { currentUserId }) => (
           toUserId === currentUserId
-            && user._id.toString() !== currentUserId
+            && theyLikeMyPost.user !== currentUserId
         ),
       ),
-      resolve: ({ user }) => user,
     },
     postLikesUpdates: {
       subscribe: withFilter(
@@ -68,5 +78,8 @@ module.exports = {
   },
   Post: {
     author: ({ author }, args, { userLoader }) => userLoader.load(author.toString()),
+  },
+  TheyLikeMyPost: {
+    user: ({ user }, args, { userLoader }) => userLoader.load(user),
   },
 };

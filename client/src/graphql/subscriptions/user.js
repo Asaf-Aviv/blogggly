@@ -1,11 +1,30 @@
 import gql from 'graphql-tag';
 
+const userShortSummaryFields = `
+  _id
+  avatar
+  username
+`;
+
+const notification = `
+  notification {
+    _id
+    body
+    from {
+      ${userShortSummaryFields}
+    }
+    createdAt
+    isRead
+  }
+`;
+
 export const NEW_FRIEND_REQUEST = gql`
   subscription {
     newFriendRequest {
-      _id
-      avatar
-      username
+      user {
+        ${userShortSummaryFields}
+      }
+      ${notification}
     }
   }
 `;
@@ -13,9 +32,10 @@ export const NEW_FRIEND_REQUEST = gql`
 export const ACCEPTED_FRIEND_REQUEST = gql`
   subscription {
     acceptedFriendRequest {
-      _id
-      avatar
-      username
+      user {
+        ${userShortSummaryFields}
+      }
+      ${notification}
     }
   }
 `;
@@ -41,12 +61,22 @@ export const DELETE_FRIEND = gql`
 export const FOLLOWERS_UPDATES = gql`
   subscription {
     followersUpdates {
-      follower {
-        _id
-        avatar
-        username
-      }
       isFollow
+      follower {
+        ${userShortSummaryFields}
+      }
+      ${notification}
+    }
+  }
+`;
+
+export const THEY_COMMENT_ON_MY_POST = gql`
+  subscription {
+    theyCommentOnMyPost {
+      commentAuthor {
+        ${userShortSummaryFields}
+      }
+      ${notification}
     }
   }
 `;
@@ -54,9 +84,10 @@ export const FOLLOWERS_UPDATES = gql`
 export const THEY_LIKE_MY_COMMENT = gql`
   subscription {
     theyLikeMyComment {
-      _id
-      avatar
-      username
+      user {
+        ${userShortSummaryFields}
+      }
+      ${notification}
     }
   }
 `;
@@ -64,9 +95,10 @@ export const THEY_LIKE_MY_COMMENT = gql`
 export const THEY_LIKE_MY_POST = gql`
   subscription {
     theyLikeMyPost {
-      _id
-      avatar
-      username
+      user {
+        ${userShortSummaryFields}
+      }
+      ${notification}
     }
   }
 `;
@@ -82,27 +114,13 @@ export const NEW_MESSAGE = gql`
         inBookmarks
         inTrash
         to {
-          _id
-          avatar
-          username
+          ${userShortSummaryFields}
         }
         from {
-          _id
-          avatar
-          username
+          ${userShortSummaryFields}
         }
       }
-      notification {
-        _id
-        body
-        from {
-          _id
-          username
-          avatar
-        }
-        createdAt
-        isRead
-      }
+      ${notification}
     }
   }
 `;
