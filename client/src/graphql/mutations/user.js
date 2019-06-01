@@ -58,9 +58,27 @@ export const TOGGLE_FOLLOW = gql`
   }
 `;
 
+export const READ_NOTIFICATION = gql`
+  mutation readNotification($notificationId: ID!) {
+    readNotification(notificationId: $notificationId)
+  }
+`;
+
+export const DELETE_NOTIFICATION = gql`
+  mutation deleteNotification($notificationId: ID!) {
+    deleteNotification(notificationId: $notificationId)
+  }
+`;
+
 export const READ_ALL_NOTIFICATIONS = gql`
   mutation readAllNotifications($unreadNotificationsIds: [ID!]!) {
     readAllNotifications(unreadNotificationsIds: $unreadNotificationsIds)
+  }
+`;
+
+export const DELETE_ALL_NOTIFICATIONS = gql`
+  mutation {
+    deleteAllNotifications
   }
 `;
 
