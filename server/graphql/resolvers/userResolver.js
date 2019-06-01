@@ -31,9 +31,21 @@ module.exports = {
       const token = generateToken(currentUser._id, currentUser.username);
       return { ...currentUser._doc, token };
     },
+    readNotification: async (root, { notificationId }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.readNotification(notificationId, userId);
+    },
     readAllNotifications: async (root, { unreadNotificationsIds }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');
       return User.readAllNotifications(unreadNotificationsIds, userId);
+    },
+    deleteNotification: async (root, { notificationId }, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.deleteNotification(notificationId, userId);
+    },
+    deleteAllNotifications: async (root, args, { userId }) => {
+      if (!userId) throw new Error('Unauthorized.');
+      return User.deleteAllNotifications(userId);
     },
     updateUserInfo: (root, { info }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');

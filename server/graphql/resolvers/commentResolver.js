@@ -18,7 +18,7 @@ module.exports = {
 
       const [newComment, notification] = await Promise.all([
         Comment.newComment({ post: postId, body, author: userId }),
-        User.addNotification({ from: userId, body: 'commented on your post' }, author),
+        User.addNotification({ from: userId, body: 'commented on your post!' }, author),
       ]);
 
       pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment: newComment });

@@ -87,7 +87,7 @@ UserSchema.statics.findByUsername = function (username) {
   return this.findOne({ username: { $regex: username, $options: 'i' } });
 };
 
-UserSchema.statics.findUserById = async function (userId, options) {
+UserSchema.statics.findUserById = async function (userId, options = {}) {
   const user = await this.findById(userId, options);
 
   if (!user) {
@@ -119,7 +119,6 @@ UserSchema.statics.createUser = async function (userInput) {
     password: hashedPassword,
   });
 
-
   return user.save();
 };
 
@@ -133,11 +132,39 @@ UserSchema.statics.addNotification = async function (notification, notifyUserId)
   return notifications[0];
 };
 
+UserSchema.statics.readNotification = async function (notificationId, userId) {
+  await this.updateOne(
+    { _id: userId, 'notifications._id': notificationId },
+    { $set: { 'notifications.$.isRead': true } },
+  );
+
+  return true;
+};
+
+UserSchema.statics.deleteNotification = async function (notificationId, userId) {
+  console.log('notificationId', notificationId);
+  await this.updateOne(
+    { _id: userId },
+    { $pull: { notifications: { _id: notificationId } } },
+  );
+
+  return true;
+};
+
 UserSchema.statics.readAllNotifications = async function (notificationIds, userId) {
   console.log(notificationIds);
   await this.updateOne(
     { _id: userId, 'notifications._id': { $in: notificationIds } },
     { $set: { 'notifications.$[].isRead': true } },
+  );
+
+  return true;
+};
+
+UserSchema.statics.deleteAllNotifications = async function (userId) {
+  await this.updateOne(
+    { _id: userId },
+    { $set: { notifications: [] } },
   );
 
   return true;

@@ -18,7 +18,10 @@ module.exports = gql`
     declineFriendRequest(userId: ID!): Boolean!
     cancelFriendRequest(userId: ID!): Boolean!
     removeFriend(userId: ID!): Boolean!
+    readNotification(notificationId: ID!): Boolean!
     readAllNotifications(unreadNotificationsIds: [ID!]!): Boolean!
+    deleteNotification(notificationId: ID!): Boolean!
+    deleteAllNotifications: Boolean!
   }
 
   type Subscription {
@@ -29,7 +32,6 @@ module.exports = gql`
     canceledFriendRequest: ID!
     deleteFriend: ID!
   }
-
 
   type NewFriendRequest {
     user: User!
