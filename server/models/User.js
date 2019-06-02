@@ -97,6 +97,158 @@ UserSchema.statics.findUserById = async function (userId, options = {}) {
   return user;
 };
 
+UserSchema.statics.searchUsers = async function (userQuery, userId) {
+  try {
+    // eslint-disable-next-line no-param-reassign
+    userQuery = new RegExp(userQuery, 'i');
+  } catch (e) {
+    throw new Error('Invalid username, Enter only characters, numbers or underscore');
+  }
+
+  return this.find({ _id: { $ne: userId }, username: userQuery });
+};
+
+UserSchema.statics.declineFriendRequest = async function (userIdToDecline, userId) {
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      { $pull: { incomingFriendRequests: userIdToDecline } },
+    ),
+    this.updateOne(
+      { _id: userIdToDecline },
+      { $pull: { sentFriendRequests: userId } },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.sendFriendRequest = async function (requestedUserId, userId) {
+  const [senderRequestExist, senderAlreadyFriends] = await Promise.all([
+    this.findOne(
+      { _id: userId, sentFriendRequests: { $elemMatch: { $eq: requestedUserId } } },
+      { _id: 1 },
+    ),
+    this.findOne(
+      { _id: userId, friends: { $elemMatch: { $eq: requestedUserId } } },
+      { _id: 1 },
+    ),
+  ]);
+
+  if (senderRequestExist) throw new Error('Request already sent.');
+  if (senderAlreadyFriends) throw new Error('Already friends.');
+
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      { $push: { sentFriendRequests: requestedUserId } },
+    ),
+    this.updateOne(
+      { _id: requestedUserId },
+      { $push: { incomingFriendRequests: userId } },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.acceptFriendRequest = async function (userIdToAccept, userId) {
+  const accepter = await this.findOne(
+    { _id: userId, incomingFriendRequests: { $elemMatch: { $eq: userIdToAccept } } },
+    { friends: 1, username: 1, avatar: 1 },
+  );
+
+  if (!accepter) throw new Error('This request does not exist anymore.');
+
+  if (accepter.friends.some(f => f.toString() === userIdToAccept)) {
+    throw new Error('already friends.');
+  }
+
+  await Promise.all([
+    this.updateOne(
+      { _id: userIdToAccept },
+      {
+        $pull: { sentFriendRequests: userId },
+        $push: { friends: userId },
+      },
+    ),
+    this.updateOne(
+      { _id: userId },
+      {
+        $pull: { incomingFriendRequests: userIdToAccept },
+        $push: { friends: userIdToAccept },
+      },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.cancelFriendRequest = async function (userIdToCancel, userId) {
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      { $pull: { sentFriendRequests: userIdToCancel } },
+    ),
+    this.updateOne(
+      { _id: userIdToCancel },
+      { $pull: { incomingFriendRequests: userId } },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.declineAllFriendRequests = async function (userIds, userId) {
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      { $set: { incomingFriendRequests: [] } },
+    ),
+    this.updateMany(
+      { _id: { $in: userIds } },
+      { $pull: { sentFriendRequests: userId } },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.acceptAllFriendRequests = async function (userIds, userId) {
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      {
+        $pull: { incomingFriendRequests: { $in: userIds } },
+        $push: { friends: { $each: userIds } },
+      },
+    ),
+    this.updateMany(
+      { _id: { $in: userIds } },
+      {
+        $pull: { sentFriendRequests: userId },
+        $push: { friends: userId },
+      },
+    ),
+  ]);
+
+  return true;
+};
+
+UserSchema.statics.removeFriend = async function (userIdToRemove, userId) {
+  await Promise.all([
+    this.updateOne(
+      { _id: userId },
+      { $pull: { friends: userIdToRemove } },
+    ),
+    this.updateOne(
+      { _id: userIdToRemove },
+      { $pull: { friends: userId } },
+    ),
+  ]);
+
+  return true;
+};
 UserSchema.statics.findUsersByIds = async function (userIds) {
   if (!userIds || !userIds.length) {
     return [];

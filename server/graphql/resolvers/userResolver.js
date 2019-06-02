@@ -10,7 +10,7 @@ module.exports = {
     ),
     getUserByUsername: async (root, { username }) => User.findOne({ username }),
     searchUsers: async (root, { userQuery }, { userId }) => (
-      User.find({ _id: { $ne: userId }, username: new RegExp(userQuery, 'i') })
+      User.searchUsers(userQuery, userId)
     ),
   },
   Mutation: {
@@ -81,29 +81,8 @@ module.exports = {
     sendFriendRequest: async (root, { userId: requestedUserId }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      const [senderRequestExist, senderAlreadyFriends] = await Promise.all([
-        User.findOne(
-          { _id: userId, sentFriendRequests: { $elemMatch: { $eq: requestedUserId } } },
-          { _id: 1 },
-        ),
-        User.findOne(
-          { _id: userId, friends: { $elemMatch: { $eq: requestedUserId } } },
-          { _id: 1 },
-        ),
-      ]);
-
-      if (senderRequestExist) throw new Error('Request already sent.');
-      if (senderAlreadyFriends) throw new Error('Already friends.');
-
-      const [,, notification] = await Promise.all([
-        User.findByIdAndUpdate(
-          userId,
-          { $push: { sentFriendRequests: requestedUserId } },
-        ),
-        User.findByIdAndUpdate(
-          requestedUserId,
-          { $push: { incomingFriendRequests: userId } },
-        ),
+      const [, notification] = await Promise.all([
+        User.sendFriendRequest(requestedUserId, userId),
         User.addNotification({ from: userId, body: 'sent  you a friend request!' }, requestedUserId),
       ]);
 
@@ -123,33 +102,9 @@ module.exports = {
     acceptFriendRequest: async (root, { userId: userIdToAccept }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      const accepter = await User.findOne(
-        { _id: userId, incomingFriendRequests: { $elemMatch: { $eq: userIdToAccept } } },
-        { friends: 1, username: 1, avatar: 1 },
-      );
-
-      if (!accepter) throw new Error('This request does not exist anymore.');
-
-      if (accepter.friends.some(f => f.toString() === userIdToAccept)) {
-        throw new Error('already friends.');
-      }
-
       const [notification] = await Promise.all([
         User.addNotification({ from: userId, body: 'accepted your friend request!' }, userIdToAccept),
-        User.findByIdAndUpdate(
-          userIdToAccept,
-          {
-            $pull: { sentFriendRequests: userId },
-            $push: { friends: userId },
-          },
-        ),
-        User.findByIdAndUpdate(
-          userId,
-          {
-            $pull: { incomingFriendRequests: userIdToAccept },
-            $push: { friends: userIdToAccept },
-          },
-        ),
+        User.acceptFriendRequest(userIdToAccept, userId),
       ]);
 
       pubsub.publish(
@@ -168,16 +123,7 @@ module.exports = {
     cancelFriendRequest: async (root, { userId: userIdToCancel }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      await Promise.all([
-        User.findByIdAndUpdate(
-          userId,
-          { $pull: { sentFriendRequests: userIdToCancel } },
-        ),
-        User.findByIdAndUpdate(
-          userIdToCancel,
-          { $pull: { incomingFriendRequests: userId } },
-        ),
-      ]);
+      await User.cancelFriendRequest(userIdToCancel, userId);
 
       pubsub.publish(
         tags.CANCELED_FRIEND_REQUEST,
@@ -189,16 +135,7 @@ module.exports = {
     declineFriendRequest: async (root, { userId: userIdToDecline }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      await Promise.all([
-        User.findByIdAndUpdate(
-          userId,
-          { $pull: { incomingFriendRequests: userIdToDecline } },
-        ),
-        User.findByIdAndUpdate(
-          userIdToDecline,
-          { $pull: { sentFriendRequests: userId } },
-        ),
-      ]);
+      await User.declineFriendRequest(userIdToDecline, userId);
 
       pubsub.publish(
         tags.DECLINED_FRIEND_REQUEST,
@@ -207,21 +144,50 @@ module.exports = {
 
       return true;
     },
+    acceptAllFriendRequests: async (root, { userIds }, { userId, pubsub }) => {
+      if (!userId) throw new Error('Unauthorized.');
+
+      const notification = { from: userId, body: 'accepted your friend request!' };
+
+      const [, ...notifications] = await Promise.all([
+        User.acceptAllFriendRequests(userIds, userId),
+        ...userIds.map(notifyUserId => User.addNotification(notification, notifyUserId)),
+      ]);
+
+      userIds.forEach((toUserId, i) => {
+        pubsub.publish(
+          tags.ACCEPTED_FRIEND_REQUEST,
+          {
+            toUserId,
+            acceptedFriendRequest: {
+              user: userId,
+              notification: notifications[i],
+            },
+          },
+        );
+      });
+
+      return true;
+    },
+    declineAllFriendRequests: async (root, { userIds }, { userId, pubsub }) => {
+      if (!userId) throw new Error('Unauthorized.');
+
+      await User.declineAllFriendRequests(userIds, userId);
+
+      userIds.forEach((declinedUserId) => {
+        pubsub.publish(
+          tags.DECLINED_FRIEND_REQUEST,
+          { declinedUserId },
+        );
+      });
+
+      return true;
+    },
     removeFriend: async (root, { userId: userIdToRemove }, { userId = '5ce8e8d72560264b9021842e', pubsub }) => {
       if (!userId) throw new Error('Unauthorized.');
 
-      await Promise.all([
-        User.findByIdAndUpdate(
-          userId,
-          { $pull: { friends: userIdToRemove } },
-        ),
-        User.findByIdAndUpdate(
-          userIdToRemove,
-          { $pull: { friends: userId } },
-        ),
-      ]);
+      await User.removeFriend(userIdToRemove, userId);
 
-      console.log('publishing');
       pubsub.publish(
         tags.DELETE_FRIEND,
         { deleterId: userId, toUserId: userIdToRemove },
@@ -269,7 +235,6 @@ module.exports = {
         (root, args, { pubsub }) => pubsub.asyncIterator(tags.FOLLOWERS_UPDATES),
         ({ toUserId }, variables, { currentUserId }) => toUserId === currentUserId,
       ),
-      // resolve: ({ followersUpdates }) => followersUpdates,
     },
   },
   Notification: {
