@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   oneOf, func, string, bool, oneOfType, node, arrayOf,
 } from 'prop-types';
 
-const Button = ({
+const Button = forwardRef(({
   classes, type, onClick, text, disabled, children,
-}) => (
+}, ref) => (
   <button
+    ref={ref}
     className={classes}
     type={type}
     onClick={onClick}
@@ -15,7 +16,7 @@ const Button = ({
     {text}
     {children}
   </button>
-);
+));
 
 Button.propTypes = {
   type: oneOf(['button', 'submit']),
