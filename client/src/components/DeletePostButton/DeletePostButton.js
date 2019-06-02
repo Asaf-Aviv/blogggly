@@ -5,6 +5,7 @@ import { string, func } from 'prop-types';
 import queries from '../../graphql/queries';
 import { UserContext } from '../../context';
 import ConfirmationModal from '../ConfirmationModal';
+import Button from '../Button';
 
 const DeletePostButton = ({ postId, onCompletedCb }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -34,13 +35,12 @@ const DeletePostButton = ({ postId, onCompletedCb }) => {
     >
       {deletePost => (
         <>
-          <button
-            type="button"
-            className="trash-btn"
+          <Button
+            classes="trash-btn"
             onClick={changeModalState(true)}
           >
             <i className="fas fa-trash" />
-          </button>
+          </Button>
           {showConfirmationModal && (
             <ConfirmationModal
               confirmationQuestion="Are you sure you want to delete this post?"

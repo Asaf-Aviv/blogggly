@@ -4,6 +4,7 @@ import { string, func, bool } from 'prop-types';
 import Alert from 'react-s-alert';
 import ConfirmationModal from '../ConfirmationModal';
 import queries from '../../graphql/queries';
+import Button from '../Button';
 
 const DeleteCommentButton = ({
   commentId, postId, shouldUpdateModal, onCompletedCb,
@@ -30,13 +31,12 @@ const DeleteCommentButton = ({
     >
       {deleteComment => (
         <>
-          <button
-            type="button"
-            className="trash-btn"
+          <Button
+            classes="trash-btn"
             onClick={changeModalState(true)}
           >
             <i className="fas fa-trash" />
-          </button>
+          </Button>
           {showConfirmationModal && (
             <ConfirmationModal
               confirmationQuestion="Are you sure you want to delete this comment?"

@@ -13,6 +13,7 @@ import { UserContext } from '../../context';
 import ReportModal from '../ReportModal';
 
 import './Message.sass';
+import Button from '../Button';
 
 const Message = ({ message, fromOrTo, loggedUserId }) => {
   const [showReplyModal, setShowReplyModal] = useState(false);
@@ -52,9 +53,9 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           onError={utils.UIErrorNotifier}
         >
           {bookmarkMessage => (
-            <button className="message__btn" type="button" onClick={bookmarkMessage}>
+            <Button classes="message__btn" onClick={bookmarkMessage}>
               <i className={`${message.inBookmarks ? 'fas' : 'far'} fa-bookmark`} />
-            </button>
+            </Button>
           )}
         </Mutation>
         <Mutation
@@ -66,12 +67,12 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           onError={utils.UIErrorNotifier}
         >
           {moveToTrash => (
-            <button className="message__btn" type="button" onClick={moveToTrash}>
+            <Button className="message__btn" onClick={moveToTrash}>
               {message.inTrash
                 ? 'Restore'
                 : <i className="fas fa-trash" />
               }
-            </button>
+            </Button>
           )}
         </Mutation>
         {message.inTrash && (
@@ -93,13 +94,12 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           >
             {deleteMessage => (
               <>
-                <button
-                  className="message__btn"
-                  type="button"
+                <Button
+                  classes="message__btn"
                   onClick={() => setShowConfirmationModal(true)}
                 >
                   <i className="fas fa-trash" />
-                </button>
+                </Button>
                 {showConfirmationModal && (
                   <ConfirmationModal
                     onConfirm={deleteMessage}
@@ -115,18 +115,18 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
         )}
         {message.from._id !== loggedUserId && (
           <>
-            <button className="message__btn" type="button" onClick={() => setShowReplyModal(true)}>
+            <Button classes="message__btn" onClick={() => setShowReplyModal(true)}>
               <i className="fas fa-reply" />
-            </button>
-            <button className="message__btn message__report-btn" type="button" onClick={() => setShowReportModal(true)}>
+            </Button>
+            <Button classes="message__btn message__report-btn" onClick={() => setShowReportModal(true)}>
               <i className="fas fa-flag" />
-            </button>
+            </Button>
             {showReportModal && (
-            <ReportModal
-              reportedId={message._id}
-              type="message"
-              closeModal={() => setShowReportModal(false)}
-            />
+              <ReportModal
+                reportedId={message._id}
+                type="message"
+                closeModal={() => setShowReportModal(false)}
+              />
             )}
           </>
         )}

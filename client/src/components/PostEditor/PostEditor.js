@@ -16,6 +16,7 @@ import queries from '../../graphql/queries';
 import 'highlight.js/styles/railscasts.css';
 import 'react-quill/dist/quill.snow.css';
 import './PostEditor.sass';
+import Button from '../Button';
 
 const saveToLocalStorage = debounce((key, value) => {
   localStorage.setItem(key, value);
@@ -139,9 +140,9 @@ const PostEditor = () => {
               }}
               {...editorOptions}
             />
-            <button
-              type="button"
-              className="btn btn--primary create-post__btn"
+            <Button
+              classes="btn btn--primary create-post__btn"
+              text="Create Post"
               onClick={() => {
                 if (!isLogged) {
                   Alert.info('Please login or signup to post a story.');
@@ -166,9 +167,7 @@ const PostEditor = () => {
 
                 createPost();
               }}
-            >
-              Create Post
-            </button>
+            />
           </Container>
         )}
       </Mutation>

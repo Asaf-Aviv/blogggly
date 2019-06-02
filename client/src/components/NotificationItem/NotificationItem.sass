@@ -1,5 +1,37 @@
 .notifications
   &__item
+    padding: 0.3rem 2.5rem 0.3rem 0.3rem
+    position: relative
     font-size: 14px
     &--unread
       background: #eee
+  &__delete-btn
+    width: 24px
+    height: 24px
+    position: absolute
+    top: 5px
+    font-size: 1.25rem
+    right: 10px
+    display: flex
+    align-items: center
+    justify-content: center
+    i
+      width: 22px
+  &__body
+    display: inline-block
+    margin-bottom: 0.3rem
+  &__footer
+    font-size: 12px
+    display: flex
+    align-items: center
+  &__bookmark-btn
+    display: inline-block
+    margin-left: 0.5rem
+    background: none
+    border: none
+    font-weight: 600
+    color: #716bcc
+    outline: 0
+    margin-left: auto
+    &:hover
+      text-decoration: underline

@@ -2,12 +2,13 @@ import React from 'react';
 import { arrayOf, bool, func } from 'prop-types';
 import { SearchPostPropTypes } from '../../propTypes';
 import NavSearchItem from '../NavSearchItem';
+import Button from '../Button';
 
 const NavSearchResults = ({ posts, showResults, hideResults }) => (
   <div className={`nav-search-results ${showResults ? 'nav-search-results--active' : ''}`}>
-    <button type="button" className="nav-search-results__close-btn" onClick={hideResults}>
+    <Button classes="nav-search-results__close-btn" onClick={hideResults}>
       <i className="fa fa-times" />
-    </button>
+    </Button>
     {posts.length > 0
       ? (
         <ul className="nav-search-results__list">

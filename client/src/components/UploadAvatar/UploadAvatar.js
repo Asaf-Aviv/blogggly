@@ -7,6 +7,7 @@ import { UserContext } from '../../context';
 import UserAvatar from '../UserAvatar';
 import 'react-image-crop/dist/ReactCrop.css';
 import './UploadAvatar.sass';
+import Button from '../Button';
 
 const UploadAvatar = () => {
   const [originalFile, setOriginalFile] = useState(null);
@@ -167,12 +168,8 @@ const UploadAvatar = () => {
             onChange={onCropChange}
             onComplete={makeClientCrop}
           />
-          <button onClick={upload} type="button">
-            Upload
-          </button>
-          <button onClick={resetAll} type="button">
-            Cancel
-          </button>
+          <Button onClick={upload} text="Upload" />
+          <Button onClick={resetAll} text="Cancel" />
         </div>
       )}
     </div>

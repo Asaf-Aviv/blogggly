@@ -8,6 +8,7 @@ import Loader from '../Loader';
 import { UserContext, MemberFormsContext } from '../../context';
 
 import './AddComment.sass';
+import Button from '../Button';
 
 const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');
@@ -58,12 +59,11 @@ const AddComment = ({ postId }) => {
             rows="5"
             placeholder="Add a Comment"
           />
-          <button
-            className="btn btn--primary add-comment__btn"
+          <Button
             type="submit"
-          >
-            Add Comment
-          </button>
+            classes="btn btn--primary add-comment__btn"
+            text="Add Comment"
+          />
           {loading && <Loader />}
         </form>
       )}

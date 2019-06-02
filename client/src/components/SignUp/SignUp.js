@@ -8,6 +8,7 @@ import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Label from '../Label';
 import Input from '../Input';
+import Button from '../Button';
 
 const SignUp = ({ toggleForms, hideForms }) => {
   const [username, setUsername] = useState('');
@@ -37,13 +38,12 @@ const SignUp = ({ toggleForms, hideForms }) => {
             signup();
           }}
         >
-          <button
-            className="member-form__close-btn"
-            type="button"
+          <Button
+            classes="member-form__close-btn"
             onClick={hideForms}
           >
             <i className="fas fa-times" />
-          </button>
+          </Button>
           <h1 className="member-form__title">Sign Up</h1>
           <Label labelFor="username">
             <Input
@@ -81,12 +81,10 @@ const SignUp = ({ toggleForms, hideForms }) => {
             />
           </Label>
           <span className="forgot">Forgot your password?</span>
-          <button
-            className="member-form__submit btn btn--primary"
-            type="submit"
-          >
-            Sign Up
-          </button>
+          <Button
+            classes="member-form__submit btn btn--primary"
+            text="Sign Up"
+          />
           <span
             className="member-form__toggle"
             onClick={toggleForms}

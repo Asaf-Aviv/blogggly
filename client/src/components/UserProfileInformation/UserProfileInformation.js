@@ -12,6 +12,7 @@ import queries from '../../graphql/queries';
 import './UserInformation.sass';
 import 'react-datepicker/dist/react-datepicker.css';
 import { UserContext } from '../../context';
+import Button from '../Button';
 
 const UserProfileInformation = ({ userInfo }) => {
   const [firstname, setFirstname] = useState(userInfo.firstname);
@@ -108,7 +109,7 @@ const UserProfileInformation = ({ userInfo }) => {
                 />
               </Label>
             </div>
-            <button className="btn btn--success user-info__submit-btn" type="submit">Update</button>
+            <Button type="submit" classes="btn btn--success user-info__submit-btn" text="Update" />
           </form>
         </div>
       )}

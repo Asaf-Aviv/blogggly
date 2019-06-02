@@ -3,9 +3,12 @@ import { Mutation } from 'react-apollo';
 import { arrayOf, string, bool } from 'prop-types';
 import { UserContext } from '../../context';
 import queries from '../../graphql/queries';
+import Button from '../Button';
 
-const NotificationsHeaderActions = ({ unreadNotificationsIds, disableDeleteAll }) => {
+const NotificationsHeaderActions = ({ unreadNotificationsIds }) => {
   const { setLoggedUser } = useContext(UserContext);
+
+  if (!unreadNotificationsIds.length) return null;
 
   return (
     <>
@@ -21,13 +24,11 @@ const NotificationsHeaderActions = ({ unreadNotificationsIds, disableDeleteAll }
         }}
       >
         {readAllNotifications => (
-          <button
-            className="notifications__action-btn"
+          <Button
+            classes="notifications__action-btn"
             onClick={readAllNotifications}
-            disabled={!unreadNotificationsIds.length}
-          >
-            Mark All as Read
-          </button>
+            text="Mark All as Read"
+          />
         )}
       </Mutation>
       <Mutation
@@ -39,13 +40,11 @@ const NotificationsHeaderActions = ({ unreadNotificationsIds, disableDeleteAll }
         }}
       >
         {deleteAllNotifications => (
-          <button
-            className="notifications__action-btn"
+          <Button
+            classes="notifications__action-btn"
             onClick={deleteAllNotifications}
-            disabled={disableDeleteAll}
-          >
-            Delete All
-          </button>
+            text="Delete All"
+          />
         )}
       </Mutation>
     </>
@@ -54,7 +53,6 @@ const NotificationsHeaderActions = ({ unreadNotificationsIds, disableDeleteAll }
 
 NotificationsHeaderActions.propTypes = {
   unreadNotificationsIds: arrayOf(string).isRequired,
-  disableDeleteAll: bool.isRequired,
 };
 
 export default NotificationsHeaderActions;

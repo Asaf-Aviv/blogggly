@@ -8,6 +8,7 @@ import NavBarUserPanel from '../NavBarUserPanel';
 import NavSearchBar from '../NavSearchBar';
 
 import './NavBar.sass';
+import Button from '../Button';
 
 const NavBar = ({ logout }) => {
   const { isLogged } = useContext(UserContext);
@@ -23,16 +24,14 @@ const NavBar = ({ logout }) => {
           {isLogged ? (
             <NavBarUserPanel logout={logout} />
           ) : (
-            <button
-              type="button"
-              className="login-btn btn btn--primary"
+            <Button
+              classes="login-btn btn btn--primary"
+              text="Log In"
               onClick={() => {
                 setShowLogin(true);
                 setShowMemberForms(true);
               }}
-            >
-              Log In
-            </button>
+            />
           )}
           {showMemberForms && !isLogged && <MemberForms />}
         </nav>

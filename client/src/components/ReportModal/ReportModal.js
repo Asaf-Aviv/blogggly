@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Alert from 'react-s-alert';
-import { string, func } from 'prop-types';
+import { string, func, oneOf } from 'prop-types';
 import { Mutation } from 'react-apollo';
 import queries from '../../graphql/queries';
 import Emoji from '../Emoji';
+import Button from '../Button';
 import TransparentModal from '../TransparentModal';
 
 import './ReportModal.sass';
@@ -20,8 +21,8 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
         },
       }}
       onCompleted={() => {
+        Alert.success('Thank you for your report');
         closeModal();
-        Alert.success('Thank you for the report');
       }}
     >
       {(report => (
@@ -34,19 +35,18 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
               report();
             }}
           >
-            <button
-              className="report-form__close-btn"
-              type="button"
+            <Button
+              classes="report-form__close-btn"
               onClick={closeModal}
             >
               <i className="fas fa-times" />
-            </button>
+            </Button>
             <h3 className="report-form__title">
               Hi
               {' '}
               <Emoji emoji="👋" label="waving hand" />
               {' '}
-              Thanks for taking the time to make blogggly a better place.
+              Thank you for taking the time to make blogggly a better place.
             </h3>
             <textarea
               rows="4"
@@ -56,8 +56,9 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
               required
             />
             <div className="report-form__btn-group">
-              <button onClick={closeModal} className="btn btn--default" type="button">Cancel</button>
-              <button className="btn btn--danger" type="submit">Report</button>
+              <Button onClick={closeModal} classes="btn btn--default" text="Cancel" />
+              <Button onClick={closeModal} classes="btn btn--danger" text="Cancel" />
+              <Button type="submit" classes="btn btn--danger" text="Report" />
             </div>
           </form>
         </TransparentModal>
@@ -68,7 +69,7 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
 
 ReportModal.propTypes = {
   reportedId: string.isRequired,
-  type: string.isRequired,
+  type: oneOf(['user', 'post', 'comment', 'message']).isRequired,
   closeModal: func.isRequired,
 };
 

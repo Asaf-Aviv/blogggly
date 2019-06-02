@@ -48,7 +48,6 @@ const Notifications = ({ isOpen }) => {
         <NotificationsHeader title="Notifications">
           <NotificationsHeaderActions
             unreadNotificationsIds={unreadNotificationsIds}
-            disableDeleteAll={!loggedUser.notifications.length}
           />
         </NotificationsHeader>
         {notifications.length > 0 && (

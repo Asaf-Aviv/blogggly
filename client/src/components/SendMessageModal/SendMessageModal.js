@@ -7,6 +7,7 @@ import Input from '../Input';
 import Label from '../Label';
 import TransparentModal from '../TransparentModal';
 import { UserContext } from '../../context';
+import Button from '../Button';
 
 import './SendMessageModal.sass';
 
@@ -37,13 +38,12 @@ const SendMessageModal = ({ userId, username, closeModal }) => {
               sendMessage();
             }}
           >
-            <button
-              className="send-message__close-btn"
-              type="button"
+            <Button
+              classes="send-message__close-btn"
               onClick={closeModal}
             >
               <i className="fas fa-times" />
-            </button>
+            </Button>
             <Label labelFor="to" classes="send-message__label">
               <Input
                 value={username}
@@ -58,7 +58,7 @@ const SendMessageModal = ({ userId, username, closeModal }) => {
                 onChange={e => setBody(e.target.value)}
               />
             </Label>
-            <button className="btn btn--primary reply-message__submit-btn" type="submit">Send</button>
+            <Button type="submit" className="btn btn--primary reply-message__submit-btn" text="Send" />
           </form>
         </TransparentModal>
       )}

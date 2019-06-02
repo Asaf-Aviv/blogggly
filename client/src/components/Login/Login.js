@@ -7,6 +7,7 @@ import Loader from '../Loader';
 import { UserContext } from '../../context';
 import utils from '../../utils';
 import queries from '../../graphql/queries';
+import Button from '../Button';
 
 const Login = ({ toggleForms, hideForms }) => {
   const [email, setEmail] = useState('');
@@ -35,13 +36,12 @@ const Login = ({ toggleForms, hideForms }) => {
             login();
           }}
         >
-          <button
-            className="member-form__close-btn"
-            type="button"
+          <Button
+            classes="member-form__close-btn"
             onClick={hideForms}
           >
             <i className="fas fa-times" />
-          </button>
+          </Button>
           <h1 className="member-form__title">Login</h1>
           <Label labelFor="email">
             <Input
@@ -69,7 +69,7 @@ const Login = ({ toggleForms, hideForms }) => {
             />
           </Label>
           <span className="forgot">Forgot your password?</span>
-          <button className="member-form__submit btn btn--primary" type="submit">Login</button>
+          <Button type="submit" className="member-form__submit btn btn--primary" text="Login" />
           <span
             className="member-form__toggle"
             onClick={toggleForms}

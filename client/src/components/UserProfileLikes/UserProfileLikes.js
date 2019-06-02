@@ -9,6 +9,7 @@ import utils from '../../utils';
 import Likes from '../Likes';
 
 import './UserProfileLikes.sass';
+import Button from '../Button';
 
 const UserProfilePostLike = ({ post }) => (
   <div className="user-likes__item">
@@ -66,13 +67,11 @@ UserProfileCommentLike.propTypes = {
 };
 
 const UserProfileLikesTab = ({ changeTab, text, active }) => (
-  <button
-    className={`user-likes__tab ${active ? 'user-likes__tab--active' : ''}`}
-    type="button"
+  <Button
+    classes={`user-likes__tab ${active ? 'user-likes__tab--active' : ''}`}
     onClick={changeTab}
-  >
-    {text}
-  </button>
+    text={text}
+  />
 );
 
 UserProfileLikesTab.propTypes = {

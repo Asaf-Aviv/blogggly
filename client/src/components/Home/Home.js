@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Container from '../Container';
 import { MemberFormsContext } from '../../context';
+import Button from '../Button';
 
 import { ReactComponent as ColumnIcon } from '../../assets/column.svg';
 import { ReactComponent as FormIcon } from '../../assets/form.svg';
@@ -17,16 +18,14 @@ const Home = () => {
         <header className="home__header">
           <h1 className="home__title">Blogggly</h1>
           <h3 className="home__subtitle">Start your own blog in seconds, for free!</h3>
-          <button
-            className="btn btn--success"
-            type="button"
+          <Button
+            classes="btn btn--success"
+            text="Signup"
             onClick={() => {
               setShowLogin(false);
               setShowMemberForms(true);
             }}
-          >
-            Signup
-          </button>
+          />
         </header>
       </Container>
       <Container>

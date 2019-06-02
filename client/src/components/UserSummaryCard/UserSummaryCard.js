@@ -5,6 +5,7 @@ import moment from 'moment';
 import UserAvatar from '../UserAvatar';
 import FollowButton from '../FollowButton';
 import { UserContext } from '../../context';
+import Button from '../Button';
 import SendMessageModal from '../SendMessageModal';
 
 import './UserSummaryCard.sass';
@@ -26,13 +27,12 @@ const UserSummaryCard = ({ user }) => {
           userId={user._id}
           following={loggedUser.following.includes(user._id)}
         />
-        <button
+        <Button
           type="button"
-          className="btn btn--success btn--sm"
+          classes="btn btn--success btn--sm"
           onClick={() => setShowMessageModal(true)}
-        >
-          Send Message
-        </button>
+          text="Send Message"
+        />
       </div>
       <p className="user-card__bio">{user.info.bio}</p>
       <p className="user-card__member-since">

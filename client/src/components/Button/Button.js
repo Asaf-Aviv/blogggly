@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  oneOf, func, string, bool,
+  oneOf, func, string, bool, oneOfType, node, arrayOf,
 } from 'prop-types';
 
 const Button = ({
-  classes, type, onClick, text, disabled,
+  classes, type, onClick, text, disabled, children,
 }) => (
   <button
     className={classes}
@@ -13,6 +13,7 @@ const Button = ({
     disabled={disabled}
   >
     {text}
+    {children}
   </button>
 );
 
@@ -22,6 +23,7 @@ Button.propTypes = {
   classes: string,
   text: string,
   disabled: bool,
+  children: oneOfType([node, arrayOf(node)]),
 };
 
 Button.defaultProps = {
@@ -29,6 +31,7 @@ Button.defaultProps = {
   classes: '',
   text: '',
   disabled: false,
+  children: null,
 };
 
 export default Button;

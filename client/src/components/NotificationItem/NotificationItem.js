@@ -18,28 +18,35 @@ const NotificationItem = ({
   } = notification;
 
   return (
-    <div className={`notifications__item ${isRead ? '' : 'notifications__item--unread'}`}>
-      <Mutation
-        mutation={queries.READ_NOTIFICATION}
-        variables={{ notificationId }}
-        onCompleted={readNotificationCb}
-      >
-        {readNotification => (
-          <Button text="Mark as Read" onClick={readNotification} />
-        )}
-      </Mutation>
-      <Mutation
-        mutation={queries.DELETE_NOTIFICATION}
-        variables={{ notificationId }}
-        onCompleted={deleteNotificationCb}
-      >
-        {deleteNotification => (
-          <Button text="Delete" onClick={deleteNotification} />
-        )}
-      </Mutation>
-      <span>{`${from.username} ${body}`}</span>
-      <span>{moment(+createdAt).startOf('seconds').fromNow()}</span>
-    </div>
+    <li>
+      <div className={`notifications__item ${isRead ? '' : 'notifications__item--unread'}`}>
+        <Mutation
+          mutation={queries.DELETE_NOTIFICATION}
+          variables={{ notificationId }}
+          onCompleted={deleteNotificationCb}
+        >
+          {deleteNotification => (
+            <Button classes="notifications__delete-btn" onClick={deleteNotification}>
+              <i className="fas fa-times" />
+            </Button>
+          )}
+        </Mutation>
+        <span className="notifications__body">{`${from.username} ${body}`}</span>
+        <div className="notifications__footer">
+          <i className="fas fa-fw fa-comment-alt" />
+          <span>{moment(+createdAt).startOf('seconds').fromNow()}</span>
+          <Mutation
+            mutation={queries.READ_NOTIFICATION}
+            variables={{ notificationId }}
+            onCompleted={readNotificationCb}
+          >
+            {readNotification => (
+              <Button classes="notifications__bookmark-btn" text="Mark as Read" onClick={readNotification} />
+            )}
+          </Mutation>
+        </div>
+      </div>
+    </li>
   );
 };
 

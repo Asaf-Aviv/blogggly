@@ -43,11 +43,12 @@ module.exports = async (req, res, err) => {
     { select: 'avatar' },
   );
 
-  try {
-    unlink(path.resolve(__dirname, `../uploads/avatar/${user.avatar}`));
-    // eslint-disable-next-line no-empty
-  } catch (e) {
-    console.error(e);
+  if (user.avatar !== 'default.svg') {
+    try {
+      unlink(path.resolve(__dirname, `../uploads/avatar/${user.avatar}`));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   res.json({ avatar: req.file.filename });

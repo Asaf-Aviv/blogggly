@@ -6,6 +6,7 @@ import {
 import UserAvatar from '../UserAvatar/UserAvatar';
 
 import './NavBarUserMenu.sass';
+import Button from '../Button';
 
 const NavBarUserMenu = ({ loggedUser, logout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,20 +32,16 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
 
   return (
     <div className="user-menu">
-      <button
-        className="user-menu__btn"
-        type="button"
+      <Button
+        classes="user-menu__btn"
         onClick={() => setIsOpen(!isOpen)}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') setIsOpen(!isOpen);
-        }}
       >
         <UserAvatar
           classes="user-menu__avatar"
           username={loggedUser.username}
           avatar={loggedUser.avatar}
         />
-      </button>
+      </Button>
       {isOpen && (
         <div ref={dropdown} className="dropdown__container">
           <ul className="dropdown" onClick={() => setIsOpen(false)}>

@@ -9,6 +9,8 @@ import Button from '../Button';
 const FriendRequestHeaderActions = ({ userIds }) => {
   const { setLoggedUser } = useContext(UserContext);
 
+  if (!userIds.length) return null;
+
   return (
     <>
       <Mutation
@@ -25,7 +27,6 @@ const FriendRequestHeaderActions = ({ userIds }) => {
             classes="notifications__action-btn"
             text="Decline All"
             onClick={declineAllFriendRequests}
-            disabled={!userIds.length}
           />
         )}
       </Mutation>
@@ -44,7 +45,6 @@ const FriendRequestHeaderActions = ({ userIds }) => {
             classes="notifications__action-btn"
             text="Accept All"
             onClick={acceptAllFriendRequests}
-            disabled={!userIds.length}
           />
         )}
       </Mutation>

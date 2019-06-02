@@ -14,6 +14,7 @@ module.exports = {
   Mutation: {
     newComment: async (root, { postId, body }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized');
+
       const { author } = await Post.findPostById(postId, { author: 1 });
 
       const [newComment, notification] = await Promise.all([
@@ -34,6 +35,7 @@ module.exports = {
     },
     toggleLikeOnComment: async (root, { commentId }, { userId, pubsub }) => {
       if (!userId) throw new Error('Unauthorized');
+
       const { comment, isLike } = await Comment.toggleLike(commentId, userId);
 
       pubsub.publish(tags.COMMENT_LIKES_UPDATES, {
@@ -63,14 +65,16 @@ module.exports = {
       return comment;
     },
     deleteComment: async (root, { commentId, postId }, { userId, pubsub }) => {
-      const deletedCommentId = await Comment.deleteComment(commentId, postId, userId);
+      if (!userId) throw new Error('Unauthorized');
+
+      await Comment.deleteComment(commentId, postId, userId);
 
       pubsub.publish(
         tags.DELETED_POST_COMMENT,
         { commentId, commentPostId: postId },
       );
 
-      return deletedCommentId;
+      return commentId;
     },
   },
   Subscription: {
@@ -81,7 +85,6 @@ module.exports = {
           newPostComment.author._id.toString() !== currentUserId
         ),
       ),
-      resolve: ({ newPostComment }) => newPostComment,
     },
     commentLikesUpdates: {
       subscribe: withFilter(

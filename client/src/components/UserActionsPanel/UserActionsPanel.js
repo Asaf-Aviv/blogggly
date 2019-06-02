@@ -8,6 +8,7 @@ import ReportModal from '../ReportModal';
 import FriendRequestActions from '../FriendRequestActions';
 
 import './UserActionsPanel.sass';
+import Button from '../Button';
 
 const PopUp = ({ children }) => (
   <div className="pop-up">
@@ -68,20 +69,16 @@ const UserActionsPanel = ({
                     username={username}
                     render={(declineFriendRequest, accpetFriendRequest) => (
                       <div className="friend-request-actions">
-                        <button
-                          className="btn btn--sm btn--default"
-                          type="button"
+                        <Button
+                          classes="btn btn--sm btn--default"
                           onClick={declineFriendRequest}
-                        >
-                        Decline
-                        </button>
-                        <button
-                          className="btn btn--sm btn--success"
-                          type="button"
+                          text="Decline"
+                        />
+                        <Button
+                          classes="btn btn--sm btn--success"
                           onClick={accpetFriendRequest}
-                        >
-                        Accpet
-                        </button>
+                          text="Accpet"
+                        />
                       </div>
                     )}
                   />
@@ -99,13 +96,11 @@ const UserActionsPanel = ({
                     pending
                     render={cancelFriendRequest => (
                       <div className="friend-request-actions">
-                        <button
-                          className="btn btn--sm btn--default"
-                          type="button"
+                        <Button
+                          classes="btn btn--sm btn--default"
                           onClick={cancelFriendRequest}
-                        >
-                          Cancel
-                        </button>
+                          text="Cancel"
+                        />
                       </div>
                     )}
                   />

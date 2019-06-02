@@ -2,6 +2,7 @@ import React from 'react';
 import { func, string } from 'prop-types';
 
 import './ConfirmationModal.sass';
+import Button from '../Button';
 
 const ConfirmationModal = ({
   onConfirm, onCancel, onCancelText,
@@ -10,29 +11,24 @@ const ConfirmationModal = ({
 }) => (
   <div className={`confirmation__modal confirmation__modal--${theme}`} onClick={onCancel}>
     <div className="confirmation" onClick={e => e.stopPropagation()}>
-      <button
-        className="confirmation__close-btn"
-        type="button"
+      <Button
+        classes="confirmation__close-btn"
         onClick={onCancel}
       >
         <i className="fas fa-times" />
-      </button>
+      </Button>
       <h3 className="confirmation__text">{confirmationQuestion}</h3>
       <div className="confirmation__btn-group">
-        <button
-          className="btn btn--default"
-          type="button"
+        <Button
+          classes="btn btn--default"
           onClick={onCancel}
-        >
-          {onCancelText}
-        </button>
-        <button
-          className={`btn btn--${theme}`}
-          type="button"
+          text={onCancelText}
+        />
+        <Button
+          classes={`btn btn--${theme}`}
           onClick={onConfirm}
-        >
-          {onConfirmText}
-        </button>
+          text={onConfirmText}
+        />
       </div>
     </div>
   </div>
