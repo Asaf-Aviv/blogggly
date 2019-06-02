@@ -6,6 +6,8 @@ import queries from '../../graphql/queries';
 import Button from '../Button';
 import { UserShortSummaryPropTypes } from '../../propTypes';
 
+import './NotificationItem.sass';
+
 const NotificationItem = ({
   notification,
   readNotificationCb,
@@ -16,7 +18,7 @@ const NotificationItem = ({
   } = notification;
 
   return (
-    <div style={{ background: isRead ? 'white' : 'cyan' }}>
+    <div className={`notifications__item ${isRead ? '' : 'notifications__item--unread'}`}>
       <Mutation
         mutation={queries.READ_NOTIFICATION}
         variables={{ notificationId }}

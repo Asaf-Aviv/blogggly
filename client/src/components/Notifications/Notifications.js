@@ -3,6 +3,8 @@ import { bool } from 'prop-types';
 import NotificationsContainer from '../NotificationsContainer';
 import Badge from '../Badge';
 import NotificationsHeader from '../NotificationHeader';
+import NotificationsHeaderActions from '../NotificationsHeaderActions';
+import NotificationsList from '../NotificationsList';
 import NotificationItem from '../NotificationItem';
 import { UserContext } from '../../context';
 
@@ -22,7 +24,7 @@ const Notifications = ({ isOpen }) => {
   const markAsRead = (notificationId) => {
     setLoggedUser((draft) => {
       const notificationIndex = notifications
-        .findIndex(notification => notification._id === notificationId);
+        .findIndex(({ _id }) => _id === notificationId);
 
       draft.notifications[notificationIndex].isRead = true;
     });
@@ -31,7 +33,7 @@ const Notifications = ({ isOpen }) => {
   const deleteNotification = (notificationId) => {
     setLoggedUser((draft) => {
       const notificationIndex = notifications
-        .findIndex(notification => notification._id === notificationId);
+        .findIndex(({ _id }) => _id === notificationId);
 
       draft.notifications.splice(notificationIndex, 1);
     });
@@ -43,20 +45,24 @@ const Notifications = ({ isOpen }) => {
     <>
       <Badge num={numOfUnreadNotifications} />
       <NotificationsContainer classes="notifications">
-        <NotificationsHeader
-          unreadNotificationsIds={unreadNotificationsIds}
-          disableDeleteAll={!loggedUser.notifications.length}
-        />
-        <ul className="notifications__list">
-          {notifications.map(notification => (
-            <NotificationItem
-              key={notification._id}
-              notification={notification}
-              readNotificationCb={() => markAsRead(notification._id)}
-              deleteNotificationCb={() => deleteNotification(notification._id)}
-            />
-          ))}
-        </ul>
+        <NotificationsHeader title="Notifications">
+          <NotificationsHeaderActions
+            unreadNotificationsIds={unreadNotificationsIds}
+            disableDeleteAll={!loggedUser.notifications.length}
+          />
+        </NotificationsHeader>
+        {notifications.length > 0 && (
+          <NotificationsList>
+            {notifications.map(notification => (
+              <NotificationItem
+                key={notification._id}
+                notification={notification}
+                readNotificationCb={() => markAsRead(notification._id)}
+                deleteNotificationCb={() => deleteNotification(notification._id)}
+              />
+            ))}
+          </NotificationsList>
+        )}
       </NotificationsContainer>
     </>
   );

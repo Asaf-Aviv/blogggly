@@ -7,9 +7,12 @@ import UserAvatar from '../UserAvatar';
 import Badge from '../Badge';
 import NotificationsContainer from '../NotificationsContainer';
 import Button from '../Button';
+import NotificationsList from '../NotificationsList';
 import FriendRequestActions from '../FriendRequestActions';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
+import FriendRequestHeaderActions from '../FriendRequestHeaderActions';
+import NotificationsHeader from '../NotificationHeader';
 
 import './FriendRequestNotifications.sass';
 
@@ -23,6 +26,9 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
     <>
       <Badge num={numOfNotifications} />
       <NotificationsContainer>
+        <NotificationsHeader title="Friend Requests">
+          <FriendRequestHeaderActions userIds={incomingFriendRequests} />
+        </NotificationsHeader>
         {numOfNotifications > 0 && (
           <Query
             query={queries.GET_SHORT_USERS_SUMMARY_BY_IDS}
@@ -33,7 +39,7 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
               if (loading) return null;
 
               return (
-                <ul className="notifications__list">
+                <NotificationsList>
                   {users.map(user => (
                     <li key={user._id} className="friend-request">
                       <div className="friend-request__user-details">
@@ -59,7 +65,7 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
                       />
                     </li>
                   ))}
-                </ul>
+                </NotificationsList>
               );
             }}
           </Query>
