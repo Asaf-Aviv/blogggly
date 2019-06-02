@@ -5,6 +5,7 @@ import { bool, string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import { UserContext, MemberFormsContext } from '../../context';
+import Button from '../Button';
 
 import './FollowButton.sass';
 
@@ -38,10 +39,10 @@ const FollowButton = ({ following, userId, username }) => {
       }}
     >
       {follow => (
-        <button
+        <Button
           ref={followButtonRef}
-          className="btn btn--success btn--sm follow-btn"
-          type="button"
+          classes="btn btn--success btn--sm follow-btn"
+          text={following ? 'Unfollow' : 'Follow'}
           onClick={() => {
             if (!isLogged) {
               Alert.info(`Please login or signup to follow ${username}.`);
@@ -52,9 +53,7 @@ const FollowButton = ({ following, userId, username }) => {
             follow();
             changeFollowText();
           }}
-        >
-          {following ? 'Unfollow' : 'Follow'}
-        </button>
+        />
       )}
     </Mutation>
   );
