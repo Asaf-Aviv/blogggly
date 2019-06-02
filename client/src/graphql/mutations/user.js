@@ -30,6 +30,18 @@ export const REMOVE_FRIEND = gql`
   }
 `;
 
+export const ACCEPT_ALL_FRIEND_REQUESTS = gql`
+  mutation acceptAllFriendRequests($userIds: [ID!]!) {
+    acceptAllFriendRequests(userIds: $userIds)
+  }
+`;
+
+export const DECLINE_ALL_FRIEND_REQUESTS = gql`
+  mutation declineAllFriendRequests($userIds: [ID!]!) {
+    declineAllFriendRequests(userIds: $userIds)
+  }
+`;
+
 export const UPDATE_USER_INFO = gql`
   mutation updateUserInfo($info: UserInfoInput!) {
     updateUserInfo(info: $info) {

@@ -15,6 +15,8 @@ module.exports = gql`
     toggleFollow(userId: ID!): ToggleFollow!
     sendFriendRequest(userId: ID!): ID!
     acceptFriendRequest(userId: ID!): ID!
+    acceptAllFriendRequests(userIds: [ID!]!): Boolean!
+    declineAllFriendRequests(userIds: [ID!]!): Boolean!
     declineFriendRequest(userId: ID!): Boolean!
     cancelFriendRequest(userId: ID!): Boolean!
     removeFriend(userId: ID!): Boolean!
