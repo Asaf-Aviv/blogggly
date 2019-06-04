@@ -5,10 +5,10 @@ import { string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Loader from '../Loader';
+import Button from '../Button';
 import { UserContext, MemberFormsContext } from '../../context';
 
 import './AddComment.sass';
-import Button from '../Button';
 
 const AddComment = ({ postId }) => {
   const [commentBody, setCommentBody] = useState('');

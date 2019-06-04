@@ -14,7 +14,7 @@ const Users = () => {
   const { loggedUser, isLogged } = useContext(UserContext);
 
   return (
-    <main className="users__main">
+    <div className="users__main">
       <Container>
         <UserSearchBar setUserQuery={setUserQuery} />
         {userQuery && (
@@ -53,7 +53,7 @@ const Users = () => {
           </Query>
         )}
       </Container>
-    </main>
+    </div>
   );
 };
 

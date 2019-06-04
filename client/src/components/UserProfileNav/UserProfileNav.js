@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { shape, string } from 'prop-types';
-import capitalize from 'lodash.capitalize';
+import { capitalize } from 'lodash';
 
 import './UserProfileNav.sass';
 

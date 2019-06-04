@@ -20,7 +20,7 @@ const Button = forwardRef(({
 
 Button.propTypes = {
   type: oneOf(['button', 'submit']),
-  onClick: func.isRequired,
+  onClick: func,
   classes: string,
   text: string,
   disabled: bool,
@@ -33,6 +33,7 @@ Button.defaultProps = {
   text: '',
   disabled: false,
   children: null,
+  onClick: () => {},
 };
 
 export default Button;

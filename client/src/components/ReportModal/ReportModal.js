@@ -57,7 +57,6 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
             />
             <div className="report-form__btn-group">
               <Button onClick={closeModal} classes="btn btn--default" text="Cancel" />
-              <Button onClick={closeModal} classes="btn btn--danger" text="Cancel" />
               <Button type="submit" classes="btn btn--danger" text="Report" />
             </div>
           </form>

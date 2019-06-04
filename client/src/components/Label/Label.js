@@ -2,7 +2,7 @@ import React from 'react';
 import {
   string, node, arrayOf, oneOfType,
 } from 'prop-types';
-import capitalize from 'lodash.capitalize';
+import { capitalize } from 'lodash';
 
 import './Label.sass';
 

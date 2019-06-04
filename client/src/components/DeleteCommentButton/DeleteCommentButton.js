@@ -32,11 +32,10 @@ const DeleteCommentButton = ({
       {deleteComment => (
         <>
           <Button
-            classes="trash-btn"
+            classes="actions-dropdown__btn"
             onClick={changeModalState(true)}
-          >
-            <i className="fas fa-trash" />
-          </Button>
+            text="Delete"
+          />
           {showConfirmationModal && (
             <ConfirmationModal
               confirmationQuestion="Are you sure you want to delete this comment?"

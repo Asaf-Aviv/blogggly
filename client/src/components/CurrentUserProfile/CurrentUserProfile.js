@@ -20,7 +20,7 @@ const CurrentUserProfile = ({ match: { path } }) => {
   if (!loggedUser) return null;
 
   return (
-    <main className="user-profile">
+    <div className="user-profile">
       <Container>
         <UserProfileNav />
         <Switch>
@@ -36,7 +36,7 @@ const CurrentUserProfile = ({ match: { path } }) => {
           <Route render={() => <Redirect to="/" />} />
         </Switch>
       </Container>
-    </main>
+    </div>
   );
 };
 

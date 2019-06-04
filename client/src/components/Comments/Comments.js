@@ -25,7 +25,7 @@ const Comments = ({ postId }) => {
         <h2>Comments</h2>
       </header>
       <AddComment postId={postId} />
-      <SortByPanel setSortBy={setSortBy} />
+      <SortByPanel sortByKey={sortBy.key + sortBy.order} setSortBy={setSortBy} />
       <CommentsList postId={postId} sortBy={sortBy} />
     </section>
   );

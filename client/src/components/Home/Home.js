@@ -13,7 +13,7 @@ const Home = () => {
   const { setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
 
   return (
-    <main className="home">
+    <div className="home">
       <Container>
         <header className="home__header">
           <h1 className="home__title">Blogggly</h1>
@@ -44,7 +44,7 @@ const Home = () => {
           </div>
         </section>
       </Container>
-    </main>
+    </div>
   );
 };
 

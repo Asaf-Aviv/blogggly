@@ -7,7 +7,7 @@ import { UserContext } from '../../context';
 import ConfirmationModal from '../ConfirmationModal';
 import Button from '../Button';
 
-const DeletePostButton = ({ postId, onCompletedCb }) => {
+const DeletePostButton = ({ postId, onCompletedCb, classes }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const { setLoggedUser } = useContext(UserContext);
@@ -36,11 +36,10 @@ const DeletePostButton = ({ postId, onCompletedCb }) => {
       {deletePost => (
         <>
           <Button
-            classes="trash-btn"
+            classes="actions-dropdown__btn"
             onClick={changeModalState(true)}
-          >
-            <i className="fas fa-trash" />
-          </Button>
+            text="Delete"
+          />
           {showConfirmationModal && (
             <ConfirmationModal
               confirmationQuestion="Are you sure you want to delete this post?"
@@ -57,11 +56,13 @@ const DeletePostButton = ({ postId, onCompletedCb }) => {
 
 DeletePostButton.propTypes = {
   postId: string.isRequired,
+  classes: string,
   onCompletedCb: func,
 };
 
 DeletePostButton.defaultProps = {
   onCompletedCb: null,
+  classes: '',
 };
 
 export default DeletePostButton;

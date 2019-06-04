@@ -1,68 +1,57 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   string, arrayOf, shape, func,
 } from 'prop-types';
+import Button from '../Button';
+import useOutsideClick from '../../hooks/useOutsideClick';
 import UserAvatar from '../UserAvatar/UserAvatar';
 
 import './NavBarUserMenu.sass';
-import Button from '../Button';
+
+const renderItem = (to, iconClass, text) => (
+  <li className="dropdown__item">
+    <NavLink to={to} className="dropdown__link">
+      <i className={`dropdown__icon fas ${iconClass}`} />
+      {text}
+    </NavLink>
+  </li>
+);
 
 const NavBarUserMenu = ({ loggedUser, logout }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const dropdown = useRef(null);
-
-  useEffect(() => {
-    document.addEventListener('mousedown', detectClick);
-    return () => {
-      document.removeEventListener('mousedown', detectClick);
-    };
-  }, []);
-
-  const detectClick = (e) => {
-    if (dropdown
-      && dropdown.current
-      && !dropdown.current.contains(e.target)
-      && !e.target.classList.contains('user-menu__avatar')
-    ) {
-      setIsOpen(false);
-    }
-  };
+  useOutsideClick(dropdown, () => setIsOpen(false));
 
   return (
-    <div className="user-menu">
+    <div ref={dropdown} className="user-menu">
       <Button
         classes="user-menu__btn"
         onClick={() => setIsOpen(!isOpen)}
       >
         <UserAvatar
+          width={40}
           classes="user-menu__avatar"
           username={loggedUser.username}
           avatar={loggedUser.avatar}
         />
       </Button>
       {isOpen && (
-        <div ref={dropdown} className="dropdown__container">
+        <div className="dropdown__container">
+          <div className="user-menu__header">
+            <UserAvatar
+              width={40}
+              classes="user-menu__avatar"
+              username={loggedUser.username}
+              avatar={loggedUser.avatar}
+            />
+            <h4>{loggedUser.username}</h4>
+          </div>
+          <div className="dropdown__divider" />
           <ul className="dropdown" onClick={() => setIsOpen(false)}>
-            <li className="dropdown__item">
-              <NavLink activeClassName="dropdown__link--active" to="/create" className="dropdown__link">
-                <i className="dropdown__icon fas fa-plus" />
-                Create
-              </NavLink>
-            </li>
-            <li className="dropdown__item">
-              <NavLink activeClassName="dropdown__link--active" to="/profile/information" className="dropdown__link">
-                <i className="dropdown__icon fas fa-user" />
-                Profile
-              </NavLink>
-            </li>
-            <li className="dropdown__item">
-              <NavLink activeClassName="dropdown__link--active" to="/inbox" className="dropdown__link">
-                <i className="dropdown__icon fas fa-inbox" />
-                Inbox
-              </NavLink>
-            </li>
+            {renderItem('/create', 'fa-plus', 'Create')}
+            {renderItem('/profile/information', 'fa-user', 'Profile')}
+            {renderItem('/inbox', 'fa-inbox', 'Inbox')}
             <div className="dropdown__divider" />
             <li
               className="dropdown__item"

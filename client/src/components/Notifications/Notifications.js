@@ -1,17 +1,21 @@
 import React, { useContext } from 'react';
 import { bool } from 'prop-types';
+import { Mutation } from 'react-apollo';
+import moment from 'moment';
 import NotificationsContainer from '../NotificationsContainer';
+import queries from '../../graphql/queries';
 import Badge from '../Badge';
 import NotificationsHeader from '../NotificationHeader';
 import NotificationsHeaderActions from '../NotificationsHeaderActions';
 import NotificationsList from '../NotificationsList';
 import NotificationItem from '../NotificationItem';
 import { UserContext } from '../../context';
+import Button from '../Button';
 
 import './Notifications.sass';
 
 const Notifications = ({ isOpen }) => {
-  const { setLoggedUser, loggedUser, loggedUser: { notifications } } = useContext(UserContext);
+  const { setLoggedUser, loggedUser: { notifications } } = useContext(UserContext);
 
   const unreadNotificationsIds = notifications
     .reduce((ids, { _id, isRead }) => {
@@ -21,7 +25,7 @@ const Notifications = ({ isOpen }) => {
 
   const numOfUnreadNotifications = unreadNotificationsIds.length;
 
-  const markAsRead = (notificationId) => {
+  const markAsReadStateUpdater = (notificationId) => {
     setLoggedUser((draft) => {
       const notificationIndex = notifications
         .findIndex(({ _id }) => _id === notificationId);
@@ -30,7 +34,7 @@ const Notifications = ({ isOpen }) => {
     });
   };
 
-  const deleteNotification = (notificationId) => {
+  const deleteNotificationStateUpdater = (notificationId) => {
     setLoggedUser((draft) => {
       const notificationIndex = notifications
         .findIndex(({ _id }) => _id === notificationId);
@@ -48,6 +52,7 @@ const Notifications = ({ isOpen }) => {
         <NotificationsHeader title="Notifications">
           <NotificationsHeaderActions
             unreadNotificationsIds={unreadNotificationsIds}
+            showDeleteAll={Boolean(notifications.length)}
           />
         </NotificationsHeader>
         {notifications.length > 0 && (
@@ -55,10 +60,42 @@ const Notifications = ({ isOpen }) => {
             {notifications.map(notification => (
               <NotificationItem
                 key={notification._id}
-                notification={notification}
-                readNotificationCb={() => markAsRead(notification._id)}
-                deleteNotificationCb={() => deleteNotification(notification._id)}
-              />
+                avatar={notification.from.avatar}
+                username={notification.from.username}
+                isRead={notification.isRead}
+              >
+                <Mutation
+                  mutation={queries.DELETE_NOTIFICATION}
+                  variables={{ notificationId: notification._id }}
+                  onCompleted={() => deleteNotificationStateUpdater(notification._id)}
+                >
+                  {deleteNotification => (
+                    <Button classes="notifications__delete-btn" onClick={deleteNotification}>
+                      <i className="fas fa-times" />
+                    </Button>
+                  )}
+                </Mutation>
+                <span className="notifications__body">{notification.body}</span>
+                <div className="notifications__footer">
+                  <i className="fas fa-fw fa-comment-alt" />
+                  <span
+                    className="notifications__createdAt"
+                  >
+                    {moment(+notification.createdAt).startOf('seconds').fromNow()}
+                  </span>
+                  {!notification.isRead && (
+                    <Mutation
+                      mutation={queries.READ_NOTIFICATION}
+                      variables={{ notificationId: notification._id }}
+                      onCompleted={() => markAsReadStateUpdater(notification._id)}
+                    >
+                      {readNotification => (
+                        <Button classes="notifications__bookmark-btn" text="Mark as Read" onClick={readNotification} />
+                      )}
+                    </Mutation>
+                  )}
+                </div>
+              </NotificationItem>
             ))}
           </NotificationsList>
         )}

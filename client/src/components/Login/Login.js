@@ -69,7 +69,7 @@ const Login = ({ toggleForms, hideForms }) => {
             />
           </Label>
           <span className="forgot">Forgot your password?</span>
-          <Button type="submit" className="member-form__submit btn btn--primary" text="Login" />
+          <Button type="submit" classes="member-form__submit btn btn--primary" text="Login" />
           <span
             className="member-form__toggle"
             onClick={toggleForms}

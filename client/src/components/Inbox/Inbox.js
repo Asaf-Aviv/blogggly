@@ -47,7 +47,7 @@ const Inbox = () => {
     });
 
   return (
-    <main className="inbox">
+    <div className="inbox">
       <Container>
         <InboxSideBar setCategory={setCategory}>
           {renderInboxItem('Inbox', 'inbox', inbox.filter(notInTrash).length, showCategory === 'inbox')}
@@ -62,7 +62,7 @@ const Inbox = () => {
           <MessageBoard loggedUserId={loggedUser._id} messages={trash} active={showCategory === 'trash'} />
         </InboxContent>
       </Container>
-    </main>
+    </div>
   );
 };
 

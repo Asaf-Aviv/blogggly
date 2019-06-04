@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   string, oneOfType, node, arrayOf,
 } from 'prop-types';
 import UserAvatar from '../UserAvatar';
 
 import './AuthorDetails.sass';
+import BloggglyLink from '../BloggglyLink';
 
 const AuthorDetails = ({ avatar, username, children }) => (
   <div className="author">
@@ -14,9 +14,7 @@ const AuthorDetails = ({ avatar, username, children }) => (
       avatar={avatar}
       username={username}
     />
-    <Link to={`/user/${username}`} className="author__username-link">
-      {username}
-    </Link>
+    <BloggglyLink to={`/user/${username}`} text={username} />
     {children}
   </div>
 );

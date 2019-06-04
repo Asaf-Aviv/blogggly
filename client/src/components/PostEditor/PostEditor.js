@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 import Select from 'react-select';
 import { UserContext, MemberFormsContext } from '../../context';
 import Container from '../Container';
@@ -89,7 +89,7 @@ const PostEditor = () => {
   };
 
   return (
-    <main className="create">
+    <div className="create">
       <Mutation
         mutation={queries.CREATE_POST}
         variables={{
@@ -171,7 +171,7 @@ const PostEditor = () => {
           </Container>
         )}
       </Mutation>
-    </main>
+    </div>
   );
 };
 

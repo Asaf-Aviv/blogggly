@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
-import { func, bool } from 'prop-types';
+import { bool } from 'prop-types';
 import { UserContext } from '../../context';
-import UserAvatar from '../UserAvatar';
 import Badge from '../Badge';
 import NotificationsContainer from '../NotificationsContainer';
 import Button from '../Button';
@@ -13,10 +11,11 @@ import queries from '../../graphql/queries';
 import utils from '../../utils';
 import FriendRequestHeaderActions from '../FriendRequestHeaderActions';
 import NotificationsHeader from '../NotificationHeader';
+import NotificationItem from '../NotificationItem';
 
 import './FriendRequestNotifications.sass';
 
-const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
+const FriendRequestNotifications = ({ isOpen }) => {
   const { loggedUser: { incomingFriendRequests } } = useContext(UserContext);
   const numOfNotifications = incomingFriendRequests.length;
 
@@ -39,31 +38,21 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
               if (loading) return null;
 
               return (
-                <NotificationsList>
-                  {users.map(user => (
-                    <li key={user._id} className="friend-request">
-                      <div className="friend-request__user-details">
-                        <UserAvatar avatar={user.avatar} username={user.username} width={30} />
-                        <Link
-                          onClick={isOpenToggler}
-                          className="friend-request__link"
-                          to={`/user/${user.username}`}
-                        >
-                          {user.username}
-                        </Link>
-                      </div>
+                <NotificationsList classes="friend-requests__notifications">
+                  {users.map(({ _id, avatar, username }) => (
+                    <NotificationItem key={_id} avatar={avatar} username={username}>
                       <FriendRequestActions
                         incoming
-                        userId={user._id}
-                        username={user.username}
+                        userId={_id}
+                        username={username}
                         render={(declineFriendRequest, accpetFriendRequest) => (
-                          <div>
+                          <div className="friend-request__action-btns">
                             <Button classes="btn btn--sm btn--default" text="Decline" onClick={declineFriendRequest} />
                             <Button classes="btn btn--sm btn--success" text="Accpet" onClick={accpetFriendRequest} />
                           </div>
                         )}
                       />
-                    </li>
+                    </NotificationItem>
                   ))}
                 </NotificationsList>
               );
@@ -77,14 +66,12 @@ const FriendRequestNotifications = ({ isOpen, isOpenToggler }) => {
 
 FriendRequestNotifications.propTypes = {
   isOpen: bool,
-  isOpenToggler: func,
 };
 
 // define default props to avoid cloneElement proptypes
 // error because elements are checked at the creation time
 FriendRequestNotifications.defaultProps = {
   isOpen: false,
-  isOpenToggler: () => {},
 };
 
 export default FriendRequestNotifications;
