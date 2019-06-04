@@ -13,7 +13,7 @@ import FollowButton from '../FollowButton';
 import utils from '../../utils';
 import { UserContext } from '../../context';
 import Tags from '../Tags/Tags';
-import DeletePostButton from '../DeletePostButton';
+import ActionsDropDown from '../ActionsDropDown';
 
 import './Post.sass';
 
@@ -21,7 +21,7 @@ const Post = ({ match: { params: { postId } } }) => {
   const { loggedUser, isLogged } = useContext(UserContext);
 
   return (
-    <main className="post__main">
+    <div className="post__main">
       <Query
         query={queries.POST}
         variables={{ postId }}
@@ -44,6 +44,11 @@ const Post = ({ match: { params: { postId } } }) => {
                       <div className="post__tags">
                         <Tags tags={post.tags} />
                       </div>
+                      <ActionsDropDown
+                        type="post"
+                        resourceId={post._id}
+                        isAuthor={isLogged && loggedUser._id === post.author._id}
+                      />
                     </header>
                     <AuthorDetails {...post.author}>
                       {post.author._id !== (loggedUser && loggedUser._id) && (
@@ -64,9 +69,6 @@ const Post = ({ match: { params: { postId } } }) => {
                         likes={post.likes}
                         isPost
                       />
-                      {isLogged && loggedUser._id === post.author._id && (
-                        <DeletePostButton postId={postId} />
-                      )}
                     </div>
                   </article>
                   <MoreFromAuthor
@@ -81,7 +83,7 @@ const Post = ({ match: { params: { postId } } }) => {
           );
         }}
       </Query>
-    </main>
+    </div>
   );
 };
 

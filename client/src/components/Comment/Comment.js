@@ -4,7 +4,7 @@ import moment from 'moment';
 import AuthorDetails from '../AuthorDetails';
 import Likes from '../Likes/Likes';
 import { CommentPropTypes } from '../../propTypes';
-import DeleteCommentButton from '../DeleteCommentButton';
+import ActionsDropDown from '../ActionsDropDown';
 
 import './Comment.sass';
 
@@ -20,9 +20,12 @@ const Comment = ({ comment, postId, isAuthor }) => (
       likes={comment.likes}
       postId={postId}
     />
-    {isAuthor && (
-      <DeleteCommentButton commentId={comment._id} postId={postId} />
-    )}
+    <ActionsDropDown
+      type="comment"
+      resourceId={comment._id}
+      isAuthor={isAuthor}
+      postId={postId}
+    />
   </li>
 );
 

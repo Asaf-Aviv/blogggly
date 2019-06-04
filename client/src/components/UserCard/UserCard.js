@@ -6,6 +6,7 @@ import {
 } from 'prop-types';
 import UserAvatar from '../UserAvatar';
 import UserActionsPanel from '../UserActionsPanel';
+import ActionsDropDown from '../ActionsDropDown';
 
 import './UserCard.sass';
 
@@ -14,6 +15,7 @@ const UserCard = ({
   isIncomingFriendRequest,
 }) => (
   <div className="user-card">
+    <ActionsDropDown resourceId={user._id} type="user" isAFriend={isAFriend} />
     <header className="user-card__header">
       <UserAvatar avatar={user.avatar} username={user.username} />
       <Link className="user-card__link" to={`user/${user.username}`}>
