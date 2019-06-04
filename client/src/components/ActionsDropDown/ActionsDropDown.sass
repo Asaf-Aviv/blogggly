@@ -1,0 +1,40 @@
+.actions-dropdown
+  position: absolute
+  top: 0
+  right: 40px
+  box-shadow: 0 3px 15px 4px rgba(0, 0, 0, 0.1)
+  border-radius: 5px
+  font-size: 14px
+  background: #FFF
+  &::after
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid var(--nav-bg-color);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    top: 3px;
+    right: -11px;
+  &__container
+    position: absolute
+    top: 0
+    right: 0
+  &__toggler
+    cursor: pointer
+    width: 35px
+    padding: 0.25rem 0
+    text-align: center
+    &-container
+      position: relative
+  &__btn
+    width: 100%
+    padding: 0.5rem 0.75rem
+    font-weight: 600
+    cursor: pointer
+    border: none
+    background: none
+    outline: none
+    text-align: left
+    &:hover
+      background: #eee

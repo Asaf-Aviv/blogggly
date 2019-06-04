@@ -3,34 +3,48 @@
     padding: 0.3rem 2.5rem 0.3rem 0.3rem
     position: relative
     font-size: 14px
+    border-bottom: 1px solid #dcdcdc
+    display: flex
+    align-items: center
     &--unread
       background: #eee
+    .avatar__container
+      margin-right: 0.5rem
   &__delete-btn
-    width: 24px
-    height: 24px
+    border: none
+    background: none
+    width: 20px
+    height: 20px
     position: absolute
     top: 5px
-    font-size: 1.25rem
+    font-size: 1rem
     right: 10px
     display: flex
     align-items: center
     justify-content: center
-    i
-      width: 22px
+    transition: 100ms color
+    color: #a20000
+    outline: none
+    &:hover, &:active
+      color: #f30909
+  &__content
+    flex: 1
   &__body
     display: inline-block
-    margin-bottom: 0.3rem
+    margin-bottom: 0.1rem
   &__footer
     font-size: 12px
     display: flex
     align-items: center
+  &__createdAt
+    margin: 0 0.3rem
   &__bookmark-btn
     display: inline-block
     margin-left: 0.5rem
     background: none
     border: none
     font-weight: 600
-    color: #716bcc
+    color: var(--main-link-color)
     outline: 0
     margin-left: auto
     &:hover

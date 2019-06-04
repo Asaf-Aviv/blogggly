@@ -4,13 +4,13 @@
   box-sizing: border-box
 
 \:root
-  font-size: 18px
   --main-text-color: #545454
   --nav-bg-color: #5a5c73
   --green: #1ab181
   --light-green: #29ffb9
   --light-black: #565656
   --body-bg-color: #f3f3f3
+  --main-link-color: #716bcc
 
 body
   -webkit-font-smoothing: antialiased
@@ -43,6 +43,19 @@ ul
   padding: 0.3rem 0
   margin-right: 0.5rem
 
+.link
+  cursor: pointer
+  font-weight: 600
+  color: var(--main-link-color)
+  border: none
+  background: none
+  outline: none
+  transition: 100ms opacity
+  &:hover
+    opacity: 1
+  &--inactive
+    opacity: 0.5
+
 .heart
   color: #ef1717
 
@@ -63,7 +76,7 @@ ul
       background: #dedede
   &--primary
     color: #FFF
-    background: #716bcc
+    background: var(--main-link-color)
     box-shadow: 0 9px 10px -8px #3c3b5d
     &:hover
       background: #57539e
@@ -74,21 +87,21 @@ ul
   &--success
     color: #FFF
     background: #1cbf8b
-    &:hover, &:active
+    box-shadow: 0 9px 10px -8px #30b37f
+    &:hover
       background: #14966e
+    &:active
+      background: #0f7556
   &--danger
     color: #FFF
     background: red
+    box-shadow: 0 9px 10px -8px #790f06
+    &:hover
+      background: #b70d0d
+    &:active
+      background: #960b0b
   &--sm
     border-radius: 3px
     padding: 0 0.5rem
     height: 30px
     font-size: 0.8rem
-
-.trash-btn
-  background: none
-  color: #ef1717
-  outline: none
-  border: none
-  font-size: 20px
-  padding: 0.1rem
