@@ -1,1 +1,1 @@
-module.exports = new (require('graphql-subscriptions')).PubSub();
+module.exports = new (require('graphql-redis-subscriptions')).RedisPubSub();
