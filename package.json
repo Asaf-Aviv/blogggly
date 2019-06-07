@@ -22,7 +22,7 @@
     "express": "^4.16.4",
     "file-type": "^11.1.0",
     "graphql": "^14.3.0",
-    "graphql-subscriptions": "^1.1.0",
+    "graphql-redis-subscriptions": "^2.1.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "merge-graphql-schemas": "^1.5.8",
