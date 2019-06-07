@@ -1,8 +1,9 @@
 .home
+  min-height: calc(100vh - 80px - 4rem)
   &__header
-    padding: 2rem 1rem
-    background: #FFF
-    border-radius: 5px
+    padding: 4rem 2rem
+    background: var(--bg-alt3)
+    border-radius: var(--border-radius-medium)
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
     .btn--success
       box-shadow: 0 9px 10px -8px #0a6d4d
@@ -11,15 +12,21 @@
     display: inline-block
     margin: 2rem 3rem 4rem 0
 
+.dark-theme
+  .home__header
+    border: 1px solid var(--border-color)
+  .features__card
+    border: 1px solid var(--border-color)
+
 .features
   display: flex
   justify-content: space-between
-  padding: 2rem 0
-  border-radius: 5px
+  padding: 4rem 0
+  border-radius: var(--border-radius-medium)
   &__card
-    border-radius: 5px
-    padding: 1rem
-    background: #FFF
+    padding: 3rem
+    border-radius: var(--border-radius-medium)
+    background: var(--bg-alt3)
     flex-basis: 32%
     text-align: center
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)

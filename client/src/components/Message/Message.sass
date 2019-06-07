@@ -1,8 +1,8 @@
 .message
   &__container
     margin-bottom: 1rem
-    background: #FFF
-    border-radius: 5px
+    background: var(--bg-alt3)
+    border-radius: var(--border-radius-medium)
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
   &__from
     color: var(--main-link-color)
@@ -12,24 +12,26 @@
   &__wrapper
     padding: 0.5rem
     cursor: pointer
-    &:hover
-      background: rgba(255, 255, 255, 0.1)
+  &__body
+    margin: 1rem 0
   &__date
     font-size: 12px
     font-style: italic
     display: inline-block
-    margin-left: 0.5rem
+    margin-left: 1rem
   &__actions
     display: flex
-    padding: 0.2rem 0.5rem
+    padding: 0.5rem
+    font-size: 1.5rem
     .fa-trash, .fa-flag
       color: #ef1717
     .fa-bookmark
       color: #1cbf8a
     .fa-reply
-      color: var(--green)
+      color: var(--main-text-color)
   &__btn
-    margin-right: 0.5rem
+    color: var(--main-text-color)
+    margin-right: 1rem
     font-size: 18px
     padding: 0.2rem
     border: none

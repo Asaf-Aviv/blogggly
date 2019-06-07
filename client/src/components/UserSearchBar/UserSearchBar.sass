@@ -9,10 +9,11 @@
   &__input
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
     width: 100%
-    font-size: 1.2rem
     padding: 1rem 1rem
     border: none
-    border-radius: 5px
-    &::placeholder
-      font-size: 1rem
-      transform: translateY(-1px)
+    border-radius: var(--border-radius-medium)
+    background: var(--bg-alt3)
+
+.dark-theme
+  .search-bar__input
+    border: 1px solid var(--border-color)

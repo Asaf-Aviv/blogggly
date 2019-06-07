@@ -1,15 +1,15 @@
 .confirmation
   position: relative
   cursor: default
-  background: #FFF
+  background: var(--bg-alt3)
   color: var(--main-text-color)
   padding: 2rem 4rem 2rem 2rem
-  border-radius: 8px
-  flex: 1
+  border-radius: var(--border-radius-large)
   margin: auto
+  width: 100%
   max-width: 768px
   &__text
-    margin-bottom: 3rem
+    margin: 1rem 0 3rem 0
   &__modal
     cursor: pointer
     display: flex
@@ -23,18 +23,21 @@
     z-index: 600
   &__close-btn
     position: absolute
-    top: 15px
-    right: 15px
+    top: 0.25rem
+    right: 0.25rem
     background: none
     border: none
     display: block
     width: 45px
     height: 45px
     font-size: 25px
-    color: #c1c1c1
+    color: var(--text-alt2)
+    -webkit-transition: color 150ms
     transition: color 150ms
     &:hover, &:active
-      color: #000
+      color: var(--text-alt)
+  &__title
+    margin-top: 1rem
   &__btn-group
     display: flex
     align-items: flex-end

@@ -1,21 +1,22 @@
 .actions-dropdown
   position: absolute
+  padding: 0.5rem 0
   top: 0
   right: 40px
   box-shadow: 0 3px 15px 4px rgba(0, 0, 0, 0.1)
   border-radius: 5px
   font-size: 14px
-  background: #FFF
+  background: var(--bg-alt2)
   &::after
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 10px solid var(--nav-bg-color);
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    top: 3px;
-    right: -11px;
+    content: ''
+    position: absolute
+    width: 0
+    height: 0
+    border-left: 10px solid var(--bg-alt2)
+    border-top: 10px solid transparent
+    border-bottom: 10px solid transparent
+    top: 3px
+    right: -10px
   &__container
     position: absolute
     top: 0
@@ -29,7 +30,8 @@
       position: relative
   &__btn
     width: 100%
-    padding: 0.5rem 0.75rem
+    color: var(--main-text-color)
+    padding: 0.5rem 1rem
     font-weight: 600
     cursor: pointer
     border: none
@@ -37,4 +39,5 @@
     outline: none
     text-align: left
     &:hover
-      background: #eee
+      background: var(--main-purple)
+      color: #FFF

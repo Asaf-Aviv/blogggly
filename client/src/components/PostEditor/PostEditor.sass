@@ -1,30 +1,58 @@
 .create
-  
+  min-height: calc(100vh - 80px - 4rem)
+
 .post-title
   font-weight: 600
   display: block
   padding: 1rem
-  background: #FFF
-  border-radius: 5px
+  border-radius: var(--border-radius-medium)
   outline: none
-  font-size: 20px
+  font-size: 18px
   font-family: inherit
   width: 100%
+  background: var(--bg-alt3)
   color: var(--main-text-color)
   resize: none
   max-width: 100%
   min-width: 100%
+  border: 1px solid var(--border-color)
+  &::placeholder
+    color: var(--color-text-secondary)
+    font-weight: 400
+
+.css-bg1rzq-control,
+  border-color: var(--border-color)
+
+.css-bgvzuu-indicatorSeparator
+  background-color: var(--border-color) !important
+
+.select-categories > div
+  border-color: var(--border-color)
 
 .quill
-  border-radius: 5px
+  border-radius: var(--border-radius-medium)
+  background: var(--bg-alt3)
+
+.ql-snow .ql-picker-options,
+.css-bg1rzq-control
+  background: var(--bg-alt3) !important
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options
+  color: var(--main-text-color)
+
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label,
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label
+  border-color: var(--border-color) !important
+
+.ql-toolbar.ql-snow, .ql-container.ql-snow
+  border: 1px solid var(--border-color)
 
 .ql
   &-editor
-    background: #FFF
     font-size: 18px
     min-height: 250px
+    background: var(--bg-alt3)
   &-toolbar
-    background: #FFF
     font-family: inherit
     border-top-left-radius: 5px
     border-top-right-radius: 5px
@@ -35,13 +63,19 @@
     border-bottom-right-radius: 5px
     overflow: hidden
 
+.ql-editor.ql-blank::before
+  color: var(--color-text-secondary)
+
 .ql-snow .ql-editor blockquote
   padding: 0.5rem 1rem
   border-color: #706acf
 
 .select-categories
   margin: 1rem 0
-
+  
 .btn.create-post__btn
   display: block
   margin: 2rem 0 2rem auto
+
+.ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected
+  color: var(--text-alt) !important

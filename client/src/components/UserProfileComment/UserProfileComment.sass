@@ -3,19 +3,24 @@
   
 .user-profile-comment
   &__container
+    position: relative
     border-radius: 8px
     transition: height 150ms
     color: var(--main-text-color)
-    background: #FFF
+    background: var(--bg-alt3)
     padding: 1rem
     margin-bottom: 1rem
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
     &.deleted
       display: none
     .likes__wrapper
       display: flex
     .likes__container
       flex: 1
+  &__header
+    margin-bottom: 0.75rem
+    .blogggly-link:nth-of-type(2)
+      color: var(--main-text-color)
   &__post-title
     margin-bottom: 0.5rem
   &__comment-body

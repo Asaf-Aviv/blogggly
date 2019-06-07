@@ -11,9 +11,11 @@
     position: relative
     margin: 0 auto
     &-input
-      padding: 0.6rem
       border: none
-      border-radius: 5px
+      border-radius: var(--border-radius-medium)
+      padding: 0.6rem
+      outline: none
+      background: var(--bg-alt3)
   .toggler__container
     margin-right: 0.5rem
 
@@ -59,3 +61,7 @@
     transition: color 150ms
     &:hover, &:active
       color: #FFF
+
+.dark-theme
+  .nav__search-bar-input
+    border: 1px solid var(--border-color)

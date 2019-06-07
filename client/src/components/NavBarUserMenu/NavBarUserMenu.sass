@@ -16,6 +16,8 @@
     align-items: center
     .avatar__container
       margin-right: 0.5rem
+  &__username
+    color: var(--text-title-color)
 
 .dropdown
   &__container
@@ -26,9 +28,9 @@
     top: 100%
     width: 200px
     right: 5px
-    background: #FFF
+    background: var(--bg-alt3)
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     z-index: 100
     &::after
       content: ''
@@ -37,7 +39,7 @@
       height: 0
       border-left: 10px solid transparent
       border-right: 10px solid transparent
-      border-bottom: 10px solid #FFF
+      border-bottom: 10px solid var(--bg-alt3)
       top: -10px
       right: 10px
   &__item
@@ -47,14 +49,12 @@
     align-items: center
     border-radius: 5px
     &:hover, &:active
-      background: #5a5c72
-      color: #29ffb9
+      background: #8148f6
+      color: var(--text-color-alt3)
   &__link
     width: 100%
-    font-size: 14px
     text-decoration: none
     color: inherit
-    font-weight: 600
     display: flex
     align-items: center
   &__icon
@@ -64,4 +64,4 @@
   &__divider
     margin: 0.5rem 0
     height: 1px
-    background: rgba(0, 0, 0, 0.1)
+    background: var(--divider-color)

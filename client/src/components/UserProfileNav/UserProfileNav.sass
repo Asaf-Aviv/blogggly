@@ -2,11 +2,11 @@
   &__sidebar
     overflow: hidden
     flex: 0 0 200px
-    background: #000
-    border-radius: 5px
+    color: var(--main-text-color)
+    background: var(--bg-alt3)
+    border-radius: var(--border-radius-large)
     margin-right: 1rem
     cursor: pointer
-    background: #FFF
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
   &__menu
     &-item
@@ -14,8 +14,9 @@
       font-weight: 600
       display: block
       padding: 0.7rem 1.5rem
+      color: var(--main-text-color)
       transition: all 150ms
       &:hover, &:active, &--active
         color: #FFF
-        background: var(--nav-bg-color)
-        color rgba(255, 255, 255, 0.1)
+        background: #8148f6
+        

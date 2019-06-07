@@ -1,13 +1,32 @@
 .react-datepicker-wrapper
   display: block !important
 
+.react-datepicker__month-container .react-datepicker__header
+  background: var(--bg-alt3)
+
+.react-datepicker__current-month,
+.react-datepicker__day,
+.react-datepicker__day-name,
+.react-datepicker__week 
+  color: var(--main-text-color) !important
+
+.react-datepicker__month
+  margin: 0 !important
+  padding: 0.5rem
+  background: var(--bg-alt3)
+
+.react-datepicker__day--keyboard-selected, .react-datepicker__month-text--keyboard-selected,
+.react-datepicker__day:hover, .react-datepicker__month-text:hover,
+.react-datepicker__day--selected
+  background-color: var(--main-purple) !important
+
 .user-info
   &__textarea
     display: block
     border: none
     padding: 0.5rem
     width: 100%
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     resize: none
     color: var(--main-text-color)
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)

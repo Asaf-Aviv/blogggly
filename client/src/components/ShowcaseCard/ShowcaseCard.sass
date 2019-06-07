@@ -1,8 +1,8 @@
 .showcase
   &__card
-    border-radius: 8px
-    background: #FFF
-    height: 100%
+    position: relative
+    border-radius: var(--border-radius-large)
+    background: var(--bg-alt3)
     padding: 1rem
     display: flex
     flex-direction: column
@@ -10,7 +10,9 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
     .trash-btn
       margin-left: auto
-    &-link
+    .blogggly-link
+      color: var(--main-text-color)
+      margin-bottom: 0.75rem
       width: 100%
     .tags
       &__link

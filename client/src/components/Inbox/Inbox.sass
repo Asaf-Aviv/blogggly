@@ -1,41 +1,21 @@
 .inbox
   .container
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     display: flex
     align-items: flex-start
+    min-height: calc(100vh - 80px - 4rem)
     .empty__container
       padding: 2rem 0
-      border-radius: 5px
-      background: #FFF
+      border-radius: var(--border-radius-medium)
+      background: var(--bg-alt3)
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
-  &__header
-    border-radius: 5px
-    margin: 0 1rem 1rem 0
-    height: 50px
-    display: flex
-    background: #FFF
-    border-bottom: 1px solid #dadada
-    align-items: center
-    width: 25%
-    .avatar__container
-      height: auto
-    .avatar__figure
-      margin: 0 0.3rem
-  &__searchbar
-    height: 50px
-    flex: 1
-    min-width: 500px
-    padding: 0.5rem
-    background: #FFF
-    border-radius: 5px
   &__sidebar
     overflow: hidden
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     margin-right: 1rem
     width: 25%
-    background: #FFF
+    background: var(--bg-alt3)
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
   &-content
     &__container
       flex: 1
-      min-width: 500px

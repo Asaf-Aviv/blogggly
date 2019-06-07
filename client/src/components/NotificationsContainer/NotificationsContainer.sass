@@ -6,9 +6,8 @@
     top: 100%
     width: 400px
     right: 10px
-    background: #FFF
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     z-index: 100
     &::after
       content: ''
@@ -17,8 +16,12 @@
       height: 0
       border-left: 10px solid transparent
       border-right: 10px solid transparent
-      border-bottom: 10px solid #FFF
+      border-bottom: 10px solid var(--bg-alt)
       top: -10px
       right: 10px
     .empty
       margin: 1rem 0
+  &__wrapper
+    overflow: hidden
+    border-radius: var(--border-radius-medium)
+    background: var(--bg-alt3)

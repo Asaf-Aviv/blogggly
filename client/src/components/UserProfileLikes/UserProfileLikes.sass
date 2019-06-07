@@ -11,23 +11,28 @@
     font-weight: 600
     letter-spacing: inherit
     outline: 0
-    background: #FFF
-    color: #4d537b
-    border: 0
+    background: var(--bg-alt3)
+    color: var(--main-text-color)
+    border: none
     transition: all 150ms
+    &:first-of-type
+      border-top-left-radius: var(--border-radius-medium)
+      border-bottom-left-radius: var(--border-radius-medium)
+    &:last-of-type
+      border-top-right-radius: var(--border-radius-medium)
+      border-bottom-right-radius: var(--border-radius-medium)
     &:hover, &--active
-      background: var(--nav-bg-color)
+      background: var(--main-purple)
       color: #FFF
   &__item
     padding: 1rem
-    background: #FFF
+    background: var(--bg-alt3)
     margin-bottom: 1rem
-    border-radius: 5px
+    border-radius: var(--border-radius-medium)
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
-  &__link
-    width: 100%
-    font-weight: 600
-    display: inline-block
+  &__header
+    margin-bottom: 0.75rem
+    .blogggly-link:nth-of-type(2)
+      color: var(--main-text-color)
+  &__body
     margin-bottom: 0.5rem
-    &:active
-      color: inherit

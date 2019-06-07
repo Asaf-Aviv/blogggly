@@ -3,11 +3,15 @@
     padding: 0.75rem 2.5rem 0.75rem 0.5rem
     position: relative
     font-size: 14px
-    border-bottom: 1px solid #dcdcdc
+    border-top: 1px solid var(--border-color)
     display: flex
     align-items: center
-    &--unread
-      background: #716bcc1a
+    &:first-child
+      border: none
+    &--unread, 
+      background: var(--bg-alt)
+    &:hover
+      background: var(--bg-alt2)
     .avatar__container
       margin-right: 0.5rem
   &__delete-btn
