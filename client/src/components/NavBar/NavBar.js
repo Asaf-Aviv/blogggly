@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
-import { func } from 'prop-types';
+import { func, bool } from 'prop-types';
 import { MemberFormsContext, UserContext } from '../../context';
 import Container from '../Container';
 import MemberForms from '../MemberForms';
 import NavMenu from '../NavMenu';
 import NavBarUserPanel from '../NavBarUserPanel';
+import Button from '../Button';
+import Toggler from '../Toggler';
 import NavSearchBar from '../NavSearchBar';
 
 import './NavBar.sass';
-import Button from '../Button';
 
-const NavBar = ({ logout }) => {
+const NavBar = ({ logout, isDarkMode, toggleDarkMode }) => {
   const { isLogged } = useContext(UserContext);
 
   const { showMemberForms, setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
@@ -21,6 +22,7 @@ const NavBar = ({ logout }) => {
         <nav className="nav">
           <NavMenu />
           <NavSearchBar />
+          <Toggler checked={isDarkMode} onChange={toggleDarkMode} />
           {isLogged ? (
             <NavBarUserPanel logout={logout} />
           ) : (
@@ -42,6 +44,8 @@ const NavBar = ({ logout }) => {
 
 NavBar.propTypes = {
   logout: func.isRequired,
+  isDarkMode: bool.isRequired,
+  toggleDarkMode: func.isRequired,
 };
 
 export default NavBar;
