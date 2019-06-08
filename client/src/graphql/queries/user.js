@@ -79,6 +79,9 @@ export const GET_USER_LIKES = gql`
       post {
         _id
         title
+        author {
+          ...userDetails
+        }
       }
       author {
         ...userDetails
