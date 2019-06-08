@@ -8,8 +8,10 @@ import './NotificationsContainer.sass';
 
 const NotificationsContainer = ({ classes, children }) => (
   <div className={`notifications__container ${classes}`} onClick={e => e.stopPropagation()}>
-    {children}
-    {children.length <= 2 && !children.every(Boolean) && <EmptySentence />}
+    <div className="notifications__wrapper">
+      {children}
+      {children.length <= 2 && !children.every(Boolean) && <EmptySentence />}
+    </div>
   </div>
 );
 

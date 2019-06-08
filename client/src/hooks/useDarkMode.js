@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 
 const useDarkMode = () => {
   const [isDarkMode, setIsDarkMode] = useState(getInitialMode());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     localStorage.setItem('isDarkMode', isDarkMode);
+    document.querySelector('html').classList[isDarkMode ? 'add' : 'remove']('dark-theme');
   }, [isDarkMode]);
 
   function toggleDarkMode() {

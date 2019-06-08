@@ -19,7 +19,7 @@ const Home = () => {
           <h1 className="home__title">Blogggly</h1>
           <h3 className="home__subtitle">Start your own blog in seconds, for free!</h3>
           <Button
-            classes="btn btn--success"
+            classes="btn btn--primary"
             text="Signup"
             onClick={() => {
               setShowLogin(false);

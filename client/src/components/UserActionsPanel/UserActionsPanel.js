@@ -4,7 +4,6 @@ import {
 } from 'prop-types';
 import FollowButton from '../FollowButton';
 import SendMessageModal from '../SendMessageModal';
-import ReportModal from '../ReportModal';
 import FriendRequestActions from '../FriendRequestActions';
 
 import './UserActionsPanel.sass';
@@ -25,7 +24,6 @@ const UserActionsPanel = ({
   isIncomingFriendRequest,
 }) => {
   const [showMessageModal, setShowMessageModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
   const [showFriendRequestPopUp, setShowFriendRequestPopUp] = useState(false);
 
   const setNextPopUpState = nextState => () => {
@@ -109,22 +107,12 @@ const UserActionsPanel = ({
             </div>
           )
       )}
-      <div className="action" onClick={() => setShowReportModal(true)}>
-        <i className="action__icon fas fa-flag" />
-      </div>
       <FollowButton following={following} userId={userId} username={username} />
       {showMessageModal && (
         <SendMessageModal
           userId={userId}
           username={username}
           closeModal={() => setShowMessageModal(false)}
-        />
-      )}
-      {showReportModal && (
-        <ReportModal
-          reportedId={userId}
-          type="user"
-          closeModal={() => setShowReportModal(false)}
         />
       )}
     </div>

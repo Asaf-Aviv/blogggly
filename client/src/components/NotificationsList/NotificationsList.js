@@ -2,16 +2,15 @@ import React from 'react';
 import {
   oneOfType, node, arrayOf, string,
 } from 'prop-types';
-import SimpleBar from 'simplebar-react';
 
 import './NotificationsList.sass';
 
 const NotificationsList = ({ children, classes }) => (
-  <SimpleBar>
-    <ul className={`notifications__list ${classes}`}>
+  <ul className={`notifications__list ${classes}`} data-simplebar>
+    <div>
       {children}
-    </ul>
-  </SimpleBar>
+    </div>
+  </ul>
 );
 
 NotificationsList.propTypes = {

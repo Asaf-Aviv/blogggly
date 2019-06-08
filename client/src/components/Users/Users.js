@@ -14,7 +14,7 @@ const Users = () => {
   const { loggedUser, isLogged } = useContext(UserContext);
 
   return (
-    <div className="users__main">
+    <div className="users">
       <Container>
         <UserSearchBar setUserQuery={setUserQuery} />
         {userQuery && (

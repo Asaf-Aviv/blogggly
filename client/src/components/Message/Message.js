@@ -11,9 +11,9 @@ import MessageModal from '../MessageModal';
 import ConfirmationModal from '../ConfirmationModal';
 import { UserContext } from '../../context';
 import ReportModal from '../ReportModal';
+import Button from '../Button';
 
 import './Message.sass';
-import Button from '../Button';
 
 const Message = ({ message, fromOrTo, loggedUserId }) => {
   const [showReplyModal, setShowReplyModal] = useState(false);
@@ -33,7 +33,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
   };
 
   const inInbox = (fromOrTo === 'from');
-  const sentOrReceived = inInbox;
+  const sentOrReceived = inInbox ? 'inbox' : 'sent';
 
   return (
     <li key={message._id} className="message__container">
@@ -47,8 +47,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           mutation={queries.BOOKMARK_MESSAGE}
           variables={{ messageId: message._id, inInbox }}
           onCompleted={({ bookmarkMessage }) => {
-            console.log(bookmarkMessage);
-            updateLoggedUserInbox(inInbox, bookmarkMessage);
+            updateLoggedUserInbox(sentOrReceived, bookmarkMessage);
           }}
           onError={utils.UIErrorNotifier}
         >
@@ -67,7 +66,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
           onError={utils.UIErrorNotifier}
         >
           {moveToTrash => (
-            <Button className="message__btn" onClick={moveToTrash}>
+            <Button classes="message__btn" onClick={moveToTrash}>
               {message.inTrash
                 ? 'Restore'
                 : <i className="fas fa-trash" />

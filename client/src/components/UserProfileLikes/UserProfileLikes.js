@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
-import { Link } from 'react-router-dom';
 import {
-  arrayOf, string, shape, number, bool, func,
+  arrayOf, string, shape, number,
 } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
+import Button from '../Button';
 import Likes from '../Likes';
+import BloggglyLink from '../BloggglyLink';
 
 import './UserProfileLikes.sass';
-import Button from '../Button';
 
 const UserProfilePostLike = ({ post }) => (
   <div className="user-likes__item">
-    <Link className="user-likes__link" to={`/post/${post._id}`}>
-      <span>{post.title}</span>
-    </Link>
+    <div className="user-likes__header">
+      <span>on </span>
+      <BloggglyLink to={`/user/${post.author.username}`} text={post.author.username} />
+      {' post '}
+      <BloggglyLink to={`/post/${post._id}`} text={post.title} />
+    </div>
     <Likes
       likesCount={post.likesCount}
       id={post._id}
@@ -36,10 +39,13 @@ UserProfilePostLike.propTypes = {
 
 const UserProfileCommentLike = ({ comment }) => (
   <div className="user-likes__item">
-    <Link className="user-likes__link" to={`/post/${comment.post._id}`}>
-      <span>{comment.post.title}</span>
-    </Link>
-    <p>{comment.body}</p>
+    <div className="user-likes__header">
+      <span>on </span>
+      <BloggglyLink to={`/user/${comment.post.author.username}`} text={comment.post.author.username} />
+      {' post '}
+      <BloggglyLink to={`/post/${comment.post._id}`} text={comment.post.title} />
+    </div>
+    <p className="user-likes__body">{comment.body}</p>
     <Likes
       likesCount={comment.likesCount}
       id={comment._id}
@@ -66,20 +72,6 @@ UserProfileCommentLike.propTypes = {
   }).isRequired,
 };
 
-const UserProfileLikesTab = ({ changeTab, text, active }) => (
-  <Button
-    classes={`user-likes__tab ${active ? 'user-likes__tab--active' : ''}`}
-    onClick={changeTab}
-    text={text}
-  />
-);
-
-UserProfileLikesTab.propTypes = {
-  changeTab: func.isRequired,
-  text: string.isRequired,
-  active: bool.isRequired,
-};
-
 const UserProfileLikes = ({ likes }) => {
   const [showCategory, setShowCategory] = useState('posts');
 
@@ -95,15 +87,15 @@ const UserProfileLikes = ({ likes }) => {
         return (
           <div className="user-likes">
             <div className="user-likes__tabs-container">
-              <UserProfileLikesTab
+              <Button
+                classes={`user-likes__tab ${showCategory === 'posts' ? 'user-likes__tab--active' : ''}`}
+                onClick={() => setShowCategory('posts')}
                 text="Posts"
-                changeTab={() => setShowCategory('posts')}
-                active={showCategory === 'posts'}
               />
-              <UserProfileLikesTab
+              <Button
+                classes={`user-likes__tab ${showCategory === 'comments' ? 'user-likes__tab--active' : ''}`}
+                onClick={() => setShowCategory('comments')}
                 text="Comments"
-                changeTab={() => setShowCategory('comments')}
-                active={showCategory === 'comments'}
               />
             </div>
             {showCategory === 'posts'

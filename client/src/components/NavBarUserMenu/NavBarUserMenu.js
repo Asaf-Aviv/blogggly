@@ -45,7 +45,7 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
               username={loggedUser.username}
               avatar={loggedUser.avatar}
             />
-            <h4>{loggedUser.username}</h4>
+            <h4 className="user-menu__username">{loggedUser.username}</h4>
           </div>
           <div className="dropdown__divider" />
           <ul className="dropdown" onClick={() => setIsOpen(false)}>

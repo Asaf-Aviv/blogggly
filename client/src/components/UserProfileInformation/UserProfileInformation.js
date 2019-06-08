@@ -102,7 +102,7 @@ const UserProfileInformation = ({ userInfo }) => {
               <Label labelFor="bio">
                 <textarea
                   placeholder="Bio"
-                  className="user-info__textarea"
+                  className="textarea user-info__textarea"
                   value={bio}
                   onChange={e => setBio(e.target.value)}
                   rows="6"

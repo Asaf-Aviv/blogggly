@@ -49,8 +49,8 @@ const ReportModal = ({ reportedId, type, closeModal }) => {
               Thank you for taking the time to make blogggly a better place.
             </h3>
             <textarea
-              rows="4"
-              className="report-form__textarea"
+              rows="6"
+              className="textarea report-form__textarea"
               placeholder="Please describe the reason of the report"
               onChange={e => setReason(e.target.value)}
               required

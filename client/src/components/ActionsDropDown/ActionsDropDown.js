@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { oneOf, string, bool } from 'prop-types';
+import {
+  oneOf, string, bool, func,
+} from 'prop-types';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import ReportModal from '../ReportModal/ReportModal';
 import DeletePostButton from '../DeletePostButton';
@@ -10,7 +12,7 @@ import RemoveFriendButton from '../DeleteFriendButton';
 import './ActionsDropDown.sass';
 
 const ActionsDropDown = ({
-  type, resourceId, isAuthor, postId, isAFriend,
+  type, resourceId, isAuthor, postId, isAFriend, onCompletedCb,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -31,7 +33,13 @@ const ActionsDropDown = ({
             ? (
               <>
                 {type === 'post' && <DeletePostButton postId={resourceId} />}
-                {type === 'comment' && <DeleteCommentButton commentId={resourceId} postId={postId} />}
+                {type === 'comment' && (
+                  <DeleteCommentButton
+                    commentId={resourceId}
+                    postId={postId}
+                    onCompletedCb={onCompletedCb}
+                  />
+                )}
               </>
             )
             : (
@@ -61,12 +69,14 @@ ActionsDropDown.propTypes = {
   isAuthor: bool,
   isAFriend: bool,
   postId: string,
+  onCompletedCb: func,
 };
 
 ActionsDropDown.defaultProps = {
   postId: '',
   isAFriend: false,
   isAuthor: false,
+  onCompletedCb: null,
 };
 
 export default ActionsDropDown;

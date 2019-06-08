@@ -15,14 +15,12 @@ const NotificationItem = ({
     : '';
 
   return (
-    <li>
-      <div className={`notifications__item ${isReadClass}`}>
-        <UserAvatar avatar={avatar} username={username} width={40} />
-        <div className="notifications__content">
-          <BloggglyLink to={`/user/${username}`} text={username} />
-          {' '}
-          {children}
-        </div>
+    <li className={`notifications__item ${isReadClass}`}>
+      <UserAvatar avatar={avatar} username={username} width={40} />
+      <div className="notifications__content">
+        <BloggglyLink to={`/user/${username}`} text={username} />
+        {' '}
+        {children}
       </div>
     </li>
   );
