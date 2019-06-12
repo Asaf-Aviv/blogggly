@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   string, shape, arrayOf, number, bool, func,
 } from 'prop-types';
 import { UserShortSummaryPropTypes } from '../../propTypes';
 import Likes from '../Likes';
-import DeleteCommentButton from '../DeleteCommentButton';
+import ActionsDropDown from '../ActionsDropDown';
+import BloggglyLink from '../BloggglyLink';
 
 import './UserProfileComment.sass';
 
@@ -13,11 +13,12 @@ const UserProfileComment = ({
   comment, comment: { post }, isDeleted, addToDeletionQueue,
 }) => (
   <li className={`user-profile-comment__container ${isDeleted ? 'deleted' : ''}`}>
-    <Link to={`/post/${post._id}`}>
-      <h4 className="user-profile-comment__post-title">
-        {`on ${post.author.username} post ${post.title}`}
-      </h4>
-    </Link>
+    <div className="user-profile-comment__header">
+      {'on '}
+      <BloggglyLink to={`/user/${post.author.username}`} text={post.author.username} />
+      {' post '}
+      <BloggglyLink to={`/post/${post._id}`} classes="" text={post.title} />
+    </div>
     <p className="user-profile-comment__comment-body">{comment.body}</p>
     <div className="likes__wrapper">
       <Likes
@@ -25,10 +26,12 @@ const UserProfileComment = ({
         likesCount={comment.likesCount}
         likes={comment.likes}
       />
-      <DeleteCommentButton
-        commentId={comment._id}
-        postId={post._id}
+      <ActionsDropDown
         onCompletedCb={addToDeletionQueue}
+        type="comment"
+        resourceId={comment._id}
+        postId={comment.post._id}
+        isAuthor
       />
     </div>
   </li>

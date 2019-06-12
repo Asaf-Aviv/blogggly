@@ -1,50 +1,29 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Query } from 'react-apollo';
-import { string, shape } from 'prop-types';
-import ShowcaseCard from '../ShowcaseCard';
 import Container from '../Container';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
-import { UserContext } from '../../context';
+import PostList from '../PostsList';
 
 import './Posts.sass';
 
-const Posts = ({ match: { params: { tag } } }) => {
-  const { loggedUser, isLogged } = useContext(UserContext);
+const Posts = () => (
+  <Query
+    query={queries.GET_FEATURED_POSTS}
+    onError={utils.UIErrorNotifier}
+  >
+    {({ loading, data: { posts } }) => {
+      if (loading) return null;
 
-  return (
-    <Query
-      query={queries.GET_POSTS_BY_TAG}
-      variables={{ tag }}
-      onError={utils.UIErrorNotifier}
-    >
-      {({ loading, data: { posts } }) => {
-        if (loading) return null;
-
-        return (
+      return (
+        <div className="posts">
           <Container>
-            <div className="posts__container">
-              {posts.map(post => (
-                <ShowcaseCard
-                  key={post._id}
-                  post={post}
-                  isAuthor={isLogged && loggedUser._id === post.author._id}
-                />
-              ))}
-            </div>
+            <PostList posts={posts} />
           </Container>
-        );
-      }}
-    </Query>
-  );
-};
-
-Posts.propTypes = {
-  match: shape({
-    params: shape({
-      tag: string.isRequired,
-    }).isRequired,
-  }).isRequired,
-};
+        </div>
+      );
+    }}
+  </Query>
+);
 
 export default Posts;

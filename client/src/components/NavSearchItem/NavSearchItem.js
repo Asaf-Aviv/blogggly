@@ -1,8 +1,10 @@
 import React from 'react';
 import { func } from 'prop-types';
-import { Link } from 'react-router-dom';
 import { SearchPostPropTypes } from '../../propTypes';
 import UserAvatar from '../UserAvatar';
+import BloggglyLink from '../BloggglyLink';
+
+import './NavSearchItem.sass';
 
 const NavSearchItem = ({ post, hideResults }) => (
   <li className="nav-search-results__item">
@@ -11,10 +13,12 @@ const NavSearchItem = ({ post, hideResults }) => (
       username={post.author.username}
       width={40}
     />
-    <h4 className="nav-search-results__author">{`by ${post.author.username}`}</h4>
-    <Link to={`/post/${post._id}`} onClick={hideResults}>
-      <h4>{post.title}</h4>
-    </Link>
+    <BloggglyLink
+      to={`/user/${post.author.username}`}
+      onClick={hideResults}
+      text={post.author.username}
+    />
+    <BloggglyLink to={`/post/${post._id}`} onClick={hideResults} text={post.title} />
   </li>
 );
 

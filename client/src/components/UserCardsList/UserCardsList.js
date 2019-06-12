@@ -27,9 +27,9 @@ const UserCardsList = ({ userIds }) => {
                 following={loggedUser.following.includes(user._id)}
                 isIncomingFriendRequest={loggedUser.incomingFriendRequests.includes(user._id)}
                 friendRequestPending={
-                loggedUser.incomingFriendRequests.includes(user._id)
-                || loggedUser.sentFriendRequests.includes(user._id)
-              }
+                  loggedUser.incomingFriendRequests.includes(user._id)
+                  || loggedUser.sentFriendRequests.includes(user._id)
+                }
                 isAFriend={loggedUser.friends.includes(user._id)}
               />
             )

@@ -26,7 +26,7 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
   return (
     <div ref={dropdown} className="user-menu">
       <Button
-        classes="user-menu__btn"
+        classes="user-menu__btn animated bounceIn fast delay-300ms"
         onClick={() => setIsOpen(!isOpen)}
       >
         <UserAvatar

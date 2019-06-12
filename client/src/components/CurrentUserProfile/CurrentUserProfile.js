@@ -27,7 +27,7 @@ const CurrentUserProfile = ({ match: { path } }) => {
           <Route exact path={`${path}/information`} render={() => <UserProfileInformation userInfo={loggedUser.info} />} />
           <Route exact path={`${path}/posts`} render={() => <UserProfilePosts postIds={loggedUser.posts} />} />
           <Route exact path={`${path}/comments`} render={() => <UserProfileComments commentIds={loggedUser.comments} />} />
-          <Route exact path={`${path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} />} />
+          <Route exact path={`${path}/followers`} render={() => <UserProfileFollows userIds={loggedUser.followers} followers />} />
           <Route exact path={`${path}/following`} render={() => <UserProfileFollows userIds={loggedUser.following} />} />
           <Route exact path={`${path}/friends`} render={() => <UserProfileFriends userIds={loggedUser.friends} />} />
           <Route exact path={`${path}/likes`} render={() => <UserProfileLikes likes={loggedUser.likes} />} />

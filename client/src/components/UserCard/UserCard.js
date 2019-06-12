@@ -18,7 +18,7 @@ const UserCard = ({
     <ActionsDropDown resourceId={user._id} type="user" isAFriend={isAFriend} />
     <header className="user-card__header">
       <UserAvatar avatar={user.avatar} username={user.username} />
-      <Link className="user-card__link" to={`user/${user.username}`}>
+      <Link className="user-card__link" to={`/user/${user.username}`}>
         <h3>{user.username}</h3>
       </Link>
     </header>

@@ -1,18 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   shape, number, string, arrayOf, bool,
 } from 'prop-types';
 import Tags from '../Tags';
-import DeletePostButton from '../DeletePostButton';
+import BloggglyLink from '../BloggglyLink';
+import ActionsDropDown from '../ActionsDropDown';
 
 import './ShowcaseCard.sass';
 
 const ShowcaseCard = ({ post, isAuthor }) => (
   <div className="showcase__card">
-    <Link to={`/post/${post._id}`} className="showcase__card-link">
-      <h5 className="showcase__card-title">{post.title}</h5>
-    </Link>
+    <BloggglyLink to={`/post/${post._id}`} text={post.title} />
     <Tags tags={post.tags} />
     <div className="showcase__footer">
       <div className="showcase__feedback">
@@ -23,7 +21,7 @@ const ShowcaseCard = ({ post, isAuthor }) => (
         <i className="icon comments-icon fas fa-comments" />
         <span className="showcase__feedback-count">{post.commentsCount}</span>
       </div>
-      {isAuthor && <DeletePostButton postId={post._id} />}
+      {<ActionsDropDown type="post" resourceId={post._id} isAuthor={isAuthor} />}
     </div>
   </div>
 );

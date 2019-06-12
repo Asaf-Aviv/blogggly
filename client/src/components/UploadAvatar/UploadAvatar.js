@@ -20,10 +20,10 @@ const UploadAvatar = () => {
     y: 0,
   });
 
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
+
   const fileInputRef = useRef();
   const imageRef = useRef();
-
-  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   useEffect(() => {
     setCroppedImageUrl('');
@@ -147,7 +147,7 @@ const UploadAvatar = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="upload">
         <div className="upload__avatar" onClick={toggleFileUpload}>
           <input ref={fileInputRef} hidden type="file" accept="image/*" onChange={onSelectFile} />
@@ -172,7 +172,7 @@ const UploadAvatar = () => {
           <Button onClick={resetAll} text="Cancel" />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
