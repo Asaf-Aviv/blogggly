@@ -8,6 +8,7 @@ module.exports = {
     post: async (root, { postId }, { postLoader }) => (
       postLoader.load(postId)
     ),
+    featuredPosts: () => Post.getFeaturedPosts(),
     postsByTag: async (root, { tag }) => Post.find({ tags: { $in: [tag] } }),
     getPostsByIds: (root, { postIds }, { postLoader }) => (
       postLoader.loadMany(postIds)
