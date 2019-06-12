@@ -3,16 +3,16 @@ import { Mutation } from 'react-apollo';
 import { CountryDropdown } from 'react-country-region-selector';
 import { shape, string } from 'prop-types';
 import Alert from 'react-s-alert';
+import { Helmet } from 'react-helmet';
 import DatePicker from 'react-datepicker';
 import Label from '../Label';
-import UploadAvatar from '../UploadAvatar';
 import Input from '../Input';
 import queries from '../../graphql/queries';
+import { UserContext } from '../../context';
+import Button from '../Button';
 
 import './UserInformation.sass';
 import 'react-datepicker/dist/react-datepicker.css';
-import { UserContext } from '../../context';
-import Button from '../Button';
 
 const UserProfileInformation = ({ userInfo }) => {
   const [firstname, setFirstname] = useState(userInfo.firstname);
@@ -24,7 +24,7 @@ const UserProfileInformation = ({ userInfo }) => {
     (userInfo.dateOfBirth && new Date(userInfo.dateOfBirth)) || null,
   );
 
-  const { setLoggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   return (
     <Mutation
@@ -48,7 +48,9 @@ const UserProfileInformation = ({ userInfo }) => {
     >
       {updateUserInfo => (
         <div className="user-info">
-          <UploadAvatar />
+          <Helmet>
+            <title>{`${loggedUser.username}'s Information - Blogggly`}</title>
+          </Helmet>
           <form onSubmit={(e) => {
             e.preventDefault();
             updateUserInfo();

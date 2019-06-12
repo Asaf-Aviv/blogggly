@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Helmet } from 'react-helmet';
 import Container from '../Container';
 import { UserContext } from '../../context';
 import InboxMenuItem from '../InboxMenuItem';
@@ -48,6 +49,9 @@ const Inbox = () => {
 
   return (
     <div className="inbox">
+      <Helmet>
+        <title>Inbox - Blogggly</title>
+      </Helmet>
       <Container>
         <InboxSideBar setCategory={setCategory}>
           {renderInboxItem('Inbox', 'inbox', inbox.filter(notInTrash).length, showCategory === 'inbox')}

@@ -2,6 +2,7 @@ import React, {
   useState, useContext, useEffect, useRef,
 } from 'react';
 import { Query } from 'react-apollo';
+import { Helmet } from 'react-helmet';
 import { arrayOf, string } from 'prop-types';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
@@ -11,7 +12,7 @@ import UserProfileComment from '../UserProfileComment/UserProfileComment';
 const UserProfileComments = ({ commentIds }) => {
   const [deletedCommentsIds, setDeletedCommentsIds] = useState([]);
 
-  const { setLoggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   const cacheDeletedComments = useRef([]);
 
@@ -45,6 +46,9 @@ const UserProfileComments = ({ commentIds }) => {
 
         return (
           <div className="user-profile__comments-container">
+            <Helmet>
+              <title>{`${loggedUser.username}'s Comments - Blogggly`}</title>
+            </Helmet>
             <ul>
               {data.comments.map(comment => (
                 comment

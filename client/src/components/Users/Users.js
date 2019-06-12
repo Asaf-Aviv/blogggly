@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Query } from 'react-apollo';
+import { Helmet } from 'react-helmet';
 import queries from '../../graphql/queries';
 import Container from '../Container';
 import UserSearchBar from '../UserSearchBar';
@@ -15,6 +16,9 @@ const Users = () => {
 
   return (
     <div className="users">
+      <Helmet>
+        <title>Users - Blogggly</title>
+      </Helmet>
       <Container>
         <UserSearchBar setUserQuery={setUserQuery} />
         {userQuery && (

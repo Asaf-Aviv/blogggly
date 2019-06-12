@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Query } from 'react-apollo';
 import {
   arrayOf, string, shape, number,
 } from 'prop-types';
+import { Helmet } from 'react-helmet';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Button from '../Button';
@@ -10,6 +11,7 @@ import Likes from '../Likes';
 import BloggglyLink from '../BloggglyLink';
 
 import './UserProfileLikes.sass';
+import { UserContext } from '../../context';
 
 const UserProfilePostLike = ({ post }) => (
   <div className="user-likes__item">
@@ -75,6 +77,8 @@ UserProfileCommentLike.propTypes = {
 const UserProfileLikes = ({ likes }) => {
   const [showCategory, setShowCategory] = useState('posts');
 
+  const { loggedUser } = useContext(UserContext);
+
   return (
     <Query
       query={queries.GET_USER_LIKES}
@@ -86,6 +90,9 @@ const UserProfileLikes = ({ likes }) => {
 
         return (
           <div className="user-likes">
+            <Helmet>
+              <title>{`${loggedUser.username}'s Likes - Blogggly`}</title>
+            </Helmet>
             <div className="user-likes__tabs-container">
               <Button
                 classes={`user-likes__tab ${showCategory === 'posts' ? 'user-likes__tab--active' : ''}`}

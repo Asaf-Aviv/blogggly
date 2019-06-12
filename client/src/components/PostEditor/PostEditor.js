@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { Mutation } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
@@ -90,6 +91,9 @@ const PostEditor = () => {
 
   return (
     <div className="create">
+      <Helmet>
+        <title>Create - Blogggly</title>
+      </Helmet>
       <Mutation
         mutation={queries.CREATE_POST}
         variables={{
