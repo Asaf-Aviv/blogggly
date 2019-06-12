@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { shape, string } from 'prop-types';
 import { capitalize } from 'lodash';
+import UploadAvatar from '../UploadAvatar';
 
 import './UserProfileNav.sass';
 
@@ -23,6 +24,7 @@ UserProfileNavLink.propTypes = {
 
 const UserProfileNav = ({ match: { url } }) => (
   <nav className="user-profile__sidebar">
+    <UploadAvatar />
     <ul className="user-profile__menu">
       <UserProfileNavLink to={`${url}/information`} />
       <UserProfileNavLink to={`${url}/posts`} />
