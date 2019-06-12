@@ -22,7 +22,7 @@
 .nav-search-results
   display: none
   position: fixed
-  background: rgba(0, 0, 0, 0.5)
+  background: var(--transparent-bg)
   top: 80px
   left: 0
   right: 0
@@ -31,22 +31,12 @@
   max-height: calc(100vh - 80px)
   overflow-y: auto
   overflow-x: hidden
+  z-index: 100
   &--active
     display: block
   &__list
     max-width: 786px
     margin: 0 auto
-  &__item
-    display: flex
-    align-items: center
-    padding: 1rem
-    background: #FFF
-    border-radius: 5px
-    margin-top: 1rem
-    &:first-child
-      margin-top: 0
-  &__author
-    margin: 0 0.5rem
   &__close-btn
     position: absolute
     top: 15px
@@ -61,7 +51,3 @@
     transition: color 150ms
     &:hover, &:active
       color: #FFF
-
-.dark-theme
-  .nav__search-bar-input
-    border: 1px solid var(--border-color)

@@ -13,24 +13,30 @@
   --button-bg-primary: #5941A9
   --button-bg-primary-light: #7659d6
   --button-bg-primary-dark: #4d3a8e
-
   --button-bg-danger: #a50000
+
+  --shadow-small: 0 2px 10px rgba(0, 0, 0, 0.15)
+  --shadow-medium: 0 5px 10px rgba(0, 0, 0, 0.15)
+  --shadow-large: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
 
   --main-purple: #8148f6
 
+  --transparent-bg: rgba(0, 0, 0, 0.7)
+  --shadow-color: rgba(0, 0, 0, 0.1)
   --bg-alt: #f0e8ff
-  --bg-alt2: #eae0ff
+  --bg-alt2: #f7f3ff
   --bg-alt3: #FFF
   --bg-alt4: #272629
   --body-bg-color: #fbfbfb
   --body-text-color: #19171c
+  --main-text-color: #19171c
   --divider-color: #cecece
-  --text-color-alt: #FFF
-  --text-color-alt2: #FFF
-  --text-color-alt3: #FFF
-  --text-color-colored: #2e6c73
+  --text-alt: #FFF
+  --text-alt2: #dadada
+  --text-alt3: #444
+  --text-colored: #2e6c73
   --nav-bg-color: #8148f6
-  --nav-link-color: #ababab
+  --nav-link-color: #cacaca
   --nav-link-color-active: #FFF
   --main-link-color: #755ad0
   --text-title-color: #8148f6
@@ -49,10 +55,12 @@
   // --body-bg-color: #f3f3f3
   // --main-link-color: #716bcc
   &.dark-theme
+    --shadow-color: rgba(0, 0, 0, 0.5)
+    --transparent-bg: rgba(0, 0, 0, 0.4)
     --bg-alt: #444048
-    --bg-alt2: #43404a
+    --bg-alt2: #252429
     --bg-alt3: #322f37
-    --body-bg-color: #0f0e11
+    --body-bg-color: #3e3a46
     --main-text-color: #f8f8f8
     --divider-color: #4a4a4a
     --nav-bg-color: #232323
@@ -65,7 +73,7 @@
     --color-text-secondary: #b3b3b3
     --text-alt: #FFF
     --text-alt2: #8a8a8a
-    --text-alt3: #8a8a8a
+    --text-alt3: #e6e6e6
 
 body
   -webkit-font-smoothing: antialiased
@@ -90,6 +98,10 @@ ol
 ul
   list-style: none
 
+@for $i from 1 through 9
+  .delay-#{$i}00ms
+    animation-delay: calc(100ms * #{$i})
+
 ::placeholder
   color: var(--color-text-secondary)
 
@@ -106,6 +118,9 @@ ul
     
 .textarea
   padding: 1rem
+
+.heart
+  cursor: pointer
 
 .simplebar-scrollbar
   &::before

@@ -1,15 +1,15 @@
 .post
+  position: relative
   margin-bottom: 4rem
   padding: 2rem
-  background: #FFF
+  background: var(--bg-alt3)
   border-radius: var(--border-radius-medium)
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
-  &__header
-    position: relative
   .follow-btn
     margin-right: 1rem
   &__title
     font-size: 22px
+    line-height: 1.5
     margin-bottom: 1rem
     padding: 0 3.8rem
   &__tags
@@ -19,6 +19,8 @@
     font-size: 14px
     line-height: 24px
   &__body
+    font-size: 18px
+    line-height: 1.5
     display: block
     padding: 0 3.8rem
     margin-bottom: 1rem
@@ -28,7 +30,6 @@
   .likes__container
     margin-left: 3.8rem
     .heart
+      cursor: pointer
       margin-right: 1rem
 
-.heart, .like-count
-  cursor: pointer

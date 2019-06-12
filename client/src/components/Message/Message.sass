@@ -1,14 +1,18 @@
 .message
   &__container
+    padding: 
     margin-bottom: 1rem
+    padding: 0.5rem
     background: var(--bg-alt3)
-    border-radius: var(--border-radius-medium)
+    border-radius: var(--border-radius-large)
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
+    .modal:nth-of-type(2n)
+      background: transparent
   &__from
     color: var(--main-link-color)
     font-weight: 600
     display: inline-block
-    margin-right: 0.5rem
+    margin-right: 1rem
   &__wrapper
     padding: 0.5rem
     cursor: pointer
@@ -19,7 +23,7 @@
     font-style: italic
     display: inline-block
     margin-left: 1rem
-  &__actions
+  &__actions-panel
     display: flex
     padding: 0.5rem
     font-size: 1.5rem
@@ -37,3 +41,4 @@
     border: none
     outline: none
     background: none
+
