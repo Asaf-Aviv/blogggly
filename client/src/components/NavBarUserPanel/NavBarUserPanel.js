@@ -13,10 +13,10 @@ const NavBarUserPanel = ({ logout }) => {
 
   return (
     <div className="navbar-user-panel">
-      <NavNotification iconClass="fas fa-bell">
+      <NavNotification iconClass="fas fa-bell animated bounceIn fast delay-100ms">
         <Notifications />
       </NavNotification>
-      <NavNotification iconClass="fas fa-user-plus">
+      <NavNotification iconClass="fas fa-user-plus animated bounceIn fast delay-200ms">
         <FriendRequestNotifications />
       </NavNotification>
       <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
