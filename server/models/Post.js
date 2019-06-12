@@ -98,6 +98,10 @@ PostSchema.statics.findPostById = async function (postId, options = {}) {
   return post;
 };
 
+PostSchema.statics.getFeaturedPosts = function () {
+  return this.find({}).sort({ likesCount: -1, commentsCount: -1 });
+};
+
 PostSchema.statics.toggleLike = async function (postId, userId) {
   const [post, user] = await Promise.all([
     this.findPostById(postId),
