@@ -1,5 +1,13 @@
 import gql from 'graphql-tag';
 
+const authorShortSummary = `
+  author {
+    _id
+    username
+    avatar
+  }
+`;
+
 export const GET_POSTS_BY_IDS = gql`
   query getPostsByIds($postIds: [ID!]!) {
     posts: getPostsByIds(postIds: $postIds) {
@@ -8,11 +16,21 @@ export const GET_POSTS_BY_IDS = gql`
       likesCount
       commentsCount
       tags
-      author {
-        _id
-        username
-        avatar
-      }
+      ${authorShortSummary}
+    }
+  }
+`;
+
+export const GET_FEATURED_POSTS = gql`
+  query {
+    posts: featuredPosts {
+      _id
+      title
+      tags
+      createdAt
+      likesCount
+      commentsCount
+      ${authorShortSummary}
     }
   }
 `;
@@ -26,11 +44,7 @@ export const GET_POSTS_BY_TAG = gql`
       createdAt
       likesCount
       commentsCount
-      author {
-        _id
-        username
-        avatar
-      }
+      ${authorShortSummary}
     }
   }
 `;
@@ -40,11 +54,7 @@ export const SEARCH_POSTS = gql`
     posts: searchPosts(postQuery: $postQuery) {
       _id
       title
-      author {
-        _id
-        avatar
-        username
-      }
+      ${authorShortSummary}
     }
   }
 `;
@@ -61,11 +71,7 @@ export const POST = gql`
       commentsCount
       likesCount
       likes
-      author {
-        _id
-        username
-        avatar
-      }
+      ${authorShortSummary}
     }
   }
 `;
