@@ -146,8 +146,8 @@ export const LOGIN = gql`
 `;
 
 export const SIGNUP = gql`
-  mutation signup($userInput: UserInput!) {
-    signup(userInput: $userInput) {
+  mutation signup($signupInput: SignupInput!) {
+    signup(signupInput: $signupInput) {
       token
       _id
       username

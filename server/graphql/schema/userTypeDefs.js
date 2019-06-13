@@ -10,7 +10,7 @@ module.exports = gql`
   type Mutation {
     relog: CurrentUser!
     login(email: String!, password: String!): CurrentUser!
-    signup(userInput: UserInput!): CurrentUser!
+    signup(signupInput: SignupInput!): CurrentUser!
     updateUserInfo(info: UserInfoInput!): CurrentUser!
     toggleFollow(userId: ID!): ToggleFollow!
     sendFriendRequest(userId: ID!): ID!
@@ -135,10 +135,15 @@ module.exports = gql`
     sent: [Message!]!
   }
 
-  input UserInput {
+  input UserCredentialsInput {
     email: String!
     password: String!
     username: String!
+  }
+
+  input SignupInput {
+    credentials: UserCredentialsInput!
+    recaptcha: String
   }
 
   input UserInfoInput {

@@ -1,7 +1,9 @@
 
 import React, { useState, useContext } from 'react';
+import Alert from 'react-s-alert';
 import { Mutation } from 'react-apollo';
 import { func } from 'prop-types';
+import { Helmet } from 'react-helmet';
 import Loader from '../Loader';
 import { UserContext } from '../../context';
 import queries from '../../graphql/queries';
@@ -15,18 +17,15 @@ const SignUp = ({ toggleForms, hideForms }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setToken, setLoggedUser } = useContext(UserContext);
+  const { setToken, setLoggedUser, isDarkMode } = useContext(UserContext);
 
   return (
     <Mutation
       mutation={queries.SIGNUP}
-      variables={{ userInput: { username, email, password } }}
-      errorPolicy="all"
       onError={utils.UIErrorNotifier}
       onCompleted={({ signup: currentUser }) => {
         setLoggedUser(() => currentUser);
         setToken(currentUser.token);
-        hideForms();
       }}
     >
       {(signup, { loading }) => (
@@ -35,9 +34,26 @@ const SignUp = ({ toggleForms, hideForms }) => {
           onClick={e => e.stopPropagation()}
           onSubmit={(e) => {
             e.preventDefault();
-            signup();
+            const recaptcha = document.querySelector('.g-recaptcha-response').value;
+
+            if (!recaptcha) {
+              Alert.info('Please click on the reCAPTCHA box');
+              return;
+            }
+
+            signup({
+              variables: {
+                signupInput: {
+                  credentials: { username, email, password },
+                  recaptcha,
+                },
+              },
+            });
           }}
         >
+          <Helmet>
+            <script src="https://www.google.com/recaptcha/api.js" />
+          </Helmet>
           <Button
             classes="member-form__close-btn"
             onClick={hideForms}
@@ -81,9 +97,15 @@ const SignUp = ({ toggleForms, hideForms }) => {
             />
           </Label>
           <span className="forgot">Forgot your password?</span>
+          <div
+            data-theme={isDarkMode ? 'dark' : 'light'}
+            className="g-recaptcha"
+            data-sitekey="6LfIlagUAAAAANtuiAwKeI-W2AmHZZg8hrsGtjlQ"
+          />
           <Button
             classes="member-form__submit btn btn--primary"
             text="Sign Up"
+            type="submit"
           />
           <span
             className="member-form__toggle"

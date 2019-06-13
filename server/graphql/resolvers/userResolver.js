@@ -1,4 +1,5 @@
 const { withFilter } = require('graphql-subscriptions');
+const axios = require('axios');
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
 const tags = require('../tags');
@@ -26,8 +27,17 @@ module.exports = {
 
       return { ...user, token };
     },
-    signup: async (root, { userInput }) => {
-      const currentUser = await User.createUser(userInput);
+    signup: async (root, { signupInput }) => {
+      const { data } = await axios({
+        method: 'POST',
+        url: 'https://www.google.com/recaptcha/api/siteverify',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: `secret=${process.env.RECAPTCHA_SECRET}&response=${signupInput.recaptcha}`,
+      });
+
+      if (!data.success) throw new Error('Bad reCAPTCHA');
+
+      const currentUser = await User.createUser(signupInput.credentials);
       const token = generateToken(currentUser._id, currentUser.username);
       return { ...currentUser._doc, token };
     },
