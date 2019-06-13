@@ -3,6 +3,7 @@ import { Query, Subscription } from 'react-apollo';
 import { shape, string } from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
+import { Helmet } from 'react-helmet';
 import Comments from '../Comments';
 import Container from '../Container';
 import AuthorDetails from '../AuthorDetails';
@@ -39,6 +40,16 @@ const Post = ({ match: { params: { postId } } }) => {
               {() => (
                 <Container>
                   <article className="post">
+                    <Helmet titleTemplate="%s - Blogggly">
+                      <title>{post.title}</title>
+                      <meta name="title" content={post.title} />
+                      <meta
+                        name="description"
+                        content={`${post.body.slice(0, 500).replace(/<[^>]*>?/gm, '').slice(0, post.body.lastIndexOf(' ', 200))}...`}
+                      />
+                      <link rel="author" href={`https://blogggly.com/user/${post.author.username}`} />
+                      <meta name="author" content={post.author.username} />
+                    </Helmet>
                     <header className="post__header">
                       <h1 className="post__title">{post.title}</h1>
                       <div className="post__tags">

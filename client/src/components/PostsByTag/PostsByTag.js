@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import { shape, string } from 'prop-types';
+import { Helmet } from 'react-helmet';
 import queries from '../../graphql/queries';
 import Container from '../Container';
 import PostsList from '../PostsList';
@@ -19,6 +20,9 @@ const PostsByTag = ({ match: { params: { tag } } }) => (
 
       return (
         <div className="posts-by-tag">
+          <Helmet>
+            <title>{`${tag} Posts - Blogggly`}</title>
+          </Helmet>
           <Container>
             <PostsList posts={posts} />
           </Container>

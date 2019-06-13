@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Query } from 'react-apollo';
 import Container from '../Container';
 import queries from '../../graphql/queries';
@@ -18,6 +19,9 @@ const Posts = () => (
       return (
         <div className="posts">
           <Container>
+            <Helmet>
+              <title>Posts - Blogggly</title>
+            </Helmet>
             <PostList posts={posts} />
           </Container>
         </div>
