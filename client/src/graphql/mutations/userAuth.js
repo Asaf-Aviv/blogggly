@@ -217,3 +217,15 @@ export const SIGNUP = gql`
     }
   }
 `;
+
+export const FORGOT_PASSWORD = gql`
+  mutation forgotPassword($email: String!) {
+    forgotPassword(email: $email)
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+  mutation resetPassword($email: String!, $password: String!, $confirmPassword: String!) {
+    resetPassword(email: $email, password: $password, confirmPassword: $confirmPassword)
+  }
+`;
