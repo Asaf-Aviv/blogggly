@@ -5,24 +5,29 @@ import { Mutation } from 'react-apollo';
 import { func } from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Loader from '../Loader';
-import { UserContext } from '../../context';
+import { UserContext, DarkModeContext } from '../../context';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Label from '../Label';
 import Input from '../Input';
 import Button from '../Button';
+import BloggglyLink from '../BloggglyLink';
 
 const SignUp = ({ toggleForms, hideForms }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setToken, setLoggedUser, isDarkMode } = useContext(UserContext);
+  const { setToken, setLoggedUser } = useContext(UserContext);
+  const { isDarkMode } = useContext(DarkModeContext);
 
   return (
     <Mutation
       mutation={queries.SIGNUP}
-      onError={utils.UIErrorNotifier}
+      onError={(err) => {
+        utils.UIErrorNotifier(err);
+        window.grecaptcha.reset();
+      }}
       onCompleted={({ signup: currentUser }) => {
         setLoggedUser(() => currentUser);
         setToken(currentUser.token);
@@ -60,7 +65,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
           >
             <i className="fas fa-times" />
           </Button>
-          <h1 className="member-form__title">Sign Up</h1>
+          <h2 className="member-form__title">Sign Up</h2>
           <Label labelFor="username">
             <Input
               onChange={setUsername}
@@ -75,7 +80,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
             <Input
               onChange={setEmail}
               value={email}
-              inputType="email"
+              type="email"
               iconClasses="fas fa-envelope"
               placeholder="Email"
               validateFunc={utils.validateEmail}
@@ -87,7 +92,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
             <Input
               onChange={setPassword}
               value={password}
-              inputType="password"
+              type="password"
               iconClasses="fas fa-lock"
               placeholder="Password"
               validateFunc={utils.validatePassword}
@@ -96,7 +101,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
               required
             />
           </Label>
-          <span className="forgot">Forgot your password?</span>
+          <BloggglyLink to="/forgot" classes="forgot" text="Forgot your password?" onClick={hideForms} />
           <div
             data-theme={isDarkMode ? 'dark' : 'light'}
             className="g-recaptcha"
