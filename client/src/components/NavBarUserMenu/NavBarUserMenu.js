@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import {
-  string, arrayOf, shape, func,
-} from 'prop-types';
+import { func, number } from 'prop-types';
 import Button from '../Button';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import UserAvatar from '../UserAvatar/UserAvatar';
+import UserAvatar from '../UserAvatar';
+import NotificationsWrapper from '../NotificationsWrapper';
+import Toggler from '../Toggler';
+import { DarkModeContext, UserContext } from '../../context';
 
 import './NavBarUserMenu.sass';
 
@@ -18,10 +19,13 @@ const renderItem = (to, iconClass, text) => (
   </li>
 );
 
-const NavBarUserMenu = ({ loggedUser, logout }) => {
+const NavBarUserMenu = ({ logout, windowWidth }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdown = useRef(null);
   useOutsideClick(dropdown, () => setIsOpen(false));
+  const { loggedUser } = useContext(UserContext);
+
+  const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
     <div ref={dropdown} className="user-menu">
@@ -47,6 +51,15 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
             />
             <h4 className="user-menu__username">{loggedUser.username}</h4>
           </div>
+          {windowWidth < 600 && (
+            <>
+              <div className="dropdown__divider" />
+              <div className="notifications__mobile">
+                <Toggler checked={isDarkMode} onChange={toggleDarkMode} />
+                <NotificationsWrapper />
+              </div>
+            </>
+          )}
           <div className="dropdown__divider" />
           <ul className="dropdown" onClick={() => setIsOpen(false)}>
             {renderItem('/create', 'fa-plus', 'Create')}
@@ -70,20 +83,8 @@ const NavBarUserMenu = ({ loggedUser, logout }) => {
 };
 
 NavBarUserMenu.propTypes = {
-  loggedUser: shape({
-    _id: string.isRequired,
-    username: string.isRequired,
-    email: string.isRequired,
-    posts: arrayOf(string).isRequired,
-    avatar: string.isRequired,
-    createdAt: string.isRequired,
-    comments: arrayOf(string).isRequired,
-  }),
   logout: func.isRequired,
-};
-
-NavBarUserMenu.defaultProps = {
-  loggedUser: null,
+  windowWidth: number.isRequired,
 };
 
 export default NavBarUserMenu;
