@@ -1,0 +1,30 @@
+.nav-search-results
+  display: none
+  position: fixed
+  background: var(--transparent-bg)
+  top: 80px
+  left: 0
+  right: 0
+  bottom: 0
+  padding: 3rem 1rem 1rem 1rem
+  z-index: 100
+  &--active
+    display: block
+  &__list
+    max-height: calc(100vh - 80px - 3rem)
+    max-width: 786px
+    margin: 0 auto
+  &__close-btn
+    position: absolute
+    top: 5px
+    right: 0
+    background: none
+    border: none
+    display: block
+    width: 45px
+    height: 45px
+    font-size: 25px
+    color: #c1c1c1
+    transition: color 150ms
+    &:hover, &:active
+      color: #FFF

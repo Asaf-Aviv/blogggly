@@ -1,5 +1,7 @@
+@import '../../sass/_mixins'
+
 .posts
-  min-height: calc(100vh - 80px - 4rem)
+  @include full-screen-min-height
   &__container
     .showcase__card
       margin-bottom: 2rem

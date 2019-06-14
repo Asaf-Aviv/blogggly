@@ -1,29 +1,63 @@
+@import '../../sass/_mixins'
+
 .home
-  min-height: calc(100vh - 80px - 4rem)
+  @include full-screen-min-height
   &__header
     padding: 4rem 2rem
     background: var(--bg-alt3)
-    border-radius: var(--border-radius-medium)
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
-    .btn--success
-      box-shadow: 0 9px 10px -8px #0a6d4d
+    border-radius: var(--border-radius-large)
+    box-shadow: var(--shadow-small)
+    @media (max-width: 786px)
+      padding: 2rem 1rem
+    @media (max-width: 600px)
+      .btn--primary
+        width: 100%
   &__title
   &__subtitle
+    font-weight: 400
+    color: var(--text-alt4)
     display: inline-block
     margin: 2rem 3rem 4rem 0
+    @media (max-width: 786px)
+      font-size: 1.25em
+      margin-right: 1rem
+    @media (max-width: 600px)
+      font-size: 1em
+      margin-right: 0
 
 .features
   display: flex
   justify-content: space-between
-  padding: 4rem 0
-  border-radius: var(--border-radius-medium)
+  flex-wrap: wrap
+  margin: var(--space-md) 0
+  border-radius: var(--border-radius-large)
+  @media (max-width: 900px)
+    justify-content: center
+  @media (max-width: 786px)
+    display: block
   &__card
-    padding: 3rem
-    border-radius: var(--border-radius-medium)
+    padding: var(--space-md) var(--space-sm)
+    box-shadow: var(--shadow-small)
+    border-radius: var(--border-radius-large)
     background: var(--bg-alt3)
-    flex-basis: 32%
+    color: var(--text-alt4)
+    flex-basis: 31%
     text-align: center
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
+    margin-bottom: var(--space-md)
+    max-width: 70%
+    @media (max-width: 900px)
+      flex: 1
+      &:first-of-type
+        margin-right: var(--space-md)
+      &:last-of-type
+        flex-basis: 70%
+
+    @media (max-width: 786px)
+      max-width: 70%
+      margin: 0 auto 2rem auto !important
+    @media (max-width: 600px)
+      max-width: 100%
+
   &-card
     &__icon
       display: inline-block

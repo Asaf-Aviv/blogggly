@@ -1,18 +1,39 @@
 .nav-menu
-  height: 100%
   display: flex
-  align-items: center
+  background: var(--nav-bg-color)
+  height: 100%
+  &__container
+    background: rgba(0, 0, 0, 0.7)
   &__item
-    height: 100%
     display: flex
-    align-items: center
   &__link
-    position: relative
-    font-weight: 600
     color: var(--nav-link-color)
     margin-right: 1rem
     transition: color 150ms
+    width: 100%
     line-height: 80px
     &:hover, &:active, &--active
       color: var(--nav-link-color-active)
 
+@media (max-width: 786px)
+  .nav-menu
+    width: 70%
+    padding-top: 15vh
+    flex-direction: column
+    &__container
+      position: fixed
+      top: 0
+      left: 0
+      height: 100vh
+      width: 100vw
+      z-index: 200
+      transition: transform 200ms
+      transform: translateX(-100%)
+      &--open
+        transform: translateX(0)
+    &__item
+      padding: 0 1.5rem
+      height: 40px
+    &__link
+      width: 100%
+      line-height: 40px

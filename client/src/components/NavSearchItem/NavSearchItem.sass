@@ -1,13 +1,20 @@
-.nav-search-results__item
-  display: flex
-  align-items: center
-  padding: 1rem
-  background: var(--bg-alt3)
-  border-radius: 5px
-  margin-top: 1rem
-  &:first-child
-    margin-top: 0
-  .blogggly-link:first-of-type
-    margin: 0 1rem
-  .blogggly-link:last-of-type
+.nav-search-results
+  .avatar__container
+    margin-right: 1rem
+  &__author
+    font-weight: 600
+    color: var(--main-link-color)
+    margin-left: 1rem
+  &__title
+    width: 100%
+    font-weight: 600
+    margin: 1rem 0
     color: var(--main-text-color)
+  &__inner-item
+    display: flex
+    align-items: center
+    padding: 1rem
+    background: var(--bg-alt3)
+    border-radius: 5px
+    margin-bottom: 1rem
+    flex-wrap: wrap

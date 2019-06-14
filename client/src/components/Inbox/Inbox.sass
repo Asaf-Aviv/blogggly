@@ -1,9 +1,11 @@
+@import '../../sass/_mixins'
+  
 .inbox
   .container
     border-radius: var(--border-radius-medium)
     display: flex
     align-items: flex-start
-    min-height: calc(100vh - 80px - 4rem)
+    @include full-screen-min-height
     .empty__container
       padding: 2rem 0
       border-radius: var(--border-radius-medium)

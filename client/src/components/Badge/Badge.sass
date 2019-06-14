@@ -1,10 +1,9 @@
 .badge
   position: absolute
   background: var(--bg-primary)
-  padding: 0 0.2rem
   min-width: 25px
   height: 22px
-  border-radius: 3px
+  border-radius: var(--border-radius-medium)
   color: #FFF
   top: -10px
   left: 60%
@@ -12,4 +11,10 @@
   justify-content: center
   font-weight: 600
   align-items: center
-  font-size: 16px
+  @media (max-width: 786px)
+    top: -2px
+    font-size: 14px
+    height: 20px
+    min-width: 23px
+  @media (max-width: 599px)
+    top: -15px

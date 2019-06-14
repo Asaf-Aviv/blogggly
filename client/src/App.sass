@@ -1,3 +1,5 @@
+@import './sass/mixins'
+  
 *
   margin: 0
   padding: 0
@@ -10,13 +12,22 @@
   --border-radius-large: 6px
   --border-radius-rounded: 50%
 
+  --space-sm: 20px
+  --space-md: 40px
+
   --button-bg-primary: #5941A9
   --button-bg-primary-light: #7659d6
   --button-bg-primary-dark: #4d3a8e
   --button-bg-danger: #a50000
 
-  --shadow-small: 0 2px 10px rgba(0, 0, 0, 0.15)
-  --shadow-medium: 0 5px 10px rgba(0, 0, 0, 0.15)
+  --button-bg-success: #2a9c68
+  --button-bg-success-light: #2fb578
+  --button-bg-success-dark: #227d54
+  --button-success-shadow: 0 3px 3px #0a844c
+  --button-success-shadow-active: 0 3px 3px #0a844c
+
+  --shadow-small: 0 3px 10px 2px rgba(0, 0, 0, 0.1)
+  --shadow-medium: 0 5px 10px 3px rgba(0, 0, 0, 0.1)
   --shadow-large: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
 
   --main-purple: #8148f6
@@ -34,8 +45,9 @@
   --text-alt: #FFF
   --text-alt2: #dadada
   --text-alt3: #444
+  --text-alt4: #909090
   --text-colored: #2e6c73
-  --nav-bg-color: #8148f6
+  --nav-bg-color: #8f77d6
   --nav-link-color: #cacaca
   --nav-link-color-active: #FFF
   --main-link-color: #755ad0
@@ -43,23 +55,14 @@
   --border-color: #c5c5c5
   --bg-primary: #1cbf8a
   --color-text-secondary: #ababab
-
-  // --nav-bg-color: #5a5c73
-
-  // --link-color:
-  // --link-color-active:
-
-  // --green: #1ab181
-  // --light-green: #29ffb9
-  // --light-black: #565656
-  // --body-bg-color: #f3f3f3
-  // --main-link-color: #716bcc
   &.dark-theme
+    --shadow-small: 0 3px 10px 2px #252427
     --shadow-color: rgba(0, 0, 0, 0.5)
     --transparent-bg: rgba(0, 0, 0, 0.4)
     --bg-alt: #444048
     --bg-alt2: #252429
     --bg-alt3: #322f37
+    --bg-primary: #8148f6
     --body-bg-color: #3e3a46
     --main-text-color: #f8f8f8
     --divider-color: #4a4a4a
@@ -69,11 +72,11 @@
     --border-color: #4a4a4a
     --main-link-color: #00ffa3
     --text-title-color: #00ffa3
-    --bg-primary: #8148f6
     --color-text-secondary: #b3b3b3
     --text-alt: #FFF
     --text-alt2: #8a8a8a
     --text-alt3: #e6e6e6
+    --text-alt4: #dadada
 
 body
   -webkit-font-smoothing: antialiased
@@ -81,19 +84,15 @@ body
   font-family: 'Montserrat', sans-serif
   background: var(--body-bg-color)
   color: var(--main-text-color)
+  padding-top: 120px
+  @media (max-width: 786px)
+    padding-top: 100px
 
 a
   text-decoration: none
 
 button
   cursor: pointer
-
-button, input, textarea
-  font-family: inherit
-  font-size: inherit
-  
-ol
-  padding-left: 1rem
 
 ul
   list-style: none
@@ -109,29 +108,24 @@ ul
   background: #7659d6
   color: #FFF
 
-.dark-theme
-  .input, .textarea
-    background: var(--bg-alt3)
-    caret-color: var(--color-text-secondary)
-    color: var(--main-text-color)
-    outline-color: var(--bg-primary)
-    
+.input
+  height: 50px
+  padding: 0 0.8rem
+
 .textarea
-  padding: 1rem
+  padding: 0.8rem
+
+.input, .textarea
+  background: var(--bg-alt3)
+  caret-color: var(--color-text-secondary)
+  color: var(--main-text-color)
+  border: none
+  outline-color: var(--main-purple)
+  border-radius: var(--border-radius-large)
+  box-shadow: var(--shadow-small)
 
 .heart
   cursor: pointer
-
-.simplebar-scrollbar
-  &::before
-    background: var(--text-color-alt)
-    border-radius: 6px
-    overflow: hidden
-    opacity: 1 !important
-
-.simplebar-track
-  color: red
-  background: var(--bg-alt)
 
 .main
   padding-top: 4rem
@@ -159,7 +153,7 @@ ul
   color: #ef1717
 
 .btn
-  font-size: 1rem
+  position: relative
   display: inline-block
   height: 50px
   padding: 0 1.5rem
@@ -167,6 +161,7 @@ ul
   background: none
   border: none
   outline: none
+  white-space: nowrap
   border-radius: 5px
   transition: background 150ms, color 150ms
   &--default
@@ -185,12 +180,14 @@ ul
     color: #FFF
   &--success
     color: #FFF
-    background: #1cbf8b
-    box-shadow: 0 9px 10px -8px #30b37f
+    background: var(--button-bg-success-light)
+    box-shadow: var(--button-success-shadow)
     &:hover
       background: #14966e
+      background: var(--button-bg-success)
     &:active
       background: #0f7556
+      background: var(--button-bg-success-dark)
   &--danger
     color: #FFF
     background: var(--button-bg-danger)

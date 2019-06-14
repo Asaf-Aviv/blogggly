@@ -1,0 +1,28 @@
+@mixin for-phone-only
+  @media (max-width: 599px)
+    @content
+
+@mixin for-tablet-portrait
+  @media (max-width: 600px)
+    @content
+
+@mixin for-tablet
+  @media (max-width: 786px)
+    @content
+
+@mixin for-tablet-landscape
+  @media (max-width: 900px)
+    @content
+
+@mixin for-desktop-up
+  @media (max-width: 1200px)
+    @content
+
+@mixin for-big-desktop-up
+  @media (max-width: 1800px)
+    @content
+
+@mixin full-screen-min-height
+  min-height: calc(100vh - 120px)
+  @media (max-width: 786px)
+    min-height: calc(100vh - 100px)
