@@ -49,7 +49,7 @@ const UserProfileInformation = ({ userInfo }) => {
       {updateUserInfo => (
         <div className="user-info">
           <Helmet>
-            <title>{`${loggedUser.username}'s Information - Blogggly`}</title>
+            <title>{`${loggedUser.username} - Information - Blogggly`}</title>
           </Helmet>
           <form onSubmit={(e) => {
             e.preventDefault();
@@ -76,39 +76,55 @@ const UserProfileInformation = ({ userInfo }) => {
             </div>
             <div className="user-info__input-group">
               <Label labelFor="country">
-                <CountryDropdown className="input" value={country} onChange={val => setCountry(val)} />
+                <div className="input__wrapper">
+                  <div className="input__container">
+                    <CountryDropdown className="input" value={country} onChange={val => setCountry(val)} />
+                  </div>
+                </div>
               </Label>
               <Label labelFor="gender">
-                <select
-                  className="input"
-                  onChange={e => setGender(e.target.value)}
-                  value={gender}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
+                <div className="input__wrapper">
+                  <div className="input__container">
+                    <select
+                      className="input"
+                      onChange={e => setGender(e.target.value)}
+                      value={gender}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                  </div>
+                </div>
               </Label>
             </div>
             <div className="user-info__input-group">
               <Label labelFor="date of birth" text="Date Of Birth">
-                <DatePicker
-                  placeholderText="MM/DD/YYYY"
-                  className="input"
-                  selected={dateOfBirth}
-                  onChange={date => setDateOfBirth(date)}
-                />
+                <div className="input__wrapper">
+                  <div className="input__container">
+                    <DatePicker
+                      placeholderText="MM/DD/YYYY"
+                      className="input"
+                      selected={dateOfBirth}
+                      onChange={date => setDateOfBirth(date)}
+                    />
+                  </div>
+                </div>
               </Label>
             </div>
             <div className="user-info__input-group">
               <Label labelFor="bio">
-                <textarea
-                  placeholder="Bio"
-                  className="textarea user-info__textarea"
-                  value={bio}
-                  onChange={e => setBio(e.target.value)}
-                  rows="6"
-                />
+                <div className="input__wrapper">
+                  <div className="input__container">
+                    <textarea
+                      placeholder="Bio"
+                      className="textarea user-info__textarea"
+                      value={bio}
+                      onChange={e => setBio(e.target.value)}
+                      rows="6"
+                    />
+                  </div>
+                </div>
               </Label>
             </div>
             <Button type="submit" classes="btn btn--success user-info__submit-btn" text="Update" />

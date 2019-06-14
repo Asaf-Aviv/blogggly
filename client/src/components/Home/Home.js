@@ -14,14 +14,14 @@ const Home = () => {
   const { setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
 
   return (
-    <div className="home">
+    <main className="home">
       <Helmet>
-        <title>Blogggly</title>
+        <title>Blogggly.com - Create your own blog for free.</title>
       </Helmet>
       <Container>
         <header className="home__header animated zoomIn fast">
           <h1 className="home__title animated delay-500ms fadeInUp">Blogggly</h1>
-          <h3 className="home__subtitle delay-700ms animated fadeInUp">Start your own blog in seconds, for free!</h3>
+          <h2 className="home__subtitle delay-700ms animated fadeInUp">Create your own free blog in seconds!</h2>
           <Button
             classes="btn btn--primary delay-700ms animated fadeInUp"
             text="Signup"
@@ -48,7 +48,7 @@ const Home = () => {
           </div>
         </section>
       </Container>
-    </div>
+    </main>
   );
 };
 

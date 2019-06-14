@@ -1,31 +1,20 @@
-import React, { useContext } from 'react';
-import { func } from 'prop-types';
-import { UserContext } from '../../context';
+import React from 'react';
+import { func, number } from 'prop-types';
 import NavBarUserMenu from '../NavBarUserMenu';
-import Notifications from '../Notifications';
-import FriendRequestNotifications from '../FriendRequestNotifications';
-import NavNotification from '../NavNotifications';
+import NotificationsWrapper from '../NotificationsWrapper';
 
 import './NavBarUserPanel.sass';
 
-const NavBarUserPanel = ({ logout }) => {
-  const { loggedUser } = useContext(UserContext);
-
-  return (
-    <div className="navbar-user-panel">
-      <NavNotification iconClass="fas fa-bell animated bounceIn fast delay-100ms">
-        <Notifications />
-      </NavNotification>
-      <NavNotification iconClass="fas fa-user-plus animated bounceIn fast delay-200ms">
-        <FriendRequestNotifications />
-      </NavNotification>
-      <NavBarUserMenu loggedUser={loggedUser} logout={logout} />
-    </div>
-  );
-};
+const NavBarUserPanel = ({ logout, windowWidth }) => (
+  <div className="navbar-user-panel">
+    {windowWidth >= 600 && <NotificationsWrapper />}
+    <NavBarUserMenu logout={logout} windowWidth={windowWidth} />
+  </div>
+);
 
 NavBarUserPanel.propTypes = {
   logout: func.isRequired,
+  windowWidth: number.isRequired,
 };
 
 export default NavBarUserPanel;

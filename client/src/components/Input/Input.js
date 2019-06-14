@@ -5,7 +5,7 @@ import useDebouncedCallback from 'use-debounce/lib/callback';
 import './Input.sass';
 
 const Input = ({
-  inputType,
+  type,
   classes,
   autoComplete,
   value,
@@ -16,6 +16,7 @@ const Input = ({
   validateFunc,
   required,
   disabled,
+  onFocus,
 }) => {
   const [isValid, setIsValid] = useState(false);
 
@@ -39,8 +40,9 @@ const Input = ({
         <input
           className={`input ${iconClasses ? 'input--with-icon' : ''} ${classes}`}
           autoComplete={autoComplete ? 'true' : 'false'}
-          type={inputType}
+          type={type}
           value={value}
+          onFocus={onFocus}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
           required={required}
@@ -70,7 +72,7 @@ const Input = ({
 };
 
 Input.propTypes = {
-  inputType: string,
+  type: string,
   classes: string,
   tooltipText: string,
   iconClasses: string,
@@ -81,10 +83,11 @@ Input.propTypes = {
   disabled: bool,
   validateFunc: func,
   onChange: func,
+  onFocus: func,
 };
 
 Input.defaultProps = {
-  inputType: 'text',
+  type: 'text',
   classes: '',
   tooltipText: '',
   iconClasses: '',
@@ -95,7 +98,7 @@ Input.defaultProps = {
   disabled: false,
   validateFunc: null,
   onChange: () => {},
+  onFocus: () => {},
 };
-
 
 export default Input;

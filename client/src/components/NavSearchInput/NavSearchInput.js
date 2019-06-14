@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { func } from 'prop-types';
 import useDebouncedCallback from 'use-debounce/lib/callback';
+import Input from '../Input';
 
 const NavSearchInput = ({ setPostSearchQuery, setShowResults }) => {
   const [postQuery, setPostQuery] = useState('');
@@ -15,12 +16,11 @@ const NavSearchInput = ({ setPostSearchQuery, setShowResults }) => {
   }, [postQuery, debouncedCallback]);
 
   return (
-    <input
+    <Input
       onFocus={setShowResults}
+      value={postQuery}
       placeholder="Search posts"
-      className="nav__search-bar-input"
-      type="text"
-      onChange={e => setPostQuery(e.target.value)}
+      onChange={setPostQuery}
     />
   );
 };

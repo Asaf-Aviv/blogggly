@@ -8,6 +8,7 @@ import { UserContext } from '../../context';
 import utils from '../../utils';
 import queries from '../../graphql/queries';
 import Button from '../Button';
+import BloggglyLink from '../BloggglyLink';
 
 const Login = ({ toggleForms, hideForms }) => {
   const [email, setEmail] = useState('');
@@ -42,12 +43,12 @@ const Login = ({ toggleForms, hideForms }) => {
           >
             <i className="fas fa-times" />
           </Button>
-          <h1 className="member-form__title">Login</h1>
+          <h2 className="member-form__title">Login</h2>
           <Label labelFor="email">
             <Input
               onChange={setEmail}
               value={email}
-              inputType="email"
+              type="email"
               iconClasses="fas fa-envelope"
               placeholder="Email"
               validateFunc={utils.validateEmail}
@@ -59,7 +60,7 @@ const Login = ({ toggleForms, hideForms }) => {
             <Input
               onChange={setPassword}
               value={password}
-              inputType="password"
+              type="password"
               iconClasses="fas fa-lock"
               placeholder="Password"
               validateFunc={utils.validatePassword}
@@ -68,7 +69,7 @@ const Login = ({ toggleForms, hideForms }) => {
               required
             />
           </Label>
-          <span className="forgot">Forgot your password?</span>
+          <BloggglyLink to="/forgot" classes="forgot" text="Forgot your password?" onClick={hideForms} />
           <Button type="submit" classes="member-form__submit btn btn--primary" text="Login" />
           <span
             className="member-form__toggle"

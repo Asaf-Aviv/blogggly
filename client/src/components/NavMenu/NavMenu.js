@@ -1,28 +1,38 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { bool, func } from 'prop-types';
+import BloggglyLink from '../BloggglyLink';
 
 import './NavMenu.sass';
 
-const navLink = (to, text) => (
+const navLink = (to, text, onClick) => (
   <li className="nav-menu__item">
-    <NavLink
-      activeClassName="nav-menu__link--active"
-      className="nav-menu__link"
-      exact
+    <BloggglyLink
       to={to}
-    >
-      {text}
-    </NavLink>
+      onClick={onClick}
+      classes="nav-menu__link"
+      activeClassName="nav-menu__link--active"
+      text={text}
+    />
   </li>
 );
 
-const NavMenu = () => (
-  <ul className="nav-menu">
-    {navLink('/', 'Home')}
-    {navLink('/posts', 'Posts')}
-    {navLink('/users', 'Users')}
-    {navLink('/create', 'Create')}
-  </ul>
+const NavMenu = ({ isNavOpen, closeNav }) => (
+  <div
+    className={`nav-menu__container ${isNavOpen ? 'nav-menu__container--open' : ''}`}
+    onClick={closeNav}
+  >
+    <ul className="nav-menu" onClick={e => e.stopPropagation()}>
+      {navLink('/', 'Home', closeNav)}
+      {navLink('/posts', 'Posts', closeNav)}
+      {navLink('/users', 'Users', closeNav)}
+      {navLink('/create', 'Create', closeNav)}
+    </ul>
+  </div>
 );
+
+NavMenu.propTypes = {
+  isNavOpen: bool.isRequired,
+  closeNav: func.isRequired,
+};
 
 export default NavMenu;

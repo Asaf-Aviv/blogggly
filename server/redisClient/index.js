@@ -25,8 +25,4 @@ redisClient.on('end', () => {
   console.error('Connection to Redis has been closed');
 });
 
-setInterval(() => {
-  redisClient.hgetallAsync('connectedUsers').then(console.log);
-}, 5000);
-
 module.exports = redisClient;

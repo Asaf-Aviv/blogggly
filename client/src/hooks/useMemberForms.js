@@ -5,10 +5,10 @@ const useMemberForms = (isLogged) => {
   const [showLogin, setShowLogin] = useState(true);
 
   useEffect(() => {
-    if (isLogged && !setShowMemberForms) {
+    if (isLogged && !showMemberForms) {
       setShowMemberForms(false);
     }
-  }, [isLogged]);
+  }, [isLogged, showMemberForms]);
 
   const toggleForms = () => {
     setShowLogin(!showLogin);

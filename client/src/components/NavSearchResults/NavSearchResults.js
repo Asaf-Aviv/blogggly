@@ -4,6 +4,8 @@ import { SearchPostPropTypes } from '../../propTypes';
 import NavSearchItem from '../NavSearchItem';
 import Button from '../Button';
 
+import './NavSearchResults.sass';
+
 const NavSearchResults = ({ posts, showResults, hideResults }) => (
   <div className={`nav-search-results ${showResults ? 'nav-search-results--active' : ''}`}>
     <Button classes="nav-search-results__close-btn" onClick={hideResults}>
@@ -11,7 +13,7 @@ const NavSearchResults = ({ posts, showResults, hideResults }) => (
     </Button>
     {posts.length > 0
       ? (
-        <ul className="nav-search-results__list">
+        <ul className="nav-search-results__list" data-simplebar>
           {posts.map(post => (
             <NavSearchItem key={post._id} post={post} hideResults={hideResults} />
           ))}
