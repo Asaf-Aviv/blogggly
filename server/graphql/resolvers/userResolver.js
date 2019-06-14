@@ -1,7 +1,9 @@
 const { withFilter } = require('graphql-subscriptions');
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
 const { generateToken } = require('../../utils');
+const emailTransporter = require('../../utils/emailTransporter');
 const tags = require('../tags');
 
 module.exports = {
@@ -13,6 +15,28 @@ module.exports = {
     searchUsers: async (root, { userQuery }, { userId }) => (
       User.searchUsers(userQuery, userId)
     ),
+    validateResetToken: async (root, { resetToken }) => {
+      const user = await User.findOne({ resetToken }).select('email');
+
+      if (!user) {
+        throw new Error('Invalid reset password link');
+      }
+
+      return new Promise((resolve, reject) => {
+        jwt.verify(resetToken, process.env.JWT_SECRET, (err, decoded) => {
+          console.log(err, decoded);
+          if (err) {
+            if (err.name === 'JsonWebTokenError') {
+              reject(new Error('Invalid reset password link'));
+              return;
+            }
+            reject(new Error('Reset password link has expired'));
+            return;
+          }
+          resolve(user.email);
+        });
+      });
+    },
   },
   Mutation: {
     relog: async (root, args, { userId, userLoader }) => {
@@ -40,6 +64,19 @@ module.exports = {
       const currentUser = await User.createUser(signupInput.credentials);
       const token = generateToken(currentUser._id, currentUser.username);
       return { ...currentUser._doc, token };
+    },
+    forgotPassword: async (root, { email }) => {
+      const { username, resetToken } = await User.forgotPassword(email);
+      await emailTransporter.sendForgotPassword(email, username, resetToken);
+      return true;
+    },
+    resetPassword: async (root, { email, password, confirmPassword }) => {
+      if (password !== confirmPassword) {
+        throw new Error('Passwords not match');
+      }
+      const username = await User.resetPassword(email, password);
+      await emailTransporter.sendResetPasswordConfirmation(email, username);
+      return true;
     },
     readNotification: async (root, { notificationId }, { userId }) => {
       if (!userId) throw new Error('Unauthorized.');

@@ -5,6 +5,7 @@ module.exports = gql`
     getUserByUsername(username: String!): User
     getUsersByIds(userIds: [ID!]!): [User]!
     searchUsers(userQuery: String!): [User!]!
+    validateResetToken(resetToken: String!): String!
   }
 
   type Mutation {
@@ -13,6 +14,8 @@ module.exports = gql`
     signup(signupInput: SignupInput!): CurrentUser!
     updateUserInfo(info: UserInfoInput!): CurrentUser!
     toggleFollow(userId: ID!): ToggleFollow!
+    forgotPassword(email: String!): Boolean!
+    resetPassword(email: String!, password: String!, confirmPassword: String!): Boolean!
     sendFriendRequest(userId: ID!): ID!
     acceptFriendRequest(userId: ID!): ID!
     acceptAllFriendRequests(userIds: [ID!]!): Boolean!

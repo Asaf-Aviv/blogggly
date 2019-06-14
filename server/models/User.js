@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const { sampleSize } = require('lodash');
@@ -33,10 +34,6 @@ const UserSchema = new Schema({
     select: false,
     required: true,
     maxlength: [100, 'Password is too long'],
-    // validate: [
-    //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-    //   'Password must contain atleast eight characters, one letter and one number',
-    // ],
   },
   avatar: { type: String, default: 'default.svg' },
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
@@ -44,6 +41,7 @@ const UserSchema = new Schema({
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   },
+  resetToken: String,
   info: {
     firstname: { type: String, default: '' },
     lastname: { type: String, default: '' },
@@ -257,11 +255,50 @@ UserSchema.statics.findUsersByIds = async function (userIds) {
   return this.find({ _id: { $in: userIds } });
 };
 
+UserSchema.statics.forgotPassword = async function (email) {
+  const user = await this.findOne({ email }).select('username email');
+  if (!user) throw new Error('Email was not found');
+
+  return new Promise((resolve, reject) => {
+    jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' }, async (err, resetToken) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      user.resetToken = resetToken;
+      await user.save();
+      resolve({ username: user.username, resetToken });
+    });
+  });
+};
+
+UserSchema.statics.resetPassword = async function (email, password) {
+  const validPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+
+  if (!validPassword) {
+    throw new Error('Password must contain atleast eight characters, one letter and one number');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const { username } = await this.findOneAndUpdate(
+    { email }, { $set: { resetToken: '', password: hashedPassword } },
+  ).select('username');
+
+  return username;
+};
+
 UserSchema.statics.createUser = async function (userInput) {
   const userExist = await this.findByEmail(userInput.email);
 
   if (userExist) {
     throw new Error('User already exists.');
+  }
+
+  const validPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(userInput.password);
+
+  if (!validPassword) {
+    throw new Error('Password must contain atleast eight characters, one letter and one number');
   }
 
   const hashedPassword = await bcrypt.hash(userInput.password, 12);
