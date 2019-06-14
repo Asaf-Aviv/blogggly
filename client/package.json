@@ -24,7 +24,7 @@
     "react-router-dom": "^5.0.0",
     "react-s-alert": "^1.4.1",
     "react-scripts": "3.0.1",
-    "react-select": "^2.4.3",
+    "react-select": "^3.0.4",
     "simplebar-react": "^1.0.0",
     "subscriptions-transport-ws": "^0.9.16",
     "use-debounce": "^2.0.1",
