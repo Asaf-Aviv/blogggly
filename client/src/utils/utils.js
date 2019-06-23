@@ -1,5 +1,13 @@
 import Alert from 'react-s-alert';
 
+export const lockScrollBody = () => {
+  document.querySelector('body').style.overflowY = 'hidden';
+};
+
+export const unlockScrollBody = () => {
+  document.querySelector('body').style.overflowY = 'auto';
+};
+
 export const validateEmail = (email) => {
   console.log('validating email');
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -14,7 +22,7 @@ export const validatePassword = (password) => {
 
 export const validateUsername = (username) => {
   console.log('validating username');
-  const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const re = /^[a-zA-Z0-9_]+$/;
   return re.test(username);
 };
 
