@@ -7,8 +7,11 @@ const useOutsideClick = (ref, onOutSideClick) => {
       onOutSideClick();
     };
 
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
+
+    const eventType = 'ontouchstart' in window ? 'touchstart' : 'click';
+
+    document.addEventListener(eventType, handleOutsideClick);
+    return () => document.removeEventListener(eventType, handleOutsideClick);
   }, [onOutSideClick, ref]);
 };
 

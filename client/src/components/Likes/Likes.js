@@ -28,9 +28,11 @@ const Likes = ({
   };
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
+    const eventType = 'touchstart' in window ? 'touchstart' : 'click';
+
+    document.addEventListener(eventType, handleClickOutside, true);
     return () => {
-      document.removeEventListener('click', handleClickOutside, true);
+      document.removeEventListener(eventType, handleClickOutside, true);
     };
   });
 
