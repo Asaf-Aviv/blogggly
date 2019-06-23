@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     unique: true,
     required: true,
     uniqueCaseInsensitive: true,
-    minlength: 3,
+    minlength: 4,
     maxlength: 16,
     validate: [
       /^[a-zA-Z0-9_]+$/,
