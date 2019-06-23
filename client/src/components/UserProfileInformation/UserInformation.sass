@@ -21,15 +21,23 @@
   background-color: var(--main-purple) !important
 
 .user-info
+  margin-bottom: var(--space-md)
+  flex: 1
   &__textarea
     display: block
     width: 100%
     resize: none
   &__input-group
     display: flex
-    margin-bottom: 1.5rem
-    >:nth-child(2)
-      margin-left: 1rem
+    flex-direction: column
+    @media (min-width: 900px)
+      flex-direction: row
+      .label:nth-child(2n)
+        margin-left: var(--space-md)
+    .label
+      margin-bottom: var(--space-md)
+      .input__wrapper
+        margin-top: var(--space-sm)
   &__submit-btn.btn
     display: block
     margin-left: auto

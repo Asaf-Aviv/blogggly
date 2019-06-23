@@ -1,16 +1,23 @@
-.user-profile__comments-container
+.user-profile__comments
   width: 100%
-  
+  &-list
+    display: grid
+    grid-template-columns: repeat(1, 1fr)
+    grid-gap: var(--space-md)
+    list-style: none
+    @media (min-width: 900px)
+      grid-template-columns: repeat(2, 1fr)
+
 .user-profile-comment
   &__container
+    height: 100%
     position: relative
     border-radius: 8px
     transition: height 150ms
     color: var(--main-text-color)
     background: var(--bg-alt3)
     padding: 1rem
-    margin-bottom: 1rem
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1)
+    box-shadow: var(--shadow-small)
     &.deleted
       display: none
     .likes__wrapper

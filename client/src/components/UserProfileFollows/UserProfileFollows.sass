@@ -1,6 +1,9 @@
-.user-profile-follows__container
+.user-profile__follows
   width: 100%
-  display: grid
-  grid-template-columns: repeat(2, 1fr)
-  grid-gap: 1rem
-  margin-bottom: 2rem
+  &-list
+    display: grid
+    grid-template-columns: repeat(1, 1fr)
+    grid-gap: var(--space-md)
+    list-style: none
+    @media (min-width: 900px)
+      grid-template-columns: repeat(2, 1fr)
