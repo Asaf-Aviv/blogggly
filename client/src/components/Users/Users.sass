@@ -5,11 +5,16 @@
   &__list
     padding: 2rem 0
     display: grid
-    grid-template-columns: repeat(3, 1fr)
-    grid-gap: 1rem
+    grid-template-columns: repeat(1, 1fr)
+    grid-gap: var(--space-md)
+    @media (min-width: 600px)
+      grid-template-columns: repeat(2, 1fr)
+    @media (min-width: 1000px)
+      grid-template-columns: repeat(3, 1fr)
   &__not-found
     background: #FFF
     margin: 2rem 0
     padding: 2rem 0
     border-radius: var(--border-radius-medium)
     text-align: center
+    box-shadow: var(--shadow-small)

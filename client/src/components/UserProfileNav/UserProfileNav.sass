@@ -19,4 +19,36 @@
       &:hover, &:active, &--active
         color: #FFF
         background: #8148f6
-        
+
+.user-profile
+  &__mobile-nav
+    transform: translateY(100%)
+    transition: transform 200ms
+    position: fixed
+    z-index: 100
+    bottom: 0
+    left: 0
+    right: 0
+    background: var(--bg-alt3)
+    color: var(--main-text-color)
+    border-radius: var(--border-radius-large)
+    box-shadow: var(--shadow-small)
+    &--open
+      transform: translateY(0)
+
+.mobile-nav
+  &__location
+    flex: 1
+    &-container
+      padding: 0.7rem 1.5rem
+      font-weight: 600
+      position: fixed
+      bottom: 0
+      left: 0
+      right: 0
+      color: #FFF
+      background: #8148f6
+      z-index: 100
+      display: flex
+      .fa-angle-up
+        flex: 1
