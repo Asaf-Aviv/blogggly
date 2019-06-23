@@ -8,7 +8,6 @@
   display: block
   padding: 1rem
   border-radius: var(--border-radius-medium)
-  outline: none
   font-size: 18px
   font-family: inherit
   width: 100%
@@ -17,7 +16,10 @@
   resize: none
   max-width: 100%
   min-width: 100%
+  box-shadow: var(--shadow-small)
   border: 1px solid var(--border-color)
+  outline-color: var(--bg-primary)
+  margin-bottom: var(--space-md)
   &::placeholder
     color: var(--color-text-secondary)
     font-weight: 400
@@ -28,12 +30,21 @@
 .css-bgvzuu-indicatorSeparator
   background-color: var(--border-color) !important
 
-.select-categories > div
-  border-color: var(--border-color)
+.select-categories
+  box-shadow: var(--shadow-small)
+  margin: 0 0 var(--space-md) !important
+  > div
+    border: 1px solid var(--border-color)
+    border-color: var(--border-color)
+    background-color: var(--bg-alt3) !important
+
+.css-1okebmr-indicatorSeparator
+  background-color: var(--border-color) !important
 
 .quill
   border-radius: var(--border-radius-medium)
   background: var(--bg-alt3)
+  box-shadow: var(--shadow-small)
 
 .ql-snow .ql-picker-options,
 .css-bg1rzq-control
@@ -91,6 +102,8 @@
 
 .select-categories
   margin: 1rem 0
+  &::placeholder
+    font-size: 12px
   
 .btn.create-post__btn
   display: block

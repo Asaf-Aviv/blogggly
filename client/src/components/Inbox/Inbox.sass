@@ -2,22 +2,22 @@
   
 .inbox
   .container
+    @include full-screen-min-height
     border-radius: var(--border-radius-medium)
     display: flex
     align-items: flex-start
-    @include full-screen-min-height
     .empty__container
       padding: 2rem 0
       border-radius: var(--border-radius-medium)
       background: var(--bg-alt3)
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
+      box-shadow: var(--shadow-small)
   &__sidebar
     overflow: hidden
     border-radius: var(--border-radius-medium)
     margin-right: 1rem
     width: 25%
     background: var(--bg-alt3)
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05)
+    box-shadow: var(--shadow-small)
   &-content
     &__container
       flex: 1

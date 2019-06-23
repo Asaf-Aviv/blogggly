@@ -12,9 +12,11 @@
   --border-radius-large: 6px
   --border-radius-rounded: 50%
 
-  --space-sm: 20px
-  --space-md: 40px
+  --space-sm: 10px
+  --space-md: 20px
+  --space-lg: 40px
 
+\:root
   --button-bg-primary: #5941A9
   --button-bg-primary-light: #7659d6
   --button-bg-primary-dark: #4d3a8e
@@ -27,7 +29,7 @@
   --button-success-shadow-active: 0 3px 3px #0a844c
 
   --shadow-small: 0 3px 10px 2px rgba(0, 0, 0, 0.1)
-  --shadow-medium: 0 5px 10px 3px rgba(0, 0, 0, 0.1)
+  --shadow-medium: 0 5px 10px 3px rgba(0, 0, 0, 0.2)
   --shadow-large: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
 
   --main-purple: #8148f6
@@ -57,6 +59,8 @@
   --color-text-secondary: #ababab
   &.dark-theme
     --shadow-small: 0 3px 10px 2px #252427
+    --shadow-medium: 0 5px 10px 3px rgba(0, 0, 0, 0.2)
+    --shadow-large: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
     --shadow-color: rgba(0, 0, 0, 0.5)
     --transparent-bg: rgba(0, 0, 0, 0.4)
     --bg-alt: #444048
@@ -94,7 +98,7 @@ a
 button
   cursor: pointer
 
-ul
+ul, li
   list-style: none
 
 @for $i from 1 through 9

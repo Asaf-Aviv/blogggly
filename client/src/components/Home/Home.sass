@@ -2,6 +2,8 @@
 
 .home
   @include full-screen-min-height
+  .container
+    margin-bottom: 2rem !important
   &__header
     padding: 4rem 2rem
     background: var(--bg-alt3)
@@ -19,7 +21,7 @@
     display: inline-block
     margin: 2rem 3rem 4rem 0
     @media (max-width: 786px)
-      font-size: 1.25em
+      font-size: 1.25rem
       margin-right: 1rem
     @media (max-width: 600px)
       font-size: 1em
@@ -51,15 +53,12 @@
         margin-right: var(--space-md)
       &:last-of-type
         flex-basis: 70%
-
     @media (max-width: 786px)
       max-width: 70%
       margin: 0 auto 2rem auto !important
     @media (max-width: 600px)
       max-width: 100%
-
-  &-card
-    &__icon
+    &-icon
       display: inline-block
       margin: 0 auto
       height: 100px
