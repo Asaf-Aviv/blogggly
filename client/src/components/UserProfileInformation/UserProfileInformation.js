@@ -51,10 +51,12 @@ const UserProfileInformation = ({ userInfo }) => {
           <Helmet>
             <title>{`${loggedUser.username} - Information - Blogggly`}</title>
           </Helmet>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            updateUserInfo();
-          }}
+          <form
+            className="user-info__form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateUserInfo();
+            }}
           >
             <div className="user-info__input-group">
               <Label labelFor="firstname" text="First Name">

@@ -26,11 +26,15 @@ const UserProfilePosts = ({ postIds }) => {
             <Helmet>
               <title>{`${loggedUser.username}'s Posts - Blogggly`}</title>
             </Helmet>
-            {posts.map(post => (
-              post
-                ? <ShowcaseCard key={post._id} post={post} isAuthor />
-                : null
-            ))}
+            {posts.length > 0 && (
+              <ul className="user-profile__posts-list">
+                {posts.map(post => (
+                  post
+                    ? <li key={post._id}><ShowcaseCard post={post} isAuthor /></li>
+                    : null
+                ))}
+              </ul>
+            )}
           </div>
         );
       }}

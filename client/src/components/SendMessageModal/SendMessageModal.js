@@ -58,7 +58,7 @@ const SendMessageModal = ({ userId, username, closeModal }) => {
                 onChange={e => setBody(e.target.value)}
               />
             </Label>
-            <Button type="submit" className="btn btn--primary reply-message__submit-btn" text="Send" />
+            <Button type="submit" classes="btn btn--primary reply-message__submit-btn" text="Send" />
           </form>
         </TransparentModal>
       )}

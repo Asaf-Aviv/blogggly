@@ -73,6 +73,7 @@ const SignUp = ({ toggleForms, hideForms }) => {
               iconClasses="fas fa-user"
               placeholder="Username"
               validateFunc={utils.validateUsername}
+              tooltipText="Username can contain only Characters, Numbers and Underscores"
               required
             />
           </Label>

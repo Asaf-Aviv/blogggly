@@ -10,11 +10,15 @@ const UserProfileFriends = ({ userIds }) => {
   const { loggedUser } = useContext(UserContext);
 
   return (
-    <div className="user-profile-friends__container">
+    <div className="user-profile__friends">
       <Helmet>
         <title>{`${loggedUser.username}'s Friends - Blogggly`}</title>
       </Helmet>
-      <UserCardsList userIds={userIds} />
+      {userIds.length > 0 && (
+        <ul className="user-profile__friends-list">
+          <UserCardsList userIds={userIds} />
+        </ul>
+      )}
     </div>
   );
 };

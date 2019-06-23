@@ -10,11 +10,15 @@ const UserProfileFollows = ({ userIds, followers }) => {
   const { loggedUser } = useContext(UserContext);
 
   return (
-    <div className="user-profile-follows__container">
+    <div className="user-profile__follows">
       <Helmet>
         <title>{`${loggedUser.username}'s ${followers ? 'Followers' : 'Following'} - Blogggly`}</title>
       </Helmet>
-      <UserCardsList userIds={userIds} />
+      {userIds.length > 0 && (
+        <ul className="user-profile__follows-list">
+          <UserCardsList userIds={userIds} />
+        </ul>
+      )}
     </div>
   );
 };

@@ -14,7 +14,7 @@ const Posts = () => (
     onError={utils.UIErrorNotifier}
   >
     {({ loading, data: { posts } }) => {
-      if (loading) return null;
+      if (loading) return <div className="posts" />;
 
       return (
         <div className="posts">

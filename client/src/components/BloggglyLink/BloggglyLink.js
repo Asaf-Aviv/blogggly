@@ -10,6 +10,7 @@ const BloggglyLink = ({
   activeClassName
     ? (
       <NavLink
+        exact
         onClick={onClick}
         to={to}
         className={`blogggly-link ${classes}`}

@@ -21,17 +21,18 @@ const UserCardsList = ({ userIds }) => {
         return users.map(user => (
           user
             ? (
-              <UserCard
-                key={user._id}
-                user={user}
-                following={loggedUser.following.includes(user._id)}
-                isIncomingFriendRequest={loggedUser.incomingFriendRequests.includes(user._id)}
-                friendRequestPending={
-                  loggedUser.incomingFriendRequests.includes(user._id)
-                  || loggedUser.sentFriendRequests.includes(user._id)
-                }
-                isAFriend={loggedUser.friends.includes(user._id)}
-              />
+              <li key={user._id}>
+                <UserCard
+                  user={user}
+                  following={loggedUser.following.includes(user._id)}
+                  isIncomingFriendRequest={loggedUser.incomingFriendRequests.includes(user._id)}
+                  friendRequestPending={
+                    loggedUser.incomingFriendRequests.includes(user._id)
+                    || loggedUser.sentFriendRequests.includes(user._id)
+                  }
+                  isAFriend={loggedUser.friends.includes(user._id)}
+                />
+              </li>
             )
             : null
         ));

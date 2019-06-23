@@ -8,7 +8,8 @@ import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
 import { debounce } from 'lodash';
-import Select from 'react-select';
+import Creatable from 'react-select/creatable';
+import TextareaAutosize from 'react-autosize-textarea';
 import { UserContext, MemberFormsContext } from '../../context';
 import Container from '../Container';
 import utils from '../../utils';
@@ -21,7 +22,7 @@ import Button from '../Button';
 
 const saveToLocalStorage = debounce((key, value) => {
   localStorage.setItem(key, value);
-}, 1000);
+}, 5000);
 
 const editorOptions = {
   placeholder: 'Share your story',
@@ -46,19 +47,16 @@ const editorOptions = {
   },
 };
 
-const options = [
-  { value: 'Programming', label: 'Programming' },
-  { value: 'React', label: 'React' },
-  { value: 'Art', label: 'Art' },
-  { value: 'Movies', label: 'Movies' },
-  { value: 'Games', label: 'Games' },
-  { value: 'Painting', label: 'Painting' },
-];
+const createOption = label => ({
+  label,
+  value: label,
+});
 
 const PostEditor = () => {
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
   const [newPostId, setNewPostId] = useState('');
+  const [tagValue, setTagValue] = useState('');
   const [tags, setTags] = useState([]);
 
   const postTitleRef = useRef(null);
@@ -81,12 +79,31 @@ const PostEditor = () => {
     );
   }
 
-  const handleChange = (selectedOptions) => {
-    if (selectedOptions.length > 5) {
-      Alert.info('You can\'t add more then 5 tags.');
-      return;
+  const handleChange = (value, actionMeta) => {
+    console.group('Value Changed');
+    console.log(value);
+    console.log(`action: ${actionMeta.action}`);
+    console.groupEnd();
+    setTags(value);
+  };
+
+  const handleInputChange = (inputValue) => {
+    setTagValue(inputValue);
+  };
+
+  const handleKeyDown = (event) => {
+    if (!tagValue) return;
+    // eslint-disable-next-line default-case
+    switch (event.key) {
+      case 'Enter':
+      case 'Tab':
+        console.group('Value Added');
+        console.log(tagValue);
+        console.groupEnd();
+        setTagValue('');
+        setTags([...tags, createOption(tagValue)]);
+        event.preventDefault();
     }
-    setTags(selectedOptions);
   };
 
   return (
@@ -117,7 +134,7 @@ const PostEditor = () => {
       >
         {createPost => (
           <Container>
-            <textarea
+            <TextareaAutosize
               ref={postTitleRef}
               className="post-title"
               value={postTitle}
@@ -125,15 +142,21 @@ const PostEditor = () => {
                 setPostTitle(e.target.value);
                 saveToLocalStorage('postTitle', e.target.value);
               }}
-              placeholder="Enter Post title"
-              rows="2"
+              placeholder="Post title"
             />
-            <Select
+            <Creatable
+              components={{ DropdownIndicator: null }}
+              classNamePrefix="react-select"
               className="select-categories"
-              options={options}
-              onChange={handleChange}
-              value={tags}
+              inputValue={tagValue}
+              isClearable
               isMulti
+              menuIsOpen={false}
+              onChange={handleChange}
+              onInputChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Enter a tag and press enter, You can enter up to 5 tags"
+              value={tags}
             />
             <ReactQuill
               ref={quillRef}

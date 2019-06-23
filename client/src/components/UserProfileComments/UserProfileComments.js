@@ -41,29 +41,30 @@ const UserProfileComments = ({ commentIds }) => {
       onError={utils.UIErrorNotifier}
       variables={{ commentIds, withPostInfo: true }}
     >
-      {({ data, loading }) => {
+      {({ data: { comments }, loading }) => {
         if (loading) return null;
 
         return (
-          <div className="user-profile__comments-container">
+          <div className="user-profile__comments">
             <Helmet>
               <title>{`${loggedUser.username}'s Comments - Blogggly`}</title>
             </Helmet>
-            <ul>
-              {data.comments.map(comment => (
-                comment
-                  ? (
-                    <UserProfileComment
-                      key={comment._id}
-                      comment={comment}
-                      isDeleted={deletedCommentsIds.includes(comment._id)}
-                      addToDeletionQueue={addToDeletionQueue}
-                      shouldUpdateModal
-                    />
-                  )
-                  : null
-              ))}
-            </ul>
+            {comments.length > 0 && (
+              <ul className="user-profile__comments-list">
+                {comments.map(comment => (
+                  comment
+                    ? (
+                      <UserProfileComment
+                        key={comment._id}
+                        comment={comment}
+                        isDeleted={deletedCommentsIds.includes(comment._id)}
+                        addToDeletionQueue={addToDeletionQueue}
+                      />
+                    )
+                    : null
+                ))}
+              </ul>
+            )}
           </div>
         );
       }}

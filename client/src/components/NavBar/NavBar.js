@@ -30,6 +30,7 @@ const NavBar = ({ logout, windowWidth }) => {
             <MenuIcon className="hamburger" onClick={setNavState()} />
           </div>
           <NavSearchBar />
+          {showMemberForms && !isLogged && <MemberForms />}
           <div className="nav__section">
             {windowWidth >= 600 && <Toggler checked={isDarkMode} onChange={toggleDarkMode} />}
             {isLogged ? (
@@ -45,7 +46,6 @@ const NavBar = ({ logout, windowWidth }) => {
               />
             )}
           </div>
-          {showMemberForms && !isLogged && <MemberForms />}
         </nav>
       </Container>
     </header>
