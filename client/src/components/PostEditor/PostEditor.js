@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import hljs from 'highlight.js';
 import ReactQuill from 'react-quill';
 import Alert from 'react-s-alert';
-import { debounce } from 'lodash';
+import { debounce, startCase } from 'lodash';
 import Creatable from 'react-select/creatable';
 import TextareaAutosize from 'react-autosize-textarea';
 import { UserContext, MemberFormsContext } from '../../context';
@@ -32,7 +32,7 @@ const editorOptions = {
       highlight: text => hljs.highlightAuto(text).value,
     },
     toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, true] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
       [{ font: [] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
@@ -73,22 +73,16 @@ const PostEditor = () => {
     postTitleRef.current.focus();
   }, []);
 
-  if (newPostId) {
-    return (
-      <Redirect to={`/post/${newPostId}`} />
-    );
-  }
-
-  const handleChange = (value, actionMeta) => {
-    console.group('Value Changed');
-    console.log(value);
-    console.log(`action: ${actionMeta.action}`);
-    console.groupEnd();
+  const handleChange = (value) => {
+    if (!value) {
+      setTags([]);
+      return;
+    }
     setTags(value);
   };
 
   const handleInputChange = (inputValue) => {
-    setTagValue(inputValue);
+    setTagValue(startCase(inputValue));
   };
 
   const handleKeyDown = (event) => {
@@ -97,14 +91,17 @@ const PostEditor = () => {
     switch (event.key) {
       case 'Enter':
       case 'Tab':
-        console.group('Value Added');
-        console.log(tagValue);
-        console.groupEnd();
-        setTagValue('');
         setTags([...tags, createOption(tagValue)]);
+        setTagValue('');
         event.preventDefault();
     }
   };
+
+  if (newPostId) {
+    return (
+      <Redirect to={`/post/${newPostId}`} />
+    );
+  }
 
   return (
     <div className="create">

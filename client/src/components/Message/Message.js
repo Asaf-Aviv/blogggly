@@ -71,7 +71,6 @@ const MessageActionsPanel = ({
           mutation={queries.DELETE_MESSAGE}
           variables={{ messageId, inInbox }}
           onCompleted={({ deletedMessageId }) => {
-            console.log('cleaning', deletedMessageId);
             setLoggedUser((draft) => {
               const messagesArray = draft.inbox[sentOrReceived];
               messagesArray.splice(

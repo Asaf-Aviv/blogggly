@@ -11,7 +11,6 @@ const useToken = (isLogged, setLoggedUser) => {
         const { data: { relog: relogResult } } = await apolloClient.mutate({
           mutation: queries.RELOG,
         });
-        console.log(relogResult);
         setLoggedUser(() => relogResult);
       } catch (error) {
         setToken(null);

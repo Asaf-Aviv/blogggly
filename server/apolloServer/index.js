@@ -11,12 +11,6 @@ module.exports = new ApolloServer({
   resolvers,
   subscriptions: {
     onConnect: (connectionParams) => {
-      console.log('*'.repeat(20));
-      console.log(connectionParams);
-      console.log('*'.repeat(20));
-      console.log('websocket connected');
-      console.log('*'.repeat(20));
-
       let currentUserId = null;
 
       if (connectionParams.Authorization) {
@@ -42,7 +36,6 @@ module.exports = new ApolloServer({
   },
   context: ({ req, connection }) => {
     if (connection) {
-      console.log('context', connection.context);
       return {
         ...connection.context,
         ...createLoaders(),

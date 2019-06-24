@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Mutation } from 'react-apollo';
 import Alert from 'react-s-alert';
 import { string } from 'prop-types';
+import TextareaAutosize from 'react-autosize-textarea';
 import queries from '../../graphql/queries';
 import utils from '../../utils';
 import Loader from '../Loader';
@@ -39,7 +40,7 @@ const AddComment = ({ postId }) => {
     >
       {(newComment, { loading }) => (
         <form
-          className="add-comment"
+          className="add-comment__form"
           onSubmit={(e) => {
             e.preventDefault();
             if (!isLogged) {
@@ -51,17 +52,17 @@ const AddComment = ({ postId }) => {
             newComment();
           }}
         >
-          <textarea
-            className="add-comment__textarea"
+          <TextareaAutosize
+            className="textarea"
             onChange={e => setCommentBody(e.target.value)}
             value={commentBody}
             required
-            rows="5"
+            rows="7"
             placeholder="Add a Comment"
           />
           <Button
             type="submit"
-            classes="btn btn--primary add-comment__btn"
+            classes="btn btn--primary add-comment__submit-btn"
             text="Add Comment"
           />
           {loading && <Loader />}

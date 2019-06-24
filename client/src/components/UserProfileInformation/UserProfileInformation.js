@@ -80,7 +80,11 @@ const UserProfileInformation = ({ userInfo }) => {
               <Label labelFor="country">
                 <div className="input__wrapper">
                   <div className="input__container">
-                    <CountryDropdown className="input" value={country} onChange={val => setCountry(val)} />
+                    <CountryDropdown
+                      className="select input"
+                      value={country}
+                      onChange={val => setCountry(val)}
+                    />
                   </div>
                 </div>
               </Label>
@@ -88,7 +92,7 @@ const UserProfileInformation = ({ userInfo }) => {
                 <div className="input__wrapper">
                   <div className="input__container">
                     <select
-                      className="input"
+                      className="select input"
                       onChange={e => setGender(e.target.value)}
                       value={gender}
                     >

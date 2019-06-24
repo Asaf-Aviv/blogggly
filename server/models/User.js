@@ -331,7 +331,6 @@ UserSchema.statics.readNotification = async function (notificationId, userId) {
 };
 
 UserSchema.statics.deleteNotification = async function (notificationId, userId) {
-  console.log('notificationId', notificationId);
   await this.updateOne(
     { _id: userId },
     { $pull: { notifications: { _id: notificationId } } },
@@ -341,7 +340,6 @@ UserSchema.statics.deleteNotification = async function (notificationId, userId) 
 };
 
 UserSchema.statics.readAllNotifications = async function (notificationIds, userId) {
-  console.log(notificationIds);
   await this.updateOne(
     { _id: userId, 'notifications._id': { $in: notificationIds } },
     { $set: { 'notifications.$[].isRead': true } },

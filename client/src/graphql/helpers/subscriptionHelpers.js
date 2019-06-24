@@ -18,7 +18,6 @@ export const subscribeToDeletedComments = variables => apolloClient
   .subscribe({ query: queries.DELETED_POST_COMMENT, variables })
   .subscribe({
     next: ({ data: { deletedPostComment: deletedCommentId } }) => {
-      console.log(deletedCommentId);
       const query = { query: queries.POST_COMMENTS, variables };
 
       const data = cloneDeep(apolloClient.readQuery(query));
