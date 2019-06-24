@@ -7,7 +7,7 @@ import './NavBarUserPanel.sass';
 
 const NavBarUserPanel = ({ logout, windowWidth }) => (
   <div className="navbar-user-panel">
-    {windowWidth >= 600 && <NotificationsWrapper />}
+    {windowWidth >= 900 && <NotificationsWrapper />}
     <NavBarUserMenu logout={logout} windowWidth={windowWidth} />
   </div>
 );

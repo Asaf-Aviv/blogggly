@@ -51,7 +51,7 @@ const NavBarUserMenu = ({ logout, windowWidth }) => {
             />
             <h4 className="user-menu__username">{loggedUser.username}</h4>
           </div>
-          {windowWidth < 600 && (
+          {windowWidth < 900 && (
             <>
               <div className="dropdown__divider" />
               <div className="notifications__mobile">

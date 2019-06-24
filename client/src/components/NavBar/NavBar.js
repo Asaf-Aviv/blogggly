@@ -32,7 +32,7 @@ const NavBar = ({ logout, windowWidth }) => {
           <NavSearchBar />
           {showMemberForms && !isLogged && <MemberForms />}
           <div className="nav__section">
-            {windowWidth >= 600 && <Toggler checked={isDarkMode} onChange={toggleDarkMode} />}
+            {windowWidth >= 900 && <Toggler checked={isDarkMode} onChange={toggleDarkMode} />}
             {isLogged ? (
               <NavBarUserPanel windowWidth={windowWidth} logout={logout} />
             ) : (
