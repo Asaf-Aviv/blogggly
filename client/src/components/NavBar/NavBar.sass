@@ -1,16 +1,14 @@
 @import '../../sass/_mixins'
-  
+
 .navbar
   position: fixed
   top: 0
   left: 0
   right: 0
   z-index: 300
-  height: 80px
+  height: var(--navbar-height)
   background: var(--nav-bg-color)
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15)
-  @media (max-width: 786px)
-    height: 60px
 
 .hamburger
   cursor: pointer
@@ -28,7 +26,6 @@
   align-items: center
   height: 100%
   &__section
-    flex: 1
     display: flex
     align-items: center
     display: flex

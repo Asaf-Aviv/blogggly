@@ -1,18 +1,13 @@
 .add-comment
-  position: relative
-  margin-bottom: 1rem
-  &__textarea
-    outline: none
-    display: block
-    min-width: 100%
-    max-width: 100%
-    padding: 1rem
-    border: none
-    border-radius: 5px
-    background: var(--bg-alt3)
-    resize: none
-    margin-bottom: 1rem
-    box-shadow: 0 5px 10px rgba(0 ,0 ,0, 0.1)
-  &__btn
-    display: block
-    margin-left: auto
+  &__form
+    position: relative
+    display: flex
+    flex-direction: column
+    .textarea
+      display: block
+      min-width: 100%
+      max-width: 100%
+      margin-bottom: var(--space-md)
+      resize: none !important
+  &__submit-btn
+    align-self: flex-end

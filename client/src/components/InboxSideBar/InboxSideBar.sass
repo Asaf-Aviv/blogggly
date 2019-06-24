@@ -1,0 +1,52 @@
+.inbox
+  &__sidebar
+    background: var(--bg-alt3)
+    box-shadow: var(--shadow-small)
+    border-radius: var(--border-radius-medium)
+    overflow: hidden
+    margin-right: 1rem
+    width: 25%
+    &--mobile
+      position: fixed
+      bottom: 0
+      left: 0
+      right: 0
+      width: 100%
+      .inbox__sidebar-text
+        display: none
+      .inbox__sidebar-menu
+        display: flex
+      .inbox__sidebar-item
+        justify-content: center
+        padding-right: 0
+      .menu-badge
+        position: absolute
+        top: 3px
+        right: 35%
+    &-item
+      padding-right: 1rem
+      position: relative
+      display: flex
+      align-items: center
+      flex: 1
+      height: 50px
+      cursor: pointer
+      transition: all 150ms
+      font-weight: 600
+      &--active, &:hover
+        color: #FFF
+        background: var(--main-purple)
+    &-icon
+      width: 35px
+      display: flex
+      align-items: center
+      justify-content: center
+    
+.menu-badge
+  margin-left: auto
+  border-radius: 4px
+  font-size: 16px
+  display: flex
+  align-items: center
+  font-weight: 600
+  justify-content: center

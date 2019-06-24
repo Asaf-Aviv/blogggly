@@ -18,7 +18,7 @@
   min-width: 100%
   box-shadow: var(--shadow-small)
   border: 1px solid var(--border-color)
-  outline-color: var(--bg-primary)
+  outline-color: var(--main-purple)
   margin-bottom: var(--space-md)
   &::placeholder
     color: var(--color-text-secondary)
@@ -102,9 +102,21 @@
 
 .select-categories
   margin: 1rem 0
-  &::placeholder
-    font-size: 12px
-  
+  &:focus
+    outline-color: var(--bg-primary)
+
+.react-select__control
+  box-shadow: 0 0 1px var(--bg-primary) !important
+  &:hover
+    border-color: var(--main-purple) !important
+
+.react-select__value-container
+  padding: 0.5rem
+  font-size: 14px
+  height: 50px
+  &:focus, &:hover
+    outline-color: var(--main-purple)
+
 .btn.create-post__btn
   display: block
   margin: 2rem 0 2rem auto

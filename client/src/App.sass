@@ -12,15 +12,24 @@
   --border-radius-large: 6px
   --border-radius-rounded: 50%
 
+  --navbar-height: 50px
+
   --space-sm: 10px
   --space-md: 20px
   --space-lg: 40px
 
+  @media (min-width: 786px)
+    --navbar-height: 60px
+  @media (min-width: 900px)
+    --navbar-height: 70px
+  @media (min-width: 1200px)
+    --navbar-height: 80px
 \:root
   --button-bg-primary: #5941A9
   --button-bg-primary-light: #7659d6
   --button-bg-primary-dark: #4d3a8e
   --button-bg-danger: #a50000
+  --button-primary-shadow: 0 9px 10px -8px #3c3b5d
 
   --button-bg-success: #2a9c68
   --button-bg-success-light: #2fb578
@@ -58,6 +67,7 @@
   --bg-primary: #1cbf8a
   --color-text-secondary: #ababab
   &.dark-theme
+    --button-primary-shadow: 0 9px 10px -8px #261440
     --shadow-small: 0 3px 10px 2px #252427
     --shadow-medium: 0 5px 10px 3px rgba(0, 0, 0, 0.2)
     --shadow-large: 0 5px 15px 1px rgba(0, 0, 0, 0.2)
@@ -88,9 +98,7 @@ body
   font-family: 'Montserrat', sans-serif
   background: var(--body-bg-color)
   color: var(--main-text-color)
-  padding-top: 120px
-  @media (max-width: 786px)
-    padding-top: 100px
+  padding-top: calc(var(--space-lg) + var(--navbar-height))
 
 a
   text-decoration: none
@@ -117,7 +125,7 @@ ul, li
   padding: 0 0.8rem
 
 .textarea
-  padding: 0.8rem
+  padding: 1rem
 
 .input, .textarea
   background: var(--bg-alt3)
@@ -127,6 +135,9 @@ ul, li
   outline-color: var(--main-purple)
   border-radius: var(--border-radius-large)
   box-shadow: var(--shadow-small)
+
+.select
+  -webkit-appearance: none
 
 .heart
   cursor: pointer
@@ -175,7 +186,7 @@ ul, li
   &--primary
     color: #FFF
     background: var(--button-bg-primary-light)
-    box-shadow: 0 9px 10px -8px #3c3b5d
+    box-shadow: var(--button-primary-shadow)
     &:hover
       background: var(--button-bg-primary)
     &:active
