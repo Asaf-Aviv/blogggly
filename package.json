@@ -36,7 +36,8 @@
     "read-chunk": "^3.2.0",
     "redis": "^2.8.0",
     "uuid": "^3.3.2",
-    "validator": "^10.11.0"
+    "validator": "^10.11.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
