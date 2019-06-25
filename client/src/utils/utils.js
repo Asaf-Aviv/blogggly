@@ -1,11 +1,17 @@
 import Alert from 'react-s-alert';
 
 export const lockScrollBody = () => {
-  document.querySelector('body').style.overflowY = 'hidden';
+  const body = document.querySelector('body');
+  body.style.overflowY = 'scroll';
+  body.style.position = 'fixed';
+  body.style.width = '100%';
 };
 
 export const unlockScrollBody = () => {
-  document.querySelector('body').style.overflowY = 'auto';
+  const body = document.querySelector('body');
+  body.style.overflowY = 'scroll';
+  body.style.position = 'static';
+  body.style.width = 'auto';
 };
 
 export const validateEmail = (email) => {

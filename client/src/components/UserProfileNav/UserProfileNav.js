@@ -30,6 +30,18 @@ UserProfileNavLink.defaultProps = {
   onClick: null,
 };
 
+const renderLinks = (url, onClick) => (
+  <ul className="user-profile__menu">
+    <UserProfileNavLink onClick={onClick} to={`${url}/information`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/posts`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/comments`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/followers`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/following`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/friends`} />
+    <UserProfileNavLink onClick={onClick} to={`${url}/likes`} />
+  </ul>
+);
+
 const MobileUserProfileNav = withRouter(({ location: { pathname }, match: { url } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
@@ -43,15 +55,7 @@ const MobileUserProfileNav = withRouter(({ location: { pathname }, match: { url 
         ref={navRef}
         className={`user-profile__mobile-nav ${isOpen ? 'user-profile__mobile-nav--open' : ''}`}
       >
-        <ul className="user-profile__menu">
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/information`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/posts`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/comments`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/followers`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/following`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/friends`} />
-          <UserProfileNavLink onClick={toggleNav} to={`${url}/likes`} />
-        </ul>
+        {renderLinks(url, toggleNav)}
       </nav>
       {!isOpen && (
         <div onClick={toggleNav} className="mobile-nav__location-container">
@@ -79,15 +83,7 @@ MobileUserProfileNav.propTypes = {
 const DesktopUserProfileNav = ({ match: { url } }) => (
   <nav className="user-profile__sidebar">
     <UploadAvatar />
-    <ul className="user-profile__menu">
-      <UserProfileNavLink to={`${url}/information`} />
-      <UserProfileNavLink to={`${url}/posts`} />
-      <UserProfileNavLink to={`${url}/comments`} />
-      <UserProfileNavLink to={`${url}/followers`} />
-      <UserProfileNavLink to={`${url}/following`} />
-      <UserProfileNavLink to={`${url}/friends`} />
-      <UserProfileNavLink to={`${url}/likes`} />
-    </ul>
+    {renderLinks(url)}
   </nav>
 );
 
@@ -101,7 +97,7 @@ const DesktopUserProfileNavWithRouter = withRouter(DesktopUserProfileNav);
 const MobileUserProfileNavWithRouter = withRouter(MobileUserProfileNav);
 
 const UserProfileNav = () => (
-  useWindowWidth() > 600
+  useWindowWidth() >= 600
     ? <DesktopUserProfileNavWithRouter />
     : <MobileUserProfileNavWithRouter />
 );
