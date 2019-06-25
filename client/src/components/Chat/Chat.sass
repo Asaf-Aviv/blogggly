@@ -1,0 +1,135 @@
+.chat
+  position: fixed
+  display: flex
+  flex-direction: column
+  top: var(--navbar-height)
+  left: 0
+  height: calc(100vh - var(--navbar-height))
+  background: var(--bg-alt2)
+  width: 250px
+  box-shadow: var(--shadow-small)
+  z-index: 50
+  &__header
+    padding: var(--space-sm)
+    text-align: center
+    height: 180px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    .avatar__container
+      height: auto
+    &-username
+      margin: var(--space-sm) 0
+      font-weight: 600
+  &__users
+    &-container
+      position: relative
+      flex: 1
+      padding: var(--space-xs)
+    &-list
+      position: absolute !important
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      &-item
+        padding: var(--space-xs)
+        border-radius: var(--border-radius-large)
+        cursor: pointer
+        display: flex
+        align-items: center
+        &:hover
+          background: var(--bg-alt)
+
+.chat-user
+  &__container
+    user-select: none
+    display: flex
+    flex-direction: column
+    margin-left: var(--space-sm)
+  &__username
+    font-weight: 600
+  &__body-preview
+    color: var(--text-alt4)
+    display: inline-block
+    width: 170px
+    font-size: 12px
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+.chat-boxes
+  &__container
+    position: fixed
+    bottom: 0
+    left: 260px
+    display: flex
+
+.chat-box
+  width: 350px
+  height: 400px
+  background: var(--bg-alt2)
+  display: flex
+  flex-direction: column
+  margin-right: var(--space-sm)
+  &__header
+    border-top-left-radius: var(--border-radius-large)
+    border-top-right-radius: var(--border-radius-large)
+    font-weight: 600
+    border-bottom: 1px solid var(--border-color)
+    padding: var(--space-xs) var(--space-sm)
+    display: flex
+    align-items: center
+    background: var(--main-purple)
+    .avatar__container
+      margin-right: var(--space-sm)
+    button
+      margin-left: auto
+  &__messages-list
+    position: absolute !important
+    padding: var(--space-sm)
+    top: 0
+    bottom: 0
+    right: 0
+    left: 0
+    &-container
+      position: relative
+      flex: 1
+  &__message
+    margin-right: 10%
+    border-radius: var(--border-radius-medium)
+    font-size: 14px
+    padding: var(--space-xs) var(--space-sm)
+    margin-top: var(--space-sm)
+    background: var(--bg-alt)
+    &:first-of-type
+      margin-top: 0
+    &--self
+      color: #FFF
+      margin-left: 10%
+      margin-right: 0
+      background: var(--main-purple)
+    &-form
+      border: 1px solid var(--border-color)
+      position: relative
+      display: flex
+  &__textarea
+    font-size: 14px
+    border: none
+    padding: var(--space-xs)
+    color: var(--main-text-color)
+    flex: 1
+    background-color: var(--bg-alt3)
+    outline-color: var(--main-purple)
+    border-right: 1px solid var(--border-color)
+
+  &__send-btn
+    border: none
+    background-color: var(--bg-alt3)
+    color: #FFF
+    font-size: 1.25rem
+    flex-basis: 50px
+    outline: none
+    &:hover, &:active
+      background: var(--main-purple)

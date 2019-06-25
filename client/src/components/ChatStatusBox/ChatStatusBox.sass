@@ -1,0 +1,45 @@
+.chat-status
+  &__container
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+    background: var(--bg-alt3)
+  &__dropdown
+    user-select: none
+    overflow: hidden
+    cursor: pointer
+    position: absolute
+    top: 40px
+    width: 140px
+    border: 1px solid var(--border-color)
+    border-radius: var(--border-radius-medium)
+    display: flex
+    flex-direction: column
+    z-index: 50
+    background: var(--bg-alt3)
+    &-item
+      display: flex
+      align-items: center
+      justify-content: center
+      height: 35px
+      &:hover, &:active
+        background: var(--main-purple)
+        color: #FFF
+  &--current
+    user-select: none
+    cursor: pointer
+    text-align: center
+    height: 35px
+    display: inline-block
+    width: 140px
+    border: 1px solid var(--border-color)
+    border-radius: var(--border-radius-medium)
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: background 200ms, color 200ms
+    box-shadow: var(--shadow-small)
+    &:hover, &:active
+      background: var(--main-purple)
+      color: #FFF
