@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const mongoDBConfig = require('./db.config');
 
-mongoose.connect(process.env.MONGO_URI, mongoDBConfig);
+const isProd = process.env.NODE_ENV === 'production';
+const MONGO_URI = isProd ? process.env.MONGO_URI_PROD : process.env.MONGO_URI_DEV;
+
+mongoose.connect(MONGO_URI, mongoDBConfig);
 
 const conn = mongoose.connection;
 
