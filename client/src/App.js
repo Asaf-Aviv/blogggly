@@ -15,6 +15,7 @@ import PostsByTag from './components/PostsByTag';
 import Inbox from './components/Inbox';
 import Forgot from './components/Forgot';
 import ResetPassword from './components/ResetPassword';
+import Chat from './components/Chat';
 import UserProfile from './components/UserProfile';
 import CurrentUserProfile from './components/CurrentUserProfile';
 import useDarkMode from './hooks/useDarkMode';
@@ -48,6 +49,7 @@ const App = () => {
           <DarkModeContext.Provider value={{ isDarkMode, toggleDarkMode }}>
             <div className="App">
               <NavBar logout={logout} windowWidth={windowWidth} />
+              <Chat />
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/posts" component={Posts} />
