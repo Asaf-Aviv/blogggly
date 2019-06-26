@@ -1,14 +1,15 @@
 {
-  "name": "blogly",
+  "name": "blogggly",
   "version": "1.0.0",
-  "description": "",
+  "description": "Create you own free blog and publish your stories, Simple, Easy and free.",
   "main": "server/index.js",
   "scripts": {
     "start": "node server",
     "server": "nodemon server/index.js",
     "client": "cd client && npm start",
     "dev": "concurrently --kill-others-on-fail \"npm:server\" \"npm:client\"",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "deploy": "node ../deploy/blogggly"
   },
   "keywords": [],
   "author": "",
