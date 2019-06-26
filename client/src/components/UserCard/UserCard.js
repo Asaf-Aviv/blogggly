@@ -14,7 +14,7 @@ const UserCard = ({
   user, following, friendRequestPending, isAFriend,
   isIncomingFriendRequest,
 }) => (
-  <div className="user-card">
+  <div className="user-card animated zoomIn faster">
     <ActionsDropDown resourceId={user._id} type="user" isAFriend={isAFriend} />
     <header className="user-card__header">
       <UserAvatar avatar={user.avatar} username={user.username} />

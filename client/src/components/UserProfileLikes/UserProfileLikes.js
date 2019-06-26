@@ -14,7 +14,7 @@ import './UserProfileLikes.sass';
 import { UserContext } from '../../context';
 
 const UserProfilePostLike = ({ post }) => (
-  <div className="user-likes__item">
+  <div className="user-likes__item animated zoomIn faster">
     <div className="user-likes__header">
       <span>on </span>
       <BloggglyLink to={`/user/${post.author.username}`} text={post.author.username} />
@@ -40,9 +40,10 @@ UserProfilePostLike.propTypes = {
 };
 
 const UserProfileCommentLike = ({ comment }) => (
-  <div className="user-likes__item">
+  <div className="user-likes__item animated faster zoomIn">
     <div className="user-likes__header">
-      <span>on </span>
+      <BloggglyLink to={`/user/${comment.author.username}`} text={comment.author.username} />
+      {' comment on '}
       <BloggglyLink to={`/user/${comment.post.author.username}`} text={comment.post.author.username} />
       {' post '}
       <BloggglyLink to={`/post/${comment.post._id}`} text={comment.post.title} />
@@ -62,6 +63,11 @@ UserProfileCommentLike.propTypes = {
     body: string.isRequired,
     likesCount: number.isRequired,
     likes: arrayOf(string).isRequired,
+    author: shape({
+      _id: string.isRequired,
+      avatar: string.isRequired,
+      username: string.isRequired,
+    }),
     post: shape({
       _id: string.isRequired,
       title: string.isRequired,

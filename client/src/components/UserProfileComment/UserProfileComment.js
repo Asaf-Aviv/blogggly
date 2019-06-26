@@ -12,7 +12,7 @@ import './UserProfileComment.sass';
 const UserProfileComment = ({
   comment, comment: { post }, isDeleted, addToDeletionQueue,
 }) => (
-  <li className={`user-profile-comment__container ${isDeleted ? 'deleted' : ''}`}>
+  <li className={`user-profile-comment__container animated zoomIn faster ${isDeleted ? 'deleted' : ''}`}>
     <div className="user-profile-comment__header">
       {'on '}
       <BloggglyLink to={`/user/${post.author.username}`} text={post.author.username} />

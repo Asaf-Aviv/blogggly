@@ -9,7 +9,7 @@ import ActionsDropDown from '../ActionsDropDown';
 import './ShowcaseCard.sass';
 
 const ShowcaseCard = ({ post, isAuthor }) => (
-  <div className="showcase__card">
+  <div className="showcase__card animated faster zoomIn">
     <BloggglyLink to={`/post/${post._id}`} text={post.title} />
     <Tags tags={post.tags} />
     <div className="showcase__footer">

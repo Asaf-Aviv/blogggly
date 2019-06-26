@@ -6,7 +6,7 @@ import {
 import './TransparentModal.sass';
 
 const TransparentModal = ({ onBackgroundClick, children }) => (
-  <div className="modal" onClick={onBackgroundClick}>
+  <div className="modal animated zoomIn faster" onClick={onBackgroundClick}>
     {children}
   </div>
 );
