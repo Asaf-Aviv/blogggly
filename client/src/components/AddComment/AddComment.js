@@ -57,7 +57,7 @@ const AddComment = ({ postId }) => {
             onChange={e => setCommentBody(e.target.value)}
             value={commentBody}
             required
-            rows="7"
+            rows="6"
             placeholder="Add a Comment"
           />
           <Button

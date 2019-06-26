@@ -115,10 +115,8 @@ const UploadAvatar = () => {
 
   const upload = () => {
     const formData = new FormData();
-    if (croppedImageBlob) {
-      formData.append('avatar', croppedImageBlob);
-    } else if (originalFile) {
-      formData.append('avatar', originalFile);
+    if (croppedImageBlob || originalFile) {
+      formData.append('avatar', croppedImageBlob || originalFile);
     } else {
       return;
     }

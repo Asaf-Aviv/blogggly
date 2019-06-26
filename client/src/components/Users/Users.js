@@ -6,6 +6,7 @@ import Container from '../Container';
 import UserSearchBar from '../UserSearchBar';
 import UserCard from '../UserCard';
 import { UserContext } from '../../context';
+import Main from '../Main/Main';
 
 import './Users.sass';
 
@@ -15,7 +16,7 @@ const Users = () => {
   const { loggedUser, isLogged } = useContext(UserContext);
 
   return (
-    <div className="users">
+    <Main classes="users">
       <Helmet>
         <title>Users - Blogggly</title>
       </Helmet>
@@ -57,7 +58,7 @@ const Users = () => {
           </Query>
         )}
       </Container>
-    </div>
+    </Main>
   );
 };
 

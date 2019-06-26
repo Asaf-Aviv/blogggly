@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import Container from '../Container';
 import { MemberFormsContext } from '../../context';
 import Button from '../Button';
+import Main from '../Main/Main';
 
 import { ReactComponent as ColumnIcon } from '../../assets/column.svg';
 import { ReactComponent as FormIcon } from '../../assets/form.svg';
@@ -14,14 +15,18 @@ const Home = () => {
   const { setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
 
   return (
-    <main className="home">
+    <Main classes="home">
       <Helmet>
         <title>Blogggly.com - Create your own blog for free.</title>
       </Helmet>
       <Container>
         <header className="home__header animated zoomIn fast">
           <h1 className="home__title animated delay-500ms fadeInUp">Blogggly</h1>
-          <h2 className="home__subtitle delay-700ms animated fadeInUp">Create you own blog and publish your stories, Simple, Easy and Free.</h2>
+          <h2 className="home__subtitle delay-700ms animated fadeInUp">
+            Create you own blog and publish your stories
+            <br />
+            Simple, Easy and Free.
+          </h2>
           <Button
             classes="btn btn--primary delay-700ms animated fadeInUp"
             text="Signup"
@@ -31,10 +36,8 @@ const Home = () => {
             }}
           />
         </header>
-      </Container>
-      <Container>
         <section className="features">
-          <div className="features__card delay-200ms animated fadeInUp">
+          <div className="features__card first delay-200ms animated fadeInUp">
             <ColumnIcon className="features__card-icon" />
             <h3>Start your personal blog and share your stories!</h3>
           </div>
@@ -48,7 +51,7 @@ const Home = () => {
           </div>
         </section>
       </Container>
-    </main>
+    </Main>
   );
 };
 

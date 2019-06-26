@@ -53,7 +53,7 @@ const SendMessageModal = ({ userId, username, closeModal }) => {
             <Label labelFor="message" classes="send-message__label">
               <textarea
                 placeholder="Message"
-                className="send-message__textarea"
+                className="textarea send-message__textarea"
                 value={body}
                 onChange={e => setBody(e.target.value)}
               />
