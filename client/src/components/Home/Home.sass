@@ -1,63 +1,49 @@
 @import '../../sass/_mixins'
 
 .home
-  @include full-screen-min-height
-  .container
-    margin-bottom: 2rem !important
   &__header
-    padding: 4rem 2rem
+    margin-bottom: var(--space-lg)
+    padding: var(--space-lg) var(--space-md)
     background: var(--bg-alt3)
     border-radius: var(--border-radius-large)
     box-shadow: var(--shadow-small)
-    @media (max-width: 786px)
-      padding: 2rem 1rem
+    display: flex
+    flex-direction: column
+    align-items: flex-start
     @media (max-width: 600px)
       .btn--primary
         width: 100%
+    @media (min-width: 900px)
+      padding: 
   &__title
+    font-size: 30px
+    margin-bottom: var(--space-md)
   &__subtitle
-    font-weight: 400
+    line-height: 1.5
+    margin-bottom: var(--space-md)
     color: var(--text-alt4)
     display: inline-block
-    margin: 2rem 3rem 4rem 0
-    @media (max-width: 786px)
-      font-size: 1.25rem
-      margin-right: 1rem
-    @media (max-width: 600px)
-      font-size: 1em
-      margin-right: 0
 
 .features
-  display: flex
-  justify-content: space-between
-  flex-wrap: wrap
-  margin: var(--space-md) 0
+  margin-bottom: var(--space-md)
+  display: grid
+  grid-template-columns: repeat(1, 1fr)
   border-radius: var(--border-radius-large)
-  @media (max-width: 900px)
-    justify-content: center
-  @media (max-width: 786px)
-    display: block
+  grid-gap: var(--space-md)
+  @media (min-width: 786px) and (max-width: 899px)
+    grid-template-columns: repeat(2, 1fr)
+    &__card.first
+      grid-column: 1 / 3
+  @media (min-width: 900px)
+    grid-template-columns: repeat(3, 1fr)
   &__card
+    width: 100%
     padding: var(--space-md) var(--space-sm)
     box-shadow: var(--shadow-small)
     border-radius: var(--border-radius-large)
     background: var(--bg-alt3)
     color: var(--text-alt4)
-    flex-basis: 31%
     text-align: center
-    margin-bottom: var(--space-md)
-    max-width: 70%
-    @media (max-width: 900px)
-      flex: 1
-      &:first-of-type
-        margin-right: var(--space-md)
-      &:last-of-type
-        flex-basis: 70%
-    @media (max-width: 786px)
-      max-width: 70%
-      margin: 0 auto 2rem auto !important
-    @media (max-width: 600px)
-      max-width: 100%
     &-icon
       display: inline-block
       margin: 0 auto

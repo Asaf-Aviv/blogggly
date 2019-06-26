@@ -38,15 +38,14 @@
     position: relative
     flex: 3
     margin: 0 var(--space-sm)
-    @media (max-width: 786px)
-      width: 100%
-      margin: 0 0.5rem
+    .input
+      height: 35px
+    @media (min-width: 786px)
       .input
         border-radius: var(--border-radius-medium)
-        height: 35px
-  .toggler__container
-    margin-right: 0.5rem
+        height: 40px
 
 .login-btn
   height: 35px !important
   padding: 0 0.8rem !important
+  margin-left: var(--space-sm)
