@@ -1,26 +1,32 @@
 .post
   position: relative
   margin-bottom: 4rem
-  padding: 2rem
+  padding: var(--space-md)
   background: var(--bg-alt3)
   border-radius: var(--border-radius-medium)
   box-shadow: var(--shadow-small)
+  &__header
+    .author-details
+      margin-bottom: var(--space-sm)
+      .avatar__container
+        width: 60px
+      .blogggly-link
+        margin-right: var(--space-md)
+      .date
+        font-size: 14px
   .follow-btn
-    margin-right: 1rem
+    margin-right: var(--space-md)
   &__title
-    line-height: 1.5
-    margin-bottom: 1rem
-    padding: 0 3.8rem
+    margin-bottom: var(--space-md)
+    padding-left: 60px
   &__tags
-    padding-left: 4rem
-    margin-bottom: 1rem
+    padding-left: 60px
+    margin-bottom: var(--space-md)
   &__date
-    line-height: 24px
   &__body
-    line-height: 1.5
     display: block
-    padding: 0 3.8rem
-    margin-bottom: 1rem
+    padding-left: 60px
+    margin-bottom: var(--space-md)
     word-wrap: break-word
   &__actions
     display: flex
@@ -29,5 +35,5 @@
     margin-left: 3.8rem
     .heart
       cursor: pointer
-      margin-right: 1rem
+      margin-right: var(--space-sm)
 

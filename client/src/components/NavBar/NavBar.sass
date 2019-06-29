@@ -12,15 +12,13 @@
 
 .hamburger
   cursor: pointer
-  width: 40px
-  @media (max-width: 786px)
-    width: 35px
+  width: 35px
   &__container.nav__section
     height: 100%
-    display: none
-    @media (max-width: 786px)
-      display: flex
-        
+    display: flex
+    @media (min-width: 786px)
+      display: none
+
 .nav
   display: flex
   align-items: center
