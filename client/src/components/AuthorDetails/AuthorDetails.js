@@ -3,12 +3,12 @@ import {
   string, oneOfType, node, arrayOf,
 } from 'prop-types';
 import UserAvatar from '../UserAvatar';
-
-import './AuthorDetails.sass';
 import BloggglyLink from '../BloggglyLink';
 
+import './AuthorDetails.sass';
+
 const AuthorDetails = ({ avatar, username, children }) => (
-  <div className="author">
+  <div className="author-details">
     <UserAvatar
       width={50}
       avatar={avatar}

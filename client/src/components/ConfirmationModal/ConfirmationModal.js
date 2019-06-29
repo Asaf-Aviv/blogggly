@@ -1,20 +1,21 @@
 import React from 'react';
 import { func, string } from 'prop-types';
+import Button from '../Button';
+import TransparentModal from '../TransparentModal';
 
 import './ConfirmationModal.sass';
-import Button from '../Button';
 
 const ConfirmationModal = ({
-  onConfirm, onCancel, onCancelText,
-  confirmationQuestion, onConfirmText,
+  onConfirm,
+  onCancel,
+  onCancelText,
+  confirmationQuestion,
+  onConfirmText,
   theme,
 }) => (
-  <div className={`confirmation__modal confirmation__modal--${theme}`} onClick={onCancel}>
+  <TransparentModal className="confirmation__modal" onBackgroundClick={onCancel}>
     <div className="confirmation" onClick={e => e.stopPropagation()}>
-      <Button
-        classes="confirmation__close-btn"
-        onClick={onCancel}
-      >
+      <Button classes="confirmation__close-btn" onClick={onCancel}>
         <i className="fas fa-times" />
       </Button>
       <h3 className="confirmation__text">{confirmationQuestion}</h3>
@@ -31,7 +32,7 @@ const ConfirmationModal = ({
         />
       </div>
     </div>
-  </div>
+  </TransparentModal>
 );
 
 ConfirmationModal.propTypes = {

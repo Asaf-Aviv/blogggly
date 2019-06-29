@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Query, Subscription } from 'react-apollo';
 import { shape, string } from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import moment from 'moment';
 import { Helmet } from 'react-helmet';
 import Comments from '../Comments';
 import Container from '../Container';
@@ -15,6 +14,7 @@ import utils from '../../utils';
 import { UserContext } from '../../context';
 import Tags from '../Tags/Tags';
 import ActionsDropDown from '../ActionsDropDown';
+import DisplayDate from '../DisplayDate';
 
 import './Post.sass';
 
@@ -51,6 +51,18 @@ const Post = ({ match: { params: { postId } } }) => {
                       <meta name="author" content={post.author.username} />
                     </Helmet>
                     <header className="post__header">
+                      <AuthorDetails {...post.author}>
+                        {post.author._id !== (loggedUser && loggedUser._id) && (
+                          <FollowButton
+                            following={!!loggedUser
+                              && loggedUser.following.includes(post.author._id)
+                            }
+                            userId={post.author._id}
+                            username={post.author.username}
+                          />
+                        )}
+                        <DisplayDate date={post.createdAt} format="LL" />
+                      </AuthorDetails>
                       <h1 className="post__title">{post.title}</h1>
                       <div className="post__tags">
                         <Tags tags={post.tags} />
@@ -61,16 +73,6 @@ const Post = ({ match: { params: { postId } } }) => {
                         isAuthor={isLogged && loggedUser._id === post.author._id}
                       />
                     </header>
-                    <AuthorDetails {...post.author}>
-                      {post.author._id !== (loggedUser && loggedUser._id) && (
-                        <FollowButton
-                          following={!!loggedUser && loggedUser.following.includes(post.author._id)}
-                          userId={post.author._id}
-                          username={post.author.username}
-                        />
-                      )}
-                      <span className="post__date">{moment(+post.createdAt).format('LL')}</span>
-                    </AuthorDetails>
                     <span className="post__body" dangerouslySetInnerHTML={{ __html: post.body }} />
                     <div className="post__actions">
                       <Likes

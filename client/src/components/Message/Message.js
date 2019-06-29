@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import {
   string, oneOf, bool, func,
 } from 'prop-types';
-import moment from 'moment';
 import { Mutation } from 'react-apollo';
 import Alert from 'react-s-alert';
 import { MessagePropTypes } from '../../propTypes';
@@ -14,6 +13,7 @@ import ConfirmationModal from '../ConfirmationModal';
 import { UserContext } from '../../context';
 import ReportModal from '../ReportModal';
 import Button from '../Button';
+import DisplayDate from '../DisplayDate';
 
 import './Message.sass';
 
@@ -59,10 +59,7 @@ const MessageActionsPanel = ({
       >
         {moveToTrash => (
           <Button classes="message__btn" onClick={moveToTrash}>
-            {inTrash
-              ? 'Restore'
-              : <i className="fas fa-trash" />
-            }
+            {inTrash ? 'Restore' : <i className="fas fa-trash" />}
           </Button>
         )}
       </Mutation>
@@ -84,10 +81,7 @@ const MessageActionsPanel = ({
         >
           {deleteMessage => (
             <>
-              <Button
-                classes="message__btn"
-                onClick={() => setShowConfirmationModal(true)}
-              >
+              <Button classes="message__btn" onClick={() => setShowConfirmationModal(true)}>
                 <i className="fas fa-trash" />
               </Button>
               {showConfirmationModal && (
@@ -108,8 +102,11 @@ const MessageActionsPanel = ({
           <Button classes="message__btn" onClick={() => setShowReplyModal(true)}>
             <i className="fas fa-reply" />
           </Button>
-          <Button classes="message__btn message__report-btn" onClick={() => setShowReportModal(true)}>
-            <i className="fas fa-flag" />
+          <Button
+            classes="message__btn message__report-btn"
+            onClick={() => setShowReportModal(true)}
+          >
+            <i className="fas fa-exclamation-triangle" />
           </Button>
           {showReportModal && (
             <ReportModal
@@ -151,12 +148,14 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     setLoggedUser((draft) => {
       const messagesArray = draft.inbox[sentOrReceived];
       messagesArray.splice(
-        messagesArray.findIndex(msg => msg._id === updatedMessage._id), 1, updatedMessage,
+        messagesArray.findIndex(msg => msg._id === updatedMessage._id),
+        1,
+        updatedMessage,
       );
     });
   };
 
-  const inInbox = (fromOrTo === 'from');
+  const inInbox = fromOrTo === 'from';
 
   const renderMessageActionPanel = () => (
     <MessageActionsPanel
@@ -180,7 +179,7 @@ const Message = ({ message, fromOrTo, loggedUserId }) => {
     <li key={message._id} className="message__container">
       <div className="message__wrapper" onClick={() => setShowMessageModal(true)}>
         <span className="message__from">{message[fromOrTo].username}</span>
-        <span className="message__date">{moment(+message.createdAt).startOf('seconds').fromNow()}</span>
+        <DisplayDate date={message.createdAt} />
         <p className="message__body">{message.body}</p>
       </div>
       {renderMessageActionPanel()}

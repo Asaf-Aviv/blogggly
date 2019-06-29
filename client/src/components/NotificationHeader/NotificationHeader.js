@@ -7,7 +7,7 @@ import './NotificationsHeader.sass';
 
 const NotificationsHeader = ({ title, children }) => (
   <div className="notifications__header">
-    <h5>{title}</h5>
+    <h5 className="bold">{title}</h5>
     <div className="notifications__actions">
       {children}
     </div>
