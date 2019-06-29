@@ -17,19 +17,21 @@ module.exports = {
 
       const { author } = await Post.findPostById(postId, { author: 1 });
 
-      const [newComment, notification] = await Promise.all([
-        Comment.newComment({ post: postId, body, author: userId }),
-        User.addNotification({ from: userId, body: 'commented on your post!' }, author),
-      ]);
+      const newComment = await Comment.newComment({ post: postId, body, author: userId });
 
       pubsub.publish(tags.NEW_POST_COMMENT, { newPostComment: newComment });
-      pubsub.publish(tags.THEY_COMMENT_ON_MY_POST, {
-        toUserId: author.toString(),
-        theyCommentOnMyPost: {
-          commentAuthor: userId,
-          notification,
-        },
-      });
+
+      if (author.toString() !== userId) {
+        const notification = await User.addNotification({ from: userId, body: 'commented on your post!' }, author);
+
+        pubsub.publish(tags.THEY_COMMENT_ON_MY_POST, {
+          toUserId: author.toString(),
+          theyCommentOnMyPost: {
+            commentAuthor: userId,
+            notification,
+          },
+        });
+      }
 
       return newComment;
     },
@@ -43,8 +45,8 @@ module.exports = {
         likerId: userId,
       });
 
-      if (isLike) {
-        const commentAuthorId = comment.author._id.toString();
+      const commentAuthorId = comment.author._id.toString();
+      if (isLike && commentAuthorId !== userId) {
         const notification = await User.addNotification(
           { from: userId, body: 'liked your comment!' },
           commentAuthorId,

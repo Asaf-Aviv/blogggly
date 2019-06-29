@@ -33,7 +33,7 @@ module.exports = {
         { post, likerId: userId },
       );
 
-      if (isLike) {
+      if (isLike && userId !== post.author.toString()) {
         const postAuthorId = post.author.toString();
         const notification = await User.addNotification(
           { from: userId, body: 'liked your post!' },
