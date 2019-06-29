@@ -14,15 +14,18 @@ const apolloServer = require('../apolloServer');
 const app = express();
 const httpServer = createServer(app);
 
-const PORT = process.env.NODE_ENV || 5000;
+const PORT = process.env.PORT || 5000;
 const devMode = process.env.NODE_ENV !== 'production';
+
+console.log('NODE_ENV', process.env.NODE_ENV);
 
 if (devMode) {
   mongoose.set('debug', true);
-  app.use(morgan('dev'));
 }
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(morgan('dev'));
+
+app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use('/public', express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
@@ -34,32 +37,25 @@ app.use(isAuth);
 
 app.get('/ping', (req, res) => res.send('pong'));
 
+app.get('/*', (req, res) => {
+  res.sendFile(
+    path.join(
+      __dirname, '../../client/build/', 'index.html',
+    ),
+  );
+});
 
 app.post('/upload', checkAuth, (req, res) => {
   multerUploader.single('avatar')(req, res, err => handleFileUpload(req, res, err));
 });
 
-apolloServer.applyMiddleware({
-  app,
-  // onHealthCheck: () => new Promise((resolve, reject) => {
-  //   console.log('health check');
-  //   resolve();
-  //   reject();
-  // }),
-});
+apolloServer.applyMiddleware({ app });
+
 apolloServer.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(PORT, () => {
   console.log(`🚀  Apollo Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`);
   console.log(`🚀  Apollo Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`);
-});
-
-app.get('/*', (req, res) => {
-  res.sendFile(
-    path.join(
-      __dirname, `../../client/${devMode ? 'public' : 'dist'}`, 'index.html',
-    ),
-  );
 });
 
 module.exports = app;
