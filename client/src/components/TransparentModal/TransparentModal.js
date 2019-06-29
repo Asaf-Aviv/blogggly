@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   arrayOf, node, func, oneOfType,
 } from 'prop-types';
+import utils from '../../utils';
 
 import './TransparentModal.sass';
 
-const TransparentModal = ({ onBackgroundClick, children }) => (
-  <div className="modal animated zoomIn faster" onClick={onBackgroundClick}>
-    {children}
-  </div>
-);
+const TransparentModal = ({ onBackgroundClick, children }) => {
+  useEffect(() => {
+    utils.lockScrollBody();
+    return () => utils.unlockScrollBody();
+  }, []);
+
+  return (
+    <div className="modal animated zoomIn faster" onClick={onBackgroundClick}>
+      {children}
+    </div>
+  );
+};
 
 TransparentModal.propTypes = {
   onBackgroundClick: func.isRequired,
