@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { func, number } from 'prop-types';
 import { MemberFormsContext, UserContext, DarkModeContext } from '../../context';
 import Container from '../Container';
@@ -11,6 +11,7 @@ import NavSearchBar from '../NavSearchBar';
 import { ReactComponent as MenuIcon } from '../../assets/menu.svg';
 
 import './NavBar.sass';
+import utils from '../../utils';
 
 const NavBar = ({ logout, windowWidth }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -19,7 +20,22 @@ const NavBar = ({ logout, windowWidth }) => {
   const { showMemberForms, setShowMemberForms, setShowLogin } = useContext(MemberFormsContext);
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
-  const setNavState = nextState => () => setIsNavOpen(nextState || !isNavOpen);
+  useEffect(() => {
+    if (isNavOpen) {
+      utils.lockScrollBody();
+    }
+    return () => {
+      utils.unlockScrollBody();
+    };
+  }, [isNavOpen]);
+
+  useEffect(() => {
+    if (isNavOpen && windowWidth >= 786) {
+      setIsNavOpen(false);
+    }
+  }, [isNavOpen, windowWidth]);
+
+  const setNavState = nextState => () => setIsNavOpen(nextState);
 
   return (
     <header className="navbar">
@@ -27,7 +43,7 @@ const NavBar = ({ logout, windowWidth }) => {
         <nav className="nav">
           <NavMenu closeNav={setNavState(false)} isNavOpen={isNavOpen} />
           <div className="nav__section hamburger__container">
-            <MenuIcon className="hamburger" onClick={setNavState()} />
+            <MenuIcon className="hamburger" onClick={setNavState(true)} />
           </div>
           <NavSearchBar />
           {showMemberForms && !isLogged && <MemberForms />}
