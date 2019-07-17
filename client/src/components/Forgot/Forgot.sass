@@ -1,0 +1,19 @@
+@import '../../sass/_mixins'
+
+.forgot-password
+  @include full-screen-min-height
+  &__form
+    box-shadow: var(--shadow-small)
+    border-radius: var(--border-radius-large)
+    background: var(--bg-alt3)
+    max-width: 480px
+    margin: 0 auto 
+    padding: var(--space-md) var(--space-sm)
+    &-title
+      text-align: center
+      font-weight: 600
+    .input
+      margin: var(--space-lg) 0
+    .btn
+      display: block
+      margin: 0 auto
