@@ -8,7 +8,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import apolloClient from './ApolloClient';
 
-ReactGA.initialize('UA-142877210-1');
+ReactGA.initialize(process.env.REACT_APP_GA);
 
 const history = createHistory();
 

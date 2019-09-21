@@ -69,13 +69,13 @@ exports.createFakeData = async () => {
         userInput = {
           username: `test${i}`,
           email: `test${i}@test.com`,
-          password: '12345',
+          password: '12345678a',
         };
       } else {
         userInput = {
           username: 'asafaviv',
           email: 'avivasaf1@hotmail.com',
-          password: '12345',
+          password: '12345678a',
         };
       }
       return User.createUser(userInput);
